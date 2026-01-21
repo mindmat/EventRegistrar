@@ -9,7 +9,11 @@ EventRegistrar is a comprehensive event management system built with .NET 9 and 
 - **Commands**: Handle write operations (Create, Update, Delete)
 - **Queries**: Handle read operations and data retrieval
 - **Handlers**: Implement IRequestHandler<TRequest, TResponse> for processing
-- Requests are authorized in RightsOfEventRoleProvider
+- **Requests are authorized in RightsOfEventRoleProvider**
+- **IMPORTANT**: When creating new commands or queries, always add them to appropriate roles in `RightsOfEventRoleProvider.cs`:
+  - **Reader role**: All queries and read-only operations
+  - **Writer role**: Commands that modify data (Create, Update, Delete operations)
+  - **Admin role**: Administrative operations like user management and system configuration
 
 ### Entity Framework Patterns
 - All entities inherit from `Entity` base class with `Id` and `RowVersion`
@@ -174,7 +178,11 @@ changeTrigger.TriggerUpdate<MyCalculator>(entityId, eventId);
 
 ### Security
 - Event-scoped authorization via `IEventBoundRequest`
-- Role-based access control
+- Role-based access control through `RightsOfEventRoleProvider`
 - User context through IAuthenticatedUserProvider
+- **Authorization Workflow**: 
+  1. Create new commands/queries
+  2. Add them to appropriate role sections in `RightsOfEventRoleProvider.cs`
+  3. Test authorization works for intended user roles
 
 This context should help AI assistants understand the project structure and maintain consistency with existing patterns when suggesting code changes or new features.

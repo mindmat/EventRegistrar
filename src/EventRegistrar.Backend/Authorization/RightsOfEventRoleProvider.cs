@@ -204,6 +204,8 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(AddIcsToMailCommand);
             yield return nameof(AssignToShiftCommand);
             yield return nameof(UnassignFromShiftCommand);
+            yield return nameof(ConfirmShiftAssignmentCommand);
+            yield return nameof(UnconfirmShiftAssignmentCommand);
             yield return nameof(AvailableParticipantsQuery);
             yield return nameof(CreateShiftCommand);
             yield return nameof(UpdateShiftCommand);

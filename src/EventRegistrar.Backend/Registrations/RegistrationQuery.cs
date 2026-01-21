@@ -238,7 +238,11 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                    Location = shift.Location,
                                                                    StartTime = shift.StartTime,
                                                                    EndTime = shift.EndTime,
-                                                                   IsResponsible = shift.RegistrationId_Responsible == registrationId
+                                                                   IsResponsible = shift.RegistrationId_Responsible == registrationId,
+                                                                   IsConfirmed = shift.RegistrationId_Responsible == registrationId
+                                                                                     ? null // Responsible person doesn't need confirmation
+                                                                                     : shift.Assignments!.Any(sas => sas.RegistrationId == registrationId
+                                                                                                                  && sas.IsConfirmed)
                                                                })
                                               .OrderBy(shift => shift.StartTime)
                                               .ToListAsync(cancellationToken);

@@ -11,6 +11,8 @@ public class ShiftAssignment : Entity
 
     public Guid RegistrationId { get; set; }
     public Registration? Registration { get; set; }
+    
+    public bool IsConfirmed { get; set; }
 }
 
 public class ShiftAssignmentMap : EntityMap<ShiftAssignment>

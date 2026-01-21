@@ -58,7 +58,8 @@ public class ShiftsOverviewCalculator(IQueryable<Shift> shifts)
                                                                                                      RegistrationId = a.RegistrationId,
                                                                                                      Participant = $"{a.Registration!.RespondentFirstName} {a.Registration!.RespondentLastName}",
                                                                                                      Email = a.Registration!.RespondentEmail,
-                                                                                                     IsRegistrationCancelled = a.Registration!.State == RegistrationState.Cancelled
+                                                                                                     IsRegistrationCancelled = a.Registration!.State == RegistrationState.Cancelled,
+                                                                                                     IsConfirmed = a.IsConfirmed
                                                                                                  })
                                                                        .ToList()
                                                 })
@@ -90,10 +91,11 @@ public class ShiftsOverviewCalculator(IQueryable<Shift> shifts)
                                                     + Math.Max(shift.HelpersNeeded - shift.HelpersAssigned, 0));
         var shiftsWithCancelledRegistrations = allShifts.Sum(shift => (shift.IsParticipantResponsibleCancelled ? 1 : 0)
                                                                     + shift.Assignments.Count(assignment => assignment.IsRegistrationCancelled));
+        var unconfirmedAssignments = allShifts.Sum(shift => shift.Assignments.Count(assignment => assignment is { IsConfirmed: false, IsRegistrationCancelled: false }));
 
-        if (unassignedShifts > 0 || shiftsWithCancelledRegistrations > 0)
+        if (unassignedShifts > 0 || shiftsWithCancelledRegistrations > 0 || unconfirmedAssignments > 0)
         {
-            node.Content = $"{unassignedShifts} | {shiftsWithCancelledRegistrations}";
+            node.Content = $"{unassignedShifts} | {shiftsWithCancelledRegistrations} | {unconfirmedAssignments}";
             node.Style = shiftsWithCancelledRegistrations > 0
                              ? MenuNodeStyle.ToDo
                              : MenuNodeStyle.Info;
@@ -138,4 +140,5 @@ public class ShiftAssignmentDisplayItem
     public string? Participant { get; set; }
     public string? Email { get; set; }
     public bool IsRegistrationCancelled { get; set; }
+    public bool IsConfirmed { get; set; }
 }

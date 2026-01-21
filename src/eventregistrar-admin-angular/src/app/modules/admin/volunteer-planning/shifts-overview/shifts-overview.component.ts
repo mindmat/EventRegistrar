@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil, Observable } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { VolunteerPlanningService } from '../volunteer-planning.service';
-import { ParticipantDisplayItem, ShiftDisplayItem, ShiftGroup, RegistrableDisplayItem, AvailableQuestionOptionMapping } from 'app/api/api';
+import { ParticipantDisplayItem, ShiftDisplayItem, ShiftGroup, RegistrableDisplayItem, AvailableQuestionOptionMapping, ShiftAssignmentDisplayItem } from 'app/api/api';
 import { NavigatorService } from '../../navigator.service';
 import { RegistrablesService } from '../../pricing/registrables.service';
 import { ShiftEditComponent } from '../shift-edit/shift-edit.component';
@@ -358,8 +358,8 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
         let shift: ShiftDisplayItem | undefined;
         for (const group of this.currentShiftGroups)
         {
-            shift = group.shifts?.find(s => s.id === this.currentAssignment!.shiftId);
-            if (shift) break;
+            shift = group.shifts?.find(s => s.id === this.currentAssignment.shiftId);
+            if (shift) { break; }
         }
 
         if (!shift)
@@ -545,6 +545,32 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
                 });
         }
         this.closePreferenceSelection();
+    }
+
+    /**
+     * Confirm shift assignment
+     */
+    confirmShiftAssignment(assignmentId: string): void
+    {
+        this._volunteerPlanningService.confirmShiftAssignment(assignmentId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(() =>
+            {
+                // Data will be automatically refreshed through NotificationService
+            });
+    }
+
+    /**
+     * Unconfirm shift assignment
+     */
+    unconfirmShiftAssignment(assignmentId: string): void
+    {
+        this._volunteerPlanningService.unconfirmShiftAssignment(assignmentId)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(() =>
+            {
+                // Data will be automatically refreshed through NotificationService
+            });
     }
 
     /**

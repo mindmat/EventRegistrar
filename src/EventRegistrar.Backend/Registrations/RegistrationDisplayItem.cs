@@ -81,4 +81,5 @@ public class VolunteerShiftDisplayItem
     public DateTimeOffset StartTime { get; set; }
     public DateTimeOffset EndTime { get; set; }
     public bool IsResponsible { get; set; }
+    public bool? IsConfirmed { get; set; }
 }

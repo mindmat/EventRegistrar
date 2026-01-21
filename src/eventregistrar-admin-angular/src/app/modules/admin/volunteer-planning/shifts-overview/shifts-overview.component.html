@@ -161,19 +161,38 @@
                                                 <div class="flex items-center justify-between">
                                                     <div class="flex-1">
                                                         <ng-container *ngIf="shift.responsibleRegistrationId; else noResponsible">
-                                                            <a [routerLink]="_navigatorService.getRegistrationUrl(shift.responsibleRegistrationId)" class="hover:underline cursor-pointer block">
-                                                                <div class="text-sm font-medium" [ngClass]="{
-                                                                        'text-gray-900 dark:text-gray-100': !shift.isParticipantResponsibleCancelled,
-                                                                        'text-red-800 dark:text-red-200 line-through': shift.isParticipantResponsibleCancelled
-                                                                    }">
-                                                                    {{ shift.participantResponsible }}
-                                                                    <span *ngIf="shift.isParticipantResponsibleCancelled"
-                                                                        class="text-xs font-bold text-red-600 dark:text-red-400 ml-2">(CANCELLED)</span>
+                                                            <div class="flex items-center justify-between">
+                                                                <div class="flex-1">
+                                                                    <a [routerLink]="_navigatorService.getRegistrationUrl(shift.responsibleRegistrationId)"
+                                                                        class="hover:underline cursor-pointer block">
+                                                                        <div class="text-sm font-medium" [ngClass]="{
+                                                                                'text-gray-900 dark:text-gray-100': !shift.isParticipantResponsibleCancelled,
+                                                                                'text-red-800 dark:text-red-200 line-through': shift.isParticipantResponsibleCancelled
+                                                                            }">
+                                                                            {{ shift.participantResponsible }}
+                                                                            <span *ngIf="shift.isParticipantResponsibleCancelled"
+                                                                                class="text-xs font-bold text-red-600 dark:text-red-400 ml-2">(CANCELLED)</span>
+                                                                        </div>
+                                                                        <div class="text-sm text-secondary" *ngIf="shift.responsibleEmail">
+                                                                            {{ shift.responsibleEmail }}
+                                                                        </div>
+                                                                    </a>
                                                                 </div>
-                                                                <div class="text-sm text-secondary" *ngIf="shift.responsibleEmail">
-                                                                    {{ shift.responsibleEmail }}
+                                                                <!-- Single confirmation toggle button for responsible -->
+                                                                <div class="flex items-center ml-2" *ngIf="shift.assignments && getResponsibleAssignment(shift)">
+                                                                    <ng-container *ngIf="getResponsibleAssignment(shift) as responsibleAssignment">
+                                                                        <button mat-icon-button [color]="responsibleAssignment.isConfirmed ? 'primary' : ''" [ngClass]="{
+                                                                                    'text-gray-400 hover:text-gray-600': !responsibleAssignment.isConfirmed
+                                                                                }"
+                                                                            (click)="responsibleAssignment.isConfirmed ? unconfirmShiftAssignment(responsibleAssignment.id) : confirmShiftAssignment(responsibleAssignment.id)"
+                                                                            [matTooltip]="responsibleAssignment.isConfirmed ? 'Confirmed - Click to unconfirm' : 'Pending - Click to confirm'">
+                                                                            <mat-icon class="icon-size-4"
+                                                                                [svgIcon]="responsibleAssignment.isConfirmed ? 'heroicons_outline:check-circle' : 'heroicons_outline:question-mark-circle'">
+                                                                            </mat-icon>
+                                                                        </button>
+                                                                    </ng-container>
                                                                 </div>
-                                                            </a>
+                                                            </div>
                                                         </ng-container>
                                                         <ng-template #noResponsible>
                                                             <span class="text-sm text-gray-400 italic">{{ 'Unassigned' | translate }}</span>
@@ -194,28 +213,46 @@
                                                 <div class="flex items-center justify-between" *ngIf="i < shift.helpersNeeded; else emptyHelper">
                                                     <div class="flex-1">
                                                         <ng-container *ngIf="shift.assignments && shift.assignments[i] && shift.assignments[i].registrationId; else noHelper">
-                                                            <a [routerLink]="_navigatorService.getRegistrationUrl(shift.assignments[i].registrationId)" class="hover:underline cursor-pointer block">
-                                                                <div class="text-sm font-medium" [ngClass]="{
-                                                                        'text-gray-900 dark:text-gray-100': !shift.assignments[i].isRegistrationCancelled,
-                                                                        'text-red-800 dark:text-red-200 line-through': shift.assignments[i].isRegistrationCancelled
-                                                                    }">
-                                                                    {{ shift.assignments[i].participant }}
-                                                                    <span *ngIf="shift.assignments[i].isRegistrationCancelled"
-                                                                        class="text-xs font-bold text-red-600 dark:text-red-400 ml-2">(CANCELLED)</span>
+                                                            <div class="flex items-center justify-between">
+                                                                <div class="flex-1">
+                                                                    <a [routerLink]="_navigatorService.getRegistrationUrl(shift.assignments[i].registrationId)"
+                                                                        class="hover:underline cursor-pointer block">
+                                                                        <div class="text-sm font-medium" [ngClass]="{
+                                                                                'text-gray-900 dark:text-gray-100': !shift.assignments[i].isRegistrationCancelled,
+                                                                                'text-red-800 dark:text-red-200 line-through': shift.assignments[i].isRegistrationCancelled
+                                                                            }">
+                                                                            {{ shift.assignments[i].participant }}
+                                                                            <span *ngIf="shift.assignments[i].isRegistrationCancelled"
+                                                                                class="text-xs font-bold text-red-600 dark:text-red-400 ml-2">(CANCELLED)</span>
+                                                                        </div>
+                                                                        <div class="text-sm text-secondary" *ngIf="shift.assignments[i].email">
+                                                                            {{shift.assignments[i].email}}
+                                                                        </div>
+                                                                    </a>
                                                                 </div>
-                                                                <div class="text-sm text-secondary" *ngIf="shift.assignments[i].email">
-                                                                    {{shift.assignments[i].email}}
+                                                                <div class="flex items-center ml-2 space-x-1">
+                                                                    <!-- Single confirmation toggle button -->
+                                                                    <button mat-icon-button [color]="shift.assignments[i].isConfirmed ? 'primary' : ''" [ngClass]="{
+                                                                                'text-gray-400 hover:text-gray-600': !shift.assignments[i].isConfirmed
+                                                                            }"
+                                                                        (click)="shift.assignments[i].isConfirmed ? unconfirmShiftAssignment(shift.assignments[i].id) : confirmShiftAssignment(shift.assignments[i].id)"
+                                                                        [matTooltip]="shift.assignments[i].isConfirmed ? 'Confirmed - Click to unconfirm' : 'Pending - Click to confirm'">
+                                                                        <mat-icon class="icon-size-4"
+                                                                            [svgIcon]="shift.assignments[i].isConfirmed ? 'heroicons_outline:check-circle' : 'heroicons_outline:question-mark-circle'">
+                                                                        </mat-icon>
+                                                                    </button>
+                                                                    <!-- Assign helper button -->
+                                                                    <button mat-icon-button class="text-green-600 hover:text-green-700" (click)="showCandidatesForAssignment(shift, 'helper', i)"
+                                                                        [matTooltip]="('AssignHelper' | translate) + ' ' + (i + 1)">
+                                                                        <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
+                                                                    </button>
                                                                 </div>
-                                                            </a>
+                                                            </div>
                                                         </ng-container>
                                                         <ng-template #noHelper>
                                                             <span class="text-sm text-green-600">{{ 'Unassigned' | translate }}</span>
                                                         </ng-template>
                                                     </div>
-                                                    <button mat-icon-button class="ml-2 text-green-600 hover:text-green-700" (click)="showCandidatesForAssignment(shift, 'helper', i)"
-                                                        [matTooltip]="('AssignHelper' | translate) + ' ' + (i + 1)">
-                                                        <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
-                                                    </button>
                                                 </div>
                                                 <ng-template #emptyHelper>
                                                     <div>

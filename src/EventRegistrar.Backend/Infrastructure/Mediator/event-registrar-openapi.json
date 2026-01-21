@@ -1170,6 +1170,31 @@
                 }
             }
         },
+        "/api/ConfirmShiftAssignmentCommand": {
+            "post": {
+                "tags": [
+                    "ConfirmShiftAssignment"
+                ],
+                "operationId": "ConfirmShiftAssignment_Command",
+                "requestBody": {
+                    "x-name": "ConfirmShiftAssignmentCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ConfirmShiftAssignmentCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/CreateAndAssignIncomingPaymentCommand": {
             "post": {
                 "tags": [
@@ -5125,6 +5150,31 @@
                 }
             }
         },
+        "/api/UnconfirmShiftAssignmentCommand": {
+            "post": {
+                "tags": [
+                    "UnconfirmShiftAssignment"
+                ],
+                "operationId": "UnconfirmShiftAssignment_Command",
+                "requestBody": {
+                    "x-name": "UnconfirmShiftAssignmentCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UnconfirmShiftAssignmentCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/UnprocessedRawRegistrationCountQuery": {
             "post": {
                 "tags": [
@@ -7033,6 +7083,20 @@
                     },
                     "data": {
                         "nullable": true
+                    }
+                }
+            },
+            "ConfirmShiftAssignmentCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "shiftAssignmentId": {
+                        "type": "string",
+                        "format": "guid"
                     }
                 }
             },
@@ -11483,6 +11547,10 @@
                     },
                     "isResponsible": {
                         "type": "boolean"
+                    },
+                    "isConfirmed": {
+                        "type": "boolean",
+                        "nullable": true
                     }
                 }
             },
@@ -12459,6 +12527,9 @@
                     },
                     "isRegistrationCancelled": {
                         "type": "boolean"
+                    },
+                    "isConfirmed": {
+                        "type": "boolean"
                     }
                 }
             },
@@ -12932,6 +13003,20 @@
                         "format": "guid"
                     },
                     "spotId": {
+                        "type": "string",
+                        "format": "guid"
+                    }
+                }
+            },
+            "UnconfirmShiftAssignmentCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "shiftAssignmentId": {
                         "type": "string",
                         "format": "guid"
                     }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Api, CreateShiftCommand, UpdateShiftCommand, DeleteShiftCommand, AssignToShiftCommand, UnassignFromShiftCommand, AddHelperSlotCommand, RemoveHelperSlotCommand, AvailableParticipantsQuery, ShiftsOverviewQuery, ShiftGroup, ShiftDisplayItem, ParticipantDisplayItem, VolunteerAdminConfigurationQuery, VolunteerAdminConfigurationDto, UpdateVolunteerAdminConfigurationCommand } from 'app/api/api';
+import { Api, CreateShiftCommand, UpdateShiftCommand, DeleteShiftCommand, AssignToShiftCommand, UnassignFromShiftCommand, AddHelperSlotCommand, RemoveHelperSlotCommand, AvailableParticipantsQuery, ShiftsOverviewQuery, ShiftGroup, ShiftDisplayItem, ParticipantDisplayItem, VolunteerAdminConfigurationQuery, VolunteerAdminConfigurationDto, UpdateVolunteerAdminConfigurationCommand, ConfirmShiftAssignmentCommand, UnconfirmShiftAssignmentCommand } from 'app/api/api';
 import { FetchService } from '../infrastructure/fetchService';
 import { NotificationService } from '../infrastructure/notification.service';
 import { EventService } from '../events/event.service';
@@ -177,5 +177,29 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
             registrableIds_Volunteer: registrableIds,
         };
         return this._api.updateVolunteerAdminConfiguration_Command(command);
+    }
+
+    /**
+     * Confirm shift assignment
+     */
+    confirmShiftAssignment(shiftAssignmentId: string): Observable<void>
+    {
+        const command: ConfirmShiftAssignmentCommand = {
+            eventId: this._eventService.selectedId,
+            shiftAssignmentId: shiftAssignmentId
+        };
+        return this._api.confirmShiftAssignment_Command(command);
+    }
+
+    /**
+     * Unconfirm shift assignment
+     */
+    unconfirmShiftAssignment(shiftAssignmentId: string): Observable<void>
+    {
+        const command: UnconfirmShiftAssignmentCommand = {
+            eventId: this._eventService.selectedId,
+            shiftAssignmentId: shiftAssignmentId
+        };
+        return this._api.unconfirmShiftAssignment_Command(command);
     }
 }

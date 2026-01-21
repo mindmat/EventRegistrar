@@ -2001,6 +2001,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    confirmShiftAssignment_Command(confirmShiftAssignmentCommand: ConfirmShiftAssignmentCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/ConfirmShiftAssignmentCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(confirmShiftAssignmentCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processConfirmShiftAssignment_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processConfirmShiftAssignment_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processConfirmShiftAssignment_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     createAndAssignIncomingPayment_Command(createAndAssignIncomingPaymentCommand: CreateAndAssignIncomingPaymentCommand | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/CreateAndAssignIncomingPaymentCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -8691,6 +8739,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    unconfirmShiftAssignment_Command(unconfirmShiftAssignmentCommand: UnconfirmShiftAssignmentCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/UnconfirmShiftAssignmentCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(unconfirmShiftAssignmentCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUnconfirmShiftAssignment_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUnconfirmShiftAssignment_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processUnconfirmShiftAssignment_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     unprocessedRawRegistrationCount_Query(unprocessedRawRegistrationCountQuery: UnprocessedRawRegistrationCountQuery | undefined): Observable<UnprocessedRawRegistrationsInfo> {
         let url_ = this.baseUrl + "/api/UnprocessedRawRegistrationCountQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -9926,6 +10022,11 @@ export interface ComposeAndSendBulkMailCommand {
     mailType?: MailType | null;
     withhold?: boolean;
     data?: any | null;
+}
+
+export interface ConfirmShiftAssignmentCommand {
+    eventId?: string;
+    shiftAssignmentId?: string;
 }
 
 export interface CreateAndAssignIncomingPaymentCommand {
@@ -11330,6 +11431,7 @@ export interface VolunteerShiftDisplayItem {
     startTime?: Date;
     endTime?: Date;
     isResponsible?: boolean;
+    isConfirmed?: boolean | null;
 }
 
 export interface RegistrationQuery {
@@ -11642,6 +11744,7 @@ export interface ShiftAssignmentDisplayItem {
     participant?: string | null;
     email?: string | null;
     isRegistrationCancelled?: boolean;
+    isConfirmed?: boolean;
 }
 
 export interface ShiftsOverviewQuery {
@@ -11799,6 +11902,11 @@ export interface UnbindPartnerRegistrationCommand {
 export interface UnbindPartnerSpotCommand {
     eventId?: string;
     spotId?: string;
+}
+
+export interface UnconfirmShiftAssignmentCommand {
+    eventId?: string;
+    shiftAssignmentId?: string;
 }
 
 export interface UnprocessedRawRegistrationsInfo {
