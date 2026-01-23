@@ -286,11 +286,13 @@
                 <hr class="w-full border-t my-6">
                 <div class="flex flex-col space-y-4 mb-4">
                     <ng-container *ngFor="let shift of registration.volunteerShifts">
-                        <div class="flex flex-col rounded-xl bg-default shadow p-3">
+                        <div class="flex flex-col rounded-xl bg-default shadow p-3" [ngClass]="{'border-l-4 border-blue-400': !shift.isConfirmed}">
                             <div class="flex items-center">
                                 <div class="flex flex-col flex-1">
                                     <div class="flex items-baseline">
-                                        <div class="font-medium">{{ shift.name }}</div>
+                                        <div class="font-medium" [ngClass]="{'text-blue-600': !shift.isConfirmed}">{{ shift.name }}</div>
+                                        <mat-icon *ngIf="!shift.isConfirmed" class="icon-size-4 ml-2 text-blue-500" [svgIcon]="'heroicons_solid:question-mark-circle'"
+                                            matTooltip="Not confirmed yet"></mat-icon>
                                         <mat-icon *ngIf="shift.isResponsible" class="icon-size-4 ml-2 text-primary" [svgIcon]="'heroicons_solid:star'" matTooltip="Responsible"></mat-icon>
                                     </div>
                                     <div *ngIf="shift.description" class="text-sm text-secondary mt-1">{{ shift.description }}</div>
