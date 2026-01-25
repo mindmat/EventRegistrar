@@ -71,8 +71,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             (priceAdmitted, packagesAdmitted, var allCoveredAdmitted) = CalculatePriceOfSpots(registration.Id, admittedSpots, packages, coreTracks);
             var admittedPackagesId = packagesAdmitted.Select(pkg => pkg.Id).ToList();
 
-            var samePackages = Enumerable.SequenceEqual(admittedPackagesId.OrderBy(id => id),
-                                                        originalPackageIds.OrderBy(id => id));
+            var samePackages = admittedPackagesId.TrueForAll(originalPackageIds.Contains);
             if (!samePackages)
             {
                 var fallbackPackages = packagesAdmitted.Where(adm => !originalPackageIds.Contains(adm.Id))
@@ -104,6 +103,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             {
                 var anyCorePackageAdmitted = packagesAdmitted.Any(ppk => ppk.IsCorePackage);
                 isOnWaitingList = !anyCorePackageAdmitted;
+                possibleFallbackPackages = packagesAdmitted.Where(ppk => !ppk.IsCorePackage);
             }
         }
 
