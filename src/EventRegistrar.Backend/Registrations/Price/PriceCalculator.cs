@@ -75,8 +75,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                                                         originalPackageIds.OrderBy(id => id));
             if (!samePackages)
             {
-                var fallbackPackages = packagesAdmitted.Where(adm => !originalPackageIds.Contains(adm.Id)
-                                                                  || !adm.IsCorePackage)
+                var fallbackPackages = packagesAdmitted.Where(adm => !originalPackageIds.Contains(adm.Id))
                                                        .ToList();
                 var allPossibleAsFallback = fallbackPackages.All(ppk => ppk is { AllowAsAutomaticFallback: true }
                                                                      || (ppk is { AllowAsManualFallback: true, Id: not null }
@@ -97,7 +96,9 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                     isOnWaitingList = true;
                 }
 
-                possibleFallbackPackages = fallbackPackages.Where(ppk => ppk.AllowAsManualFallback);
+                possibleFallbackPackages = Enumerable.Concat(fallbackPackages.Where(ppk => ppk.AllowAsManualFallback),
+                                                             packagesAdmitted.Where(ppk => !ppk.IsCorePackage))
+                                                     .DistinctBy(ppk => ppk.Id);
             }
             else
             {
