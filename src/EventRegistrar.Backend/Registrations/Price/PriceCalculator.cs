@@ -95,15 +95,19 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                     isOnWaitingList = true;
                 }
 
-                possibleFallbackPackages = Enumerable.Concat(fallbackPackages.Where(ppk => ppk.AllowAsManualFallback),
-                                                             packagesAdmitted.Where(ppk => !ppk.IsCorePackage))
-                                                     .DistinctBy(ppk => ppk.Id);
+                possibleFallbackPackages = isOnWaitingList
+                                               ? Enumerable.Concat(fallbackPackages.Where(ppk => ppk.AllowAsManualFallback),
+                                                                   packagesAdmitted.Where(ppk => !ppk.IsCorePackage))
+                                                           .DistinctBy(ppk => ppk.Id)
+                                               : [];
             }
             else
             {
                 var anyCorePackageAdmitted = packagesAdmitted.Any(ppk => ppk.IsCorePackage);
                 isOnWaitingList = !anyCorePackageAdmitted;
-                possibleFallbackPackages = packagesAdmitted.Where(ppk => !ppk.IsCorePackage);
+                possibleFallbackPackages = isOnWaitingList
+                                               ? packagesAdmitted.Where(ppk => !ppk.IsCorePackage)
+                                               : [];
             }
         }
 
