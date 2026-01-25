@@ -71,14 +71,20 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             (priceAdmitted, packagesAdmitted, var allCoveredAdmitted) = CalculatePriceOfSpots(registration.Id, admittedSpots, packages, coreTracks);
             var admittedPackagesId = packagesAdmitted.Select(pkg => pkg.Id).ToList();
 
-            var samePackages = admittedPackagesId.TrueForAll(originalPackageIds.Contains);
+            var samePackages = Enumerable.SequenceEqual(admittedPackagesId.OrderBy(id => id),
+                                                        originalPackageIds.OrderBy(id => id));
             if (!samePackages)
             {
-                var fallbackPackages = packagesAdmitted.Where(adm => !originalPackageIds.Contains(adm.Id))
+                var fallbackPackages = packagesAdmitted.Where(adm => !originalPackageIds.Contains(adm.Id)
+                                                                  || !adm.IsCorePackage)
                                                        .ToList();
-                if (fallbackPackages.All(ppk => ppk.AllowAsAutomaticFallback
-                                             || (ppk is { AllowAsManualFallback: true, Id: not null }
-                                              && registration.PricePackageIds_ManualFallback?.Contains(ppk.Id.Value) == true)))
+                var allPossibleAsFallback = fallbackPackages.All(ppk => ppk is { AllowAsAutomaticFallback: true }
+                                                                     || (ppk is { AllowAsManualFallback: true, Id: not null }
+                                                                      && registration.PricePackageIds_ManualFallback?.Contains(ppk.Id.Value) == true));
+                var combinationOffWaitingList = fallbackPackages.Any(ppk => ppk.IsCorePackage
+                                                                         || ppk is { AllowAsManualFallback: true, Id: not null }
+                                                                         && registration.PricePackageIds_ManualFallback?.Contains(ppk.Id.Value) == true);
+                if (allPossibleAsFallback && combinationOffWaitingList)
                 {
                     // allow fallback
                     isOnWaitingList = !allCoveredAdmitted;
