@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { Api, CreateShiftCommand, UpdateShiftCommand, DeleteShiftCommand, AssignToShiftCommand, UnassignFromShiftCommand, AddHelperSlotCommand, RemoveHelperSlotCommand, AvailableParticipantsQuery, ShiftsOverviewQuery, ShiftGroup, ShiftDisplayItem, ParticipantDisplayItem, VolunteerAdminConfigurationQuery, VolunteerAdminConfigurationDto, UpdateVolunteerAdminConfigurationCommand, ConfirmShiftAssignmentCommand, UnconfirmShiftAssignmentCommand } from 'app/api/api';
 import { FetchService } from '../infrastructure/fetchService';
 import { NotificationService } from '../infrastructure/notification.service';
@@ -12,8 +12,8 @@ import { v4 as createUuid } from 'uuid';
 export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
 {
     constructor(
-        private _api: Api,
-        private _eventService: EventService,
+        private api: Api,
+        private eventService: EventService,
         notificationService: NotificationService)
     {
         super('ShiftsOverviewQuery', notificationService);
@@ -33,9 +33,9 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     fetchShifts(): Observable<ShiftGroup[]>
     {
         const query: ShiftsOverviewQuery = {
-            eventId: this._eventService.selectedId
+            eventId: this.eventService.selectedId
         };
-        return this.fetchItems(this._api.shiftsOverview_Query(query), null, this._eventService.selectedId);
+        return this.fetchItems(this.api.shiftsOverview_Query(query), null, this.eventService.selectedId);
     }
 
     /**
@@ -53,8 +53,8 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
      */
     createShift(location: string, startTime: Date, endTime: Date): void
     {
-        this._api.createShift_Command({
-            eventId: this._eventService.selectedId,
+        this.api.createShift_Command({
+            eventId: this.eventService.selectedId,
             shiftId: createUuid(),
             location,
             startTime,
@@ -68,7 +68,7 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     updateShift(shiftId: string, shiftData: ShiftDisplayItem): Observable<void>
     {
         const command: UpdateShiftCommand = {
-            eventId: this._eventService.selectedId,
+            eventId: this.eventService.selectedId,
             shiftId: shiftId,
             name: shiftData.name,
             registrableId_ShiftPreference: shiftData.shiftPreferenceRegistrableId,
@@ -77,7 +77,7 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
             startTime: shiftData.startTime,
             endTime: shiftData.endTime
         };
-        return this._api.updateShift_Command(command);
+        return this.api.updateShift_Command(command);
     }
 
     /**
@@ -86,10 +86,10 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     addHelperSlot(shiftId: string): Observable<void>
     {
         const command: AddHelperSlotCommand = {
-            eventId: this._eventService.selectedId,
+            eventId: this.eventService.selectedId,
             shiftId: shiftId
         };
-        return this._api.addHelperSlot_Command(command);
+        return this.api.addHelperSlot_Command(command);
     }
 
     /**
@@ -98,10 +98,10 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     removeHelperSlot(shiftId: string): Observable<void>
     {
         const command: RemoveHelperSlotCommand = {
-            eventId: this._eventService.selectedId,
+            eventId: this.eventService.selectedId,
             shiftId: shiftId
         };
-        return this._api.removeHelperSlot_Command(command);
+        return this.api.removeHelperSlot_Command(command);
     }
 
     /**
@@ -110,10 +110,10 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     deleteShift(shiftId: string): Observable<void>
     {
         const command: DeleteShiftCommand = {
-            eventId: this._eventService.selectedId,
+            eventId: this.eventService.selectedId,
             shiftId
         };
-        return this._api.deleteShift_Command(command);
+        return this.api.deleteShift_Command(command);
     }
 
     /**
@@ -122,10 +122,10 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     getAvailableParticipants(shiftId: string): Observable<ParticipantDisplayItem[]>
     {
         const query: AvailableParticipantsQuery = {
-            eventId: this._eventService.selectedId,
+            eventId: this.eventService.selectedId,
             shiftId: shiftId
         };
-        return this._api.availableParticipants_Query(query);
+        return this.api.availableParticipants_Query(query);
     }
 
     /**
@@ -134,12 +134,12 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     assignToShift(shiftId: string, participantId: string, asResponsible: boolean): Observable<void>
     {
         const command: AssignToShiftCommand = {
-            eventId: this._eventService.selectedId,
+            eventId: this.eventService.selectedId,
             shiftId: shiftId,
             registrationId: participantId,
             asResponsible
         };
-        return this._api.assignToShift_Command(command);
+        return this.api.assignToShift_Command(command);
     }
 
     /**
@@ -148,12 +148,12 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     unassignFromShift(shiftId: string, participantId: string, fromResponsible: boolean = false): Observable<void>
     {
         const command: UnassignFromShiftCommand = {
-            eventId: this._eventService.selectedId,
+            eventId: this.eventService.selectedId,
             shiftId: shiftId,
             registrationId: participantId,
             fromResponsible: fromResponsible
         };
-        return this._api.unassignFromShift_Command(command);
+        return this.api.unassignFromShift_Command(command);
     }
 
     /**
@@ -162,9 +162,9 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     getVolunteerAdminConfiguration(): Observable<VolunteerAdminConfigurationDto>
     {
         const query: VolunteerAdminConfigurationQuery = {
-            eventId: this._eventService.selectedId
+            eventId: this.eventService.selectedId
         };
-        return this._api.volunteerAdminConfiguration_Query(query);
+        return this.api.volunteerAdminConfiguration_Query(query);
     }
 
     /**
@@ -173,10 +173,10 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     updateVolunteerAdminConfiguration(registrableIds: string[]): Observable<void>
     {
         const command: UpdateVolunteerAdminConfigurationCommand = {
-            eventId: this._eventService.selectedId,
+            eventId: this.eventService.selectedId,
             registrableIds_Volunteer: registrableIds,
         };
-        return this._api.updateVolunteerAdminConfiguration_Command(command);
+        return this.api.updateVolunteerAdminConfiguration_Command(command);
     }
 
     /**
@@ -185,10 +185,10 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     confirmShiftAssignment(shiftAssignmentId: string): Observable<void>
     {
         const command: ConfirmShiftAssignmentCommand = {
-            eventId: this._eventService.selectedId,
+            eventId: this.eventService.selectedId,
             shiftAssignmentId: shiftAssignmentId
         };
-        return this._api.confirmShiftAssignment_Command(command);
+        return this.api.confirmShiftAssignment_Command(command);
     }
 
     /**
@@ -197,9 +197,15 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     unconfirmShiftAssignment(shiftAssignmentId: string): Observable<void>
     {
         const command: UnconfirmShiftAssignmentCommand = {
-            eventId: this._eventService.selectedId,
+            eventId: this.eventService.selectedId,
             shiftAssignmentId: shiftAssignmentId
         };
-        return this._api.unconfirmShiftAssignment_Command(command);
+        return this.api.unconfirmShiftAssignment_Command(command);
+    }
+
+    public recalculateReadModel(): Subscription
+    {
+        return this.api.updateReadModel_Command({ eventId: this.eventService.selectedId, queryName: 'ShiftsOverviewQuery' })
+            .subscribe();
     }
 }

@@ -505,6 +505,14 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     }
 
     /**
+     * Recalculate read model
+     */
+    recalculateReadModel(): void
+    {
+        this._volunteerPlanningService.recalculateReadModel();
+    }
+
+    /**
      * Show preference selector overlay
      */
     showPreferenceSelector(shift: ShiftDisplayItem): void

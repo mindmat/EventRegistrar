@@ -40,7 +40,7 @@ public class UnassignFromShiftCommandHandler(IRepository<Shift> shifts,
 
 
         // Trigger update for the registration that was unassigned
-        changeTrigger.TriggerUpdate<RegistrationCalculator>(command.EventId, command.RegistrationId);
-        changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(command.EventId);
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(eventId: command.EventId, rowId: command.RegistrationId);
+        changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
     }
 }

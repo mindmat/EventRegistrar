@@ -46,6 +46,14 @@
                                     class="w-full">
                                 </app-tags-picker>
                             </div>
+
+                            <!-- Update Read Model Button -->
+                            <div class="space-y-2">
+                                <button mat-raised-button color="primary" (click)="recalculateReadModel()" class="w-full sm:w-auto">
+                                    <mat-icon [svgIcon]="'heroicons_outline:arrow-path'" class="icon-size-4 mr-4"></mat-icon>
+                                    &nbsp;{{ 'Recalculate' | translate }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
