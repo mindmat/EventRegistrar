@@ -252,7 +252,18 @@
                                                             </div>
                                                         </ng-container>
                                                         <ng-template #noHelper>
-                                                            <span class="text-sm text-green-600">{{ 'Unassigned' | translate }}</span>
+                                                            <div class="flex items-center justify-between">
+                                                                <div class="flex-1">
+                                                                    <span class="text-sm text-green-600">{{ 'Unassigned' | translate }}</span>
+                                                                </div>
+                                                                <div class="flex items-center ml-2">
+                                                                    <!-- Assign helper button -->
+                                                                    <button mat-icon-button class="text-green-600 hover:text-green-700" (click)="showCandidatesForAssignment(shift, 'helper', i)"
+                                                                        [matTooltip]="('AssignHelper' | translate) + ' ' + (i + 1)">
+                                                                        <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </ng-template>
                                                     </div>
                                                 </div>
