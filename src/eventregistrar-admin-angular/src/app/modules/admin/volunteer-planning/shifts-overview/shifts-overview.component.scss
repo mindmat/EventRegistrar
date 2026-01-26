@@ -82,3 +82,33 @@ thead th {
     top: 0;
     z-index: 10;
 }
+
+/* Tailwind-based scrollbar utilities */
+@layer components {
+    .scrollbar-visible {
+        /* WebKit browsers (Chrome, Safari, Edge) */
+        @apply [&::-webkit-scrollbar]:w-[14px] [&::-webkit-scrollbar]:h-[14px];
+        @apply [&::-webkit-scrollbar-track]:bg-gray-100 [&::-webkit-scrollbar-track]:rounded-lg;
+        @apply [&::-webkit-scrollbar-thumb]:bg-gray-400 [&::-webkit-scrollbar-thumb]:rounded-lg [&::-webkit-scrollbar-thumb]:border-2 [&::-webkit-scrollbar-thumb]:border-gray-100;
+        @apply [&::-webkit-scrollbar-thumb:hover]:bg-gray-600;
+        @apply [&::-webkit-scrollbar-corner]:bg-gray-100;
+
+        /* Firefox */
+        scrollbar-width: auto;
+        scrollbar-color: theme("colors.gray.400") theme("colors.gray.100");
+
+        /* Ensure scrollbars are visible */
+        overflow: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Dark mode scrollbar */
+    .dark .scrollbar-visible {
+        @apply [&::-webkit-scrollbar-track]:bg-gray-700 dark:[&::-webkit-scrollbar-track]:bg-gray-700;
+        @apply [&::-webkit-scrollbar-thumb]:bg-gray-500 [&::-webkit-scrollbar-thumb]:border-gray-700;
+        @apply [&::-webkit-scrollbar-thumb:hover]:bg-gray-400;
+        @apply [&::-webkit-scrollbar-corner]:bg-gray-700;
+
+        scrollbar-color: theme("colors.gray.500") theme("colors.gray.700");
+    }
+}
