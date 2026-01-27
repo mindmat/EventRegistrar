@@ -3,7 +3,7 @@
     <div class="calendar-header">
         <h2 class="text-2xl font-bold text-gray-900">Volunteer Calendar</h2>
         <p class="text-sm text-gray-600 mt-1" *ngIf="calendarData.length > 0">
-            Showing {{ calendarData.length }} day(s) with {{ columns.length }} location(s)
+            Showing {{ calendarData.length }} day(s) with {{ rows.length }} location(s) across {{ columns.length }} hour(s)
         </p>
     </div>
 
@@ -21,31 +21,45 @@
     <!-- Calendar Grid -->
     <div *ngIf="calendarData.length > 0" class="calendar-grid-container">
         <div class="calendar-grid" [style.--columns-count]="columns.length">
-            <!-- Column Headers -->
+            <!-- Column Headers (Hours) -->
             <div class="calendar-header-row">
-                <!-- Empty cell for hour column -->
-                <div class="hour-header-cell">
-                    <span class="text-xs font-medium text-gray-500">Time</span>
+                <!-- Empty cell for date/location column -->
+                <div class="date-location-header-cell">
+                    <span class="text-xs font-medium text-gray-500">Date / Location</span>
                 </div>
-
-                <!-- Date/Location headers -->
-                <div *ngFor="let column of columns; trackBy: trackByColumn" class="column-header-cell">
-                    <div class="column-header-content">
-                        <div class="date-header">{{ column.displayDate }}</div>
-                        <div class="location-header">{{ column.displayLocation }}</div>
+                
+                <!-- Hour headers -->
+                <div 
+                    *ngFor="let column of columns; trackBy: trackByColumn" 
+                    class="hour-header-cell"
+                >
+                    <div class="hour-header-content">
+                        <div class="hour-header">{{ column.displayHour }}</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Time Rows -->
-            <div *ngFor="let row of rows; trackBy: trackByRow" class="calendar-row" [class.even-hour]="row.hour % 2 === 0">
-                <!-- Hour cell -->
-                <div class="hour-cell">
-                    <span class="hour-label">{{ row.displayHour }}</span>
+            <!-- Date/Location Rows -->
+            <div 
+                *ngFor="let row of rows; trackBy: trackByRow; let rowIndex = index" 
+                class="calendar-row"
+                [class.even-row]="rowIndex % 2 === 0"
+            >
+                <!-- Date/Location cell -->
+                <div class="date-location-cell">
+                    <div class="date-location-content">
+                        <div class="date-label">{{ row.displayDate }}</div>
+                        <div class="location-label">{{ row.displayLocation }}</div>
+                    </div>
                 </div>
 
-                <!-- Calendar cells -->
-                <div *ngFor="let cell of row.cells; let colIndex = index" class="calendar-cell" [class.empty-cell]="cell.isEmpty" [class.has-items]="!cell.isEmpty">
+                <!-- Hour cells -->
+                <div 
+                    *ngFor="let cell of row.cells; let colIndex = index" 
+                    class="calendar-cell"
+                    [class.empty-cell]="cell.isEmpty"
+                    [class.has-items]="!cell.isEmpty"
+                >
                     <!-- Calendar items -->
                     <div *ngFor="let item of cell.items; trackBy: trackByItem" class="calendar-item" [ngClass]="getItemClasses(item)" [title]="item.title || item.registrableName">
                         <div class="item-content">
@@ -66,8 +80,8 @@
                                 <span class="duration">({{ getItemDuration(item) }})</span>
                             </div>
 
-                            <!-- Location info (if different from column) -->
-                            <div *ngIf="item.location && item.location !== columns[colIndex]?.location" class="item-location">
+                            <!-- Location info (if different from row location) -->
+                            <div *ngIf="item.location && item.location !== row.location" class="item-location">
                                 <mat-icon class="location-icon">place</mat-icon>
                                 <span>{{ item.location }}</span>
                             </div>

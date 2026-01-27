@@ -6,23 +6,23 @@ import { DateGroup, LocationGroup, CalendarIcsItem } from 'app/api/api';
 
 interface CalendarColumn
 {
+    hour: number;
+    displayHour: string;
+}
+
+interface CalendarRow
+{
     date: Date;
     location: string;
     dateLocationKey: string;
     displayDate: string;
     displayLocation: string;
-}
-
-interface CalendarRow
-{
-    hour: number;
-    displayHour: string;
     cells: CalendarCell[];
 }
 
 interface CalendarCell
 {
-    dateLocationKey: string;
+    hour: number;
     items: CalendarIcsItem[];
     isEmpty: boolean;
 }
@@ -43,9 +43,10 @@ interface CalendarEventItem extends CalendarIcsItem
 export class CalendarViewComponent implements OnInit, OnDestroy
 {
     calendarData: DateGroup[] = [];
-    columns: CalendarColumn[] = [];
-    rows: CalendarRow[] = [];
+    columns: CalendarColumn[] = []; // Now represents hours
+    rows: CalendarRow[] = []; // Now represents date/location combinations
     hours: number[] = [];
+    dateLocations: CalendarRow[] = []; // Temporary for building
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -97,45 +98,11 @@ export class CalendarViewComponent implements OnInit, OnDestroy
     }
 
     /**
-     * Build columns (one per date/location combination)
+     * Build columns (one per hour) - only for hours with events
      */
     private buildColumns(): void
     {
-        this.columns = [];
-
-        this.calendarData.forEach(dateGroup =>
-        {
-            if (dateGroup.locationGroups)
-            {
-                dateGroup.locationGroups.forEach(locationGroup =>
-                {
-                    const column: CalendarColumn = {
-                        date: dateGroup.date!,
-                        location: locationGroup.location || 'No Location',
-                        dateLocationKey: this.getDateLocationKey(dateGroup.date!, locationGroup.location),
-                        displayDate: this.formatDate(dateGroup.date!),
-                        displayLocation: locationGroup.location || 'No Location'
-                    };
-                    this.columns.push(column);
-                });
-            }
-        });
-
-        // Sort columns by date first, then by location
-        this.columns.sort((a, b) =>
-        {
-            const dateCompare = new Date(a.date).getTime() - new Date(b.date).getTime();
-            if (dateCompare !== 0) return dateCompare;
-            return a.location.localeCompare(b.location);
-        });
-    }
-
-    /**
-     * Build rows (one per hour)
-     */
-    private buildRows(): void
-    {
-        // Find the range of hours we need to display
+        // Find only the hours that have actual events
         const hourSet = new Set<number>();
 
         this.calendarData.forEach(dateGroup =>
@@ -148,15 +115,24 @@ export class CalendarViewComponent implements OnInit, OnDestroy
                     {
                         locationGroup.items.forEach(item =>
                         {
-                            if (item.start)
+                            if (item.start && item.end)
                             {
-                                const startHour = new Date(item.start).getHours();
-                                hourSet.add(startHour);
-                            }
-                            if (item.end)
-                            {
-                                const endHour = new Date(item.end).getHours();
-                                hourSet.add(endHour);
+                                const startTime = new Date(item.start);
+                                const endTime = new Date(item.end);
+                                const startHour = startTime.getHours();
+                                const endHour = endTime.getHours();
+
+                                // Add all hours that this event spans
+                                for (let hour = startHour; hour <= endHour; hour++)
+                                {
+                                    // Only add the hour if the event actually occupies it
+                                    if (hour === startHour || 
+                                        hour < endHour || 
+                                        (hour === endHour && endTime.getMinutes() > 0))
+                                    {
+                                        hourSet.add(hour);
+                                    }
+                                }
                             }
                         });
                     }
@@ -171,35 +147,68 @@ export class CalendarViewComponent implements OnInit, OnDestroy
             {
                 hourSet.add(i);
             }
-        } else
-        {
-            // Add padding hours
-            const minHour = Math.min(...hourSet);
-            const maxHour = Math.max(...hourSet);
-            for (let i = Math.max(0, minHour - 1); i <= Math.min(23, maxHour + 1); i++)
-            {
-                hourSet.add(i);
-            }
         }
 
+        // Only use hours that have events (no padding)
         this.hours = Array.from(hourSet).sort((a, b) => a - b);
 
-        // Build rows
-        this.rows = this.hours.map(hour =>
+        // Build hour columns
+        this.columns = this.hours.map(hour => ({
+            hour,
+            displayHour: this.formatHour(hour)
+        }));
+    }
+
+    /**
+     * Build rows (one per date/location combination)
+     */
+    private buildRows(): void
+    {
+        // Build date/location combinations
+        const dateLocationCombinations: CalendarRow[] = [];
+
+        this.calendarData.forEach(dateGroup =>
         {
-            const cells: CalendarCell[] = this.columns.map(column =>
+            if (dateGroup.locationGroups)
             {
-                const items = this.getItemsForHourAndColumn(hour, column.dateLocationKey);
+                dateGroup.locationGroups.forEach(locationGroup =>
+                {
+                    const dateLocationRow: CalendarRow = {
+                        date: dateGroup.date!,
+                        location: locationGroup.location || 'No Location',
+                        dateLocationKey: this.getDateLocationKey(dateGroup.date!, locationGroup.location),
+                        displayDate: this.formatDate(dateGroup.date!),
+                        displayLocation: locationGroup.location || 'No Location',
+                        cells: []
+                    };
+                    dateLocationCombinations.push(dateLocationRow);
+                });
+            }
+        });
+
+        // Sort by date first, then by location
+        dateLocationCombinations.sort((a, b) =>
+        {
+            const dateCompare = new Date(a.date).getTime() - new Date(b.date).getTime();
+            if (dateCompare !== 0) return dateCompare;
+            return a.location.localeCompare(b.location);
+        });
+
+        // Build cells for each row (hour cells)
+        this.rows = dateLocationCombinations.map(row =>
+        {
+            const cells: CalendarCell[] = this.hours.map(hour =>
+            {
+                const items = this.getItemsForHourAndDateLocation(hour, row.dateLocationKey);
                 return {
-                    dateLocationKey: column.dateLocationKey,
+                    hour,
                     items,
                     isEmpty: items.length === 0
                 };
             });
 
             return {
-                hour,
-                displayHour: this.formatHour(hour),
+                ...row,
                 cells
             };
         });
@@ -208,7 +217,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy
     /**
      * Get items that occur during a specific hour for a specific date/location
      */
-    private getItemsForHourAndColumn(hour: number, dateLocationKey: string): CalendarIcsItem[]
+    private getItemsForHourAndDateLocation(hour: number, dateLocationKey: string): CalendarIcsItem[]
     {
         const items: CalendarIcsItem[] = [];
 
@@ -328,19 +337,19 @@ export class CalendarViewComponent implements OnInit, OnDestroy
     }
 
     /**
-     * Track by function for columns
+     * Track by function for columns (now hours)
      */
-    trackByColumn(index: number, column: CalendarColumn): string
+    trackByColumn(index: number, column: CalendarColumn): number
     {
-        return column.dateLocationKey;
+        return column.hour;
     }
 
     /**
-     * Track by function for rows
+     * Track by function for rows (now date/location combinations)
      */
-    trackByRow(index: number, row: CalendarRow): number
+    trackByRow(index: number, row: CalendarRow): string
     {
-        return row.hour;
+        return row.dateLocationKey;
     }
 
     /**

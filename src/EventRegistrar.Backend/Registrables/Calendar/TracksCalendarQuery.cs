@@ -16,15 +16,15 @@ public record LocationGroup(string? Location,
 public record DateGroup(DateTime Date,
                         IEnumerable<LocationGroup> LocationGroups);
 
-public class RegistrableIcsCalendarViewQuery : IEventBoundRequest, IRequest<IEnumerable<DateGroup>>
+public class TracksCalendarQuery : IEventBoundRequest, IRequest<IEnumerable<DateGroup>>
 {
     public Guid EventId { get; set; }
 }
 
-public class RegistrableIcsCalendarViewQueryHandler(IQueryable<RegistrableIcs> registrablesIcs)
-    : IRequestHandler<RegistrableIcsCalendarViewQuery, IEnumerable<DateGroup>>
+public class TracksCalendarQueryHandler(IQueryable<RegistrableIcs> registrablesIcs)
+    : IRequestHandler<TracksCalendarQuery, IEnumerable<DateGroup>>
 {
-    public async Task<IEnumerable<DateGroup>> Handle(RegistrableIcsCalendarViewQuery query,
+    public async Task<IEnumerable<DateGroup>> Handle(TracksCalendarQuery query,
                                                      CancellationToken cancellationToken)
     {
         var icsItems = await registrablesIcs.Where(ics => ics.Registrable!.EventId == query.EventId

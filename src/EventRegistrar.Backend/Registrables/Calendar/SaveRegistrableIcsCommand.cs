@@ -41,6 +41,6 @@ public class SaveRegistrableIcsCommandHandler(IRepository<RegistrableIcs> regist
         ics.ContentHtml = saveItem.ContentHtml;
 
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
-        changeTrigger.QueryChanged<RegistrableIcsCalendarViewQuery>(command.EventId);
+        changeTrigger.QueryChanged<TracksCalendarQuery>(command.EventId);
     }
 }

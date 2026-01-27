@@ -5694,57 +5694,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    registrableIcsCalendarView_Query(registrableIcsCalendarViewQuery: RegistrableIcsCalendarViewQuery | undefined): Observable<DateGroup[]> {
-        let url_ = this.baseUrl + "/api/RegistrableIcsCalendarViewQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(registrableIcsCalendarViewQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRegistrableIcsCalendarView_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRegistrableIcsCalendarView_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<DateGroup[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<DateGroup[]>;
-        }));
-    }
-
-    protected processRegistrableIcsCalendarView_Query(response: HttpResponseBase): Observable<DateGroup[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as DateGroup[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     registrableIcs_Query(registrableIcsQuery: RegistrableIcsQuery | undefined): Observable<RegistrableIcsItem> {
         let url_ = this.baseUrl + "/api/RegistrableIcsQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -8244,6 +8193,57 @@ export class Api {
         if (status === 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    tracksCalendar_Query(tracksCalendarQuery: TracksCalendarQuery | undefined): Observable<DateGroup[]> {
+        let url_ = this.baseUrl + "/api/TracksCalendarQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(tracksCalendarQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTracksCalendar_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTracksCalendar_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<DateGroup[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<DateGroup[]>;
+        }));
+    }
+
+    protected processTracksCalendar_Query(response: HttpResponseBase): Observable<DateGroup[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as DateGroup[];
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -11226,32 +11226,6 @@ export interface RefundDifferenceCommand {
     reason?: string | null;
 }
 
-export interface DateGroup {
-    date?: Date;
-    locationGroups?: LocationGroup[];
-}
-
-export interface LocationGroup {
-    location?: string | null;
-    items?: CalendarIcsItem[];
-}
-
-export interface CalendarIcsItem {
-    id?: string;
-    registrableId?: string;
-    registrableName?: string | null;
-    registrableNameSecondary?: string | null;
-    title?: string | null;
-    location?: string | null;
-    start?: Date;
-    end?: Date;
-    contentHtml?: string | null;
-}
-
-export interface RegistrableIcsCalendarViewQuery {
-    eventId?: string;
-}
-
 export interface RegistrableIcsItem {
     id?: string;
     registrableId?: string;
@@ -11905,6 +11879,32 @@ export interface SwitchRoleOfParticipantCommand {
     registrableId?: string;
     registrationId?: string;
     toRole?: Role;
+}
+
+export interface DateGroup {
+    date?: Date;
+    locationGroups?: LocationGroup[];
+}
+
+export interface LocationGroup {
+    location?: string | null;
+    items?: CalendarIcsItem[];
+}
+
+export interface CalendarIcsItem {
+    id?: string;
+    registrableId?: string;
+    registrableName?: string | null;
+    registrableNameSecondary?: string | null;
+    title?: string | null;
+    location?: string | null;
+    start?: Date;
+    end?: Date;
+    contentHtml?: string | null;
+}
+
+export interface TracksCalendarQuery {
+    eventId?: string;
 }
 
 export interface TranslationQuery {

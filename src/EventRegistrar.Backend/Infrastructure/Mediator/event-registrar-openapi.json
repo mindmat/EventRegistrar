@@ -3384,41 +3384,6 @@
                 }
             }
         },
-        "/api/RegistrableIcsCalendarViewQuery": {
-            "post": {
-                "tags": [
-                    "RegistrableIcsCalendarView"
-                ],
-                "operationId": "RegistrableIcsCalendarView_Query",
-                "requestBody": {
-                    "x-name": "RegistrableIcsCalendarViewQuery",
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RegistrableIcsCalendarViewQuery"
-                            }
-                        }
-                    },
-                    "x-position": 1
-                },
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "array",
-                                    "items": {
-                                        "$ref": "#/components/schemas/DateGroup"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/RegistrableIcsQuery": {
             "post": {
                 "tags": [
@@ -4876,6 +4841,41 @@
                 "responses": {
                     "204": {
                         "description": ""
+                    }
+                }
+            }
+        },
+        "/api/TracksCalendarQuery": {
+            "post": {
+                "tags": [
+                    "TracksCalendar"
+                ],
+                "operationId": "TracksCalendar_Query",
+                "requestBody": {
+                    "x-name": "TracksCalendarQuery",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TracksCalendarQuery"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/DateGroup"
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -10704,90 +10704,6 @@
                     }
                 }
             },
-            "DateGroup": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                    "date": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "locationGroups": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/LocationGroup"
-                        }
-                    }
-                }
-            },
-            "LocationGroup": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                    "location": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "items": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/CalendarIcsItem"
-                        }
-                    }
-                }
-            },
-            "CalendarIcsItem": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                    "id": {
-                        "type": "string",
-                        "format": "guid"
-                    },
-                    "registrableId": {
-                        "type": "string",
-                        "format": "guid"
-                    },
-                    "registrableName": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "registrableNameSecondary": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "title": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "location": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "start": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "end": {
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    "contentHtml": {
-                        "type": "string",
-                        "nullable": true
-                    }
-                }
-            },
-            "RegistrableIcsCalendarViewQuery": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                    "eventId": {
-                        "type": "string",
-                        "format": "guid"
-                    }
-                }
-            },
             "RegistrableIcsItem": {
                 "type": "object",
                 "additionalProperties": false,
@@ -12903,6 +12819,90 @@
                     },
                     "toRole": {
                         "$ref": "#/components/schemas/Role"
+                    }
+                }
+            },
+            "DateGroup": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "date": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "locationGroups": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/LocationGroup"
+                        }
+                    }
+                }
+            },
+            "LocationGroup": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "location": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CalendarIcsItem"
+                        }
+                    }
+                }
+            },
+            "CalendarIcsItem": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "registrableId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "registrableName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "registrableNameSecondary": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "title": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "location": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "start": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "end": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "contentHtml": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "TracksCalendarQuery": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
                     }
                 }
             },

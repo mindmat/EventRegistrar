@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Api, DateGroup, RegistrableIcsCalendarViewQuery } from 'app/api/api';
+import { Api, DateGroup, TracksCalendarQuery } from 'app/api/api';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';
 import { NotificationService } from '../../infrastructure/notification.service';
@@ -19,7 +19,7 @@ export class CalendarViewService extends FetchService<DateGroup[]>
         notificationService: NotificationService
     )
     {
-        super('RegistrableIcsCalendarViewQuery', notificationService);
+        super('TracksCalendarQuery', notificationService);
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -54,13 +54,13 @@ export class CalendarViewService extends FetchService<DateGroup[]>
         console.log('CalendarViewService: fetchCalendarData called');
         console.log('CalendarViewService: selectedId:', this._eventService.selectedId);
 
-        const query: RegistrableIcsCalendarViewQuery = {
+        const query: TracksCalendarQuery = {
             eventId: this._eventService.selectedId
         };
 
         console.log('CalendarViewService: Query object:', query);
 
-        const request = this._api.registrableIcsCalendarView_Query(query);
+        const request = this._api.tracksCalendar_Query(query);
 
         return this.fetchItems(request, null, this._eventService.selectedId);
     }

@@ -62,15 +62,12 @@
                 0 1px 3px 0 rgba(0, 0, 0, 0.1),
                 0 1px 2px 0 rgba(0, 0, 0, 0.06);
             display: grid;
-            grid-template-columns: 80px repeat(
-                    var(--columns-count, 1),
-                    minmax(200px, 1fr)
-                );
+            grid-template-columns: 200px repeat(var(--columns-count, 1), minmax(120px, 1fr));
 
             .calendar-header-row {
                 display: contents;
 
-                .hour-header-cell {
+                .date-location-header-cell {
                     position: sticky;
                     top: 0;
                     z-index: 20;
@@ -81,7 +78,7 @@
                     font-weight: 500;
                     color: #374151;
                     border-bottom: 2px solid #d1d5db;
-
+                    
                     span {
                         font-size: 12px;
                         font-weight: 500;
@@ -90,8 +87,8 @@
                         letter-spacing: 0.05em;
                     }
                 }
-
-                .column-header-cell {
+                
+                .hour-header-cell {
                     position: sticky;
                     top: 0;
                     z-index: 10;
@@ -100,22 +97,12 @@
                     padding: 12px;
                     text-align: center;
                     border-bottom: 2px solid #d1d5db;
-
-                    .column-header-content {
-                        display: flex;
-                        flex-direction: column;
-                        gap: 4px;
-
-                        .date-header {
+                    
+                    .hour-header-content {
+                        .hour-header {
                             font-weight: 600;
                             color: #111827;
                             font-size: 14px;
-                        }
-
-                        .location-header {
-                            font-size: 12px;
-                            color: #6b7280;
-                            font-weight: 500;
                         }
                     }
                 }
@@ -124,31 +111,41 @@
             .calendar-row {
                 display: contents;
 
-                &.even-hour {
-                    .hour-cell,
+                &.even-row {
+                    .date-location-cell,
                     .calendar-cell {
                         background-color: #fafafa;
                     }
                 }
-
-                .hour-cell {
+                
+                .date-location-cell {
                     position: sticky;
                     left: 0;
                     z-index: 10;
                     background-color: white;
                     border-right: 1px solid #d1d5db;
                     padding: 12px;
-                    text-align: center;
-                    font-weight: 500;
-                    color: #6b7280;
                     border-bottom: 1px solid #e5e7eb;
-
-                    .hour-label {
-                        font-size: 14px;
-                        font-weight: 500;
+                    
+                    .date-location-content {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 2px;
+                        
+                        .date-label {
+                            font-weight: 600;
+                            color: #111827;
+                            font-size: 14px;
+                        }
+                        
+                        .location-label {
+                            font-size: 12px;
+                            color: #6b7280;
+                            font-weight: 500;
+                        }
                     }
                 }
-
+                
                 .calendar-cell {
                     border-right: 1px solid #e5e7eb;
                     border-bottom: 1px solid #e5e7eb;
@@ -294,28 +291,37 @@
     }
 }
 
-// Dynamic grid columns based on data
+// Dynamic grid columns based on data (first column is now date/location)
 .calendar-grid {
-    &[style*="--columns-count: 1"] {
-        grid-template-columns: 80px repeat(1, minmax(200px, 1fr));
+    &[style*="--columns-count: 1"] { 
+        grid-template-columns: 200px repeat(1, minmax(120px, 1fr)); 
     }
-    &[style*="--columns-count: 2"] {
-        grid-template-columns: 80px repeat(2, minmax(200px, 1fr));
+    &[style*="--columns-count: 2"] { 
+        grid-template-columns: 200px repeat(2, minmax(120px, 1fr)); 
     }
-    &[style*="--columns-count: 3"] {
-        grid-template-columns: 80px repeat(3, minmax(200px, 1fr));
+    &[style*="--columns-count: 3"] { 
+        grid-template-columns: 200px repeat(3, minmax(120px, 1fr)); 
     }
-    &[style*="--columns-count: 4"] {
-        grid-template-columns: 80px repeat(4, minmax(200px, 1fr));
+    &[style*="--columns-count: 4"] { 
+        grid-template-columns: 200px repeat(4, minmax(120px, 1fr)); 
     }
-    &[style*="--columns-count: 5"] {
-        grid-template-columns: 80px repeat(5, minmax(200px, 1fr));
+    &[style*="--columns-count: 5"] { 
+        grid-template-columns: 200px repeat(5, minmax(120px, 1fr)); 
     }
-    &[style*="--columns-count: 6"] {
-        grid-template-columns: 80px repeat(6, minmax(200px, 1fr));
+    &[style*="--columns-count: 6"] { 
+        grid-template-columns: 200px repeat(6, minmax(120px, 1fr)); 
     }
-    &[style*="--columns-count: 7"] {
-        grid-template-columns: 80px repeat(7, minmax(200px, 1fr));
+    &[style*="--columns-count: 7"] { 
+        grid-template-columns: 200px repeat(7, minmax(120px, 1fr)); 
+    }
+    &[style*="--columns-count: 8"] { 
+        grid-template-columns: 200px repeat(8, minmax(120px, 1fr)); 
+    }
+    &[style*="--columns-count: 12"] { 
+        grid-template-columns: 200px repeat(12, minmax(100px, 1fr)); 
+    }
+    &[style*="--columns-count: 24"] { 
+        grid-template-columns: 200px repeat(24, minmax(80px, 1fr)); 
     }
 }
 
@@ -323,10 +329,7 @@
 @media (min-width: 1024px) {
     .calendar-grid-container {
         .calendar-grid {
-            grid-template-columns: 100px repeat(
-                    var(--columns-count, 1),
-                    minmax(250px, 1fr)
-                );
+            grid-template-columns: 220px repeat(var(--columns-count, 1), minmax(140px, 1fr));
         }
     }
 }
@@ -334,10 +337,7 @@
 @media (min-width: 1280px) {
     .calendar-grid-container {
         .calendar-grid {
-            grid-template-columns: 120px repeat(
-                    var(--columns-count, 1),
-                    minmax(300px, 1fr)
-                );
+            grid-template-columns: 250px repeat(var(--columns-count, 1), minmax(150px, 1fr));
         }
     }
 }
@@ -346,41 +346,40 @@
 @media (max-width: 640px) {
     .calendar-grid-container {
         .calendar-grid {
-            grid-template-columns: 60px repeat(
-                    var(--columns-count, 1),
-                    minmax(150px, 1fr)
-                );
-
-            .column-header-cell {
-                padding: 8px;
-
-                .column-header-content {
-                    .date-header {
-                        font-size: 12px;
-                    }
-
-                    .location-header {
+            grid-template-columns: 150px repeat(var(--columns-count, 1), minmax(80px, 1fr));
+            
+            .hour-header-cell {
+                padding: 8px 4px;
+                
+                .hour-header-content {
+                    .hour-header {
                         font-size: 12px;
                     }
                 }
             }
-
-            .hour-cell {
+            
+            .date-location-cell {
                 padding: 8px;
-
-                .hour-label {
-                    font-size: 12px;
+                
+                .date-location-content {
+                    .date-label {
+                        font-size: 12px;
+                    }
+                    
+                    .location-label {
+                        font-size: 11px;
+                    }
                 }
             }
-
+            
             .calendar-cell {
                 padding: 4px;
                 min-height: 48px;
-
+                
                 .calendar-item {
                     padding: 4px;
                     margin-bottom: 4px;
-
+                    
                     .item-content {
                         .item-title {
                             font-size: 12px;
@@ -401,8 +400,8 @@
             border-color: black;
 
             .calendar-cell,
-            .hour-cell,
-            .column-header-cell {
+            .date-location-cell,
+            .hour-header-cell {
                 border-color: black;
             }
 
