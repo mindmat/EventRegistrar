@@ -1,23 +1,25 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Api, DateGroup, RegistrableIcsCalendarViewQuery } from 'app/api/api';
 import { EventService } from '../../events/event.service';
+import { FetchService } from '../../infrastructure/fetchService';
+import { NotificationService } from '../../infrastructure/notification.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class CalendarViewService
+export class CalendarViewService extends FetchService<DateGroup[]>
 {
-    private _calendarData: BehaviorSubject<DateGroup[]> = new BehaviorSubject<DateGroup[]>([]);
-
     /**
      * Constructor
      */
     constructor(
         private _api: Api,
-        private _eventService: EventService
+        private _eventService: EventService,
+        notificationService: NotificationService
     )
     {
+        super('RegistrableIcsCalendarViewQuery', notificationService);
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -29,7 +31,7 @@ export class CalendarViewService
      */
     get calendarData$(): Observable<DateGroup[]>
     {
-        return this._calendarData.asObservable();
+        return this.result$;
     }
 
     /**
@@ -37,7 +39,7 @@ export class CalendarViewService
      */
     get calendarData(): DateGroup[]
     {
-        return this._calendarData.value;
+        return this.current || [];
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -60,21 +62,7 @@ export class CalendarViewService
 
         const request = this._api.registrableIcsCalendarView_Query(query);
 
-        // Update the subject with the new data
-        request.subscribe({
-            next: (data: DateGroup[]) =>
-            {
-                console.log('CalendarViewService: Received API data:', data);
-                this._calendarData.next(data || []);
-            },
-            error: (error) =>
-            {
-                console.error('CalendarViewService: API error:', error);
-                this._calendarData.next([]);
-            }
-        });
-
-        return request;
+        return this.fetchItems(request, null, this._eventService.selectedId);
     }
 
     /**
@@ -82,6 +70,8 @@ export class CalendarViewService
      */
     resetCalendarData(): void
     {
-        this._calendarData.next([]);
+        // The FetchService base class handles the internal state
+        // We can trigger a refresh if needed, or the NotificationService will handle updates
+        this.refresh();
     }
 }

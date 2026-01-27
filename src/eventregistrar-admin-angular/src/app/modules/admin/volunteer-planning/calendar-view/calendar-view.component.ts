@@ -64,10 +64,13 @@ export class CalendarViewComponent implements OnInit, OnDestroy
             {
                 this.calendarData = data;
                 this.processCalendarData();
+                console.log('CalendarViewComponent: calendarData updated', data);
             });
 
         // Fetch initial data
-        this._calendarViewService.fetchCalendarData();
+        this._calendarViewService.fetchCalendarData()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe();
     }
 
     ngOnDestroy(): void
