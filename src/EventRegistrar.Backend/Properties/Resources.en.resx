@@ -252,6 +252,9 @@
   <data name="BulkMailTemplates" xml:space="preserve">
     <value>Bulk mails</value>
   </data>
+  <data name="CalendarView" xml:space="preserve">
+    <value>Calendar</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>

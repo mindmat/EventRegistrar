@@ -24,5 +24,8 @@
   },
   "[xml]": {
     "editor.defaultFormatter": "redhat.vscode-xml"
+  },
+  "chat.tools.terminal.autoApprove": {
+    "ng": true
   }
 }

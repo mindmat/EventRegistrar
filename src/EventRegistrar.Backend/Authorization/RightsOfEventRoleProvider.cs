@@ -133,6 +133,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SpotMatchCandidatesQuery);
             yield return nameof(RegistrationsPerDayQuery);
             yield return nameof(RegistrableIcsQuery);
+            yield return nameof(RegistrableIcsCalendarViewQuery);
             yield return nameof(DownloadMailAttachmentQuery);
             yield return nameof(DownloadIcsPreviewQuery);
             yield return nameof(ValidateAutoMailTemplatesCommand);

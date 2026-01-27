@@ -484,6 +484,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kalender.
+        /// </summary>
+        internal static string CalendarView {
+            get {
+                return ResourceManager.GetString("CalendarView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Abbrechen.
         /// </summary>
         internal static string Cancel {

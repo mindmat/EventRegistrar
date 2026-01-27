@@ -145,6 +145,13 @@ export class NavigationService
                                     link: `/${e.acronym}/volunteer-planning`,
                                     badge: this.getBadge(nodes, MenuNodeKey.ShiftsOverview)
                                 },
+                                {
+                                    id: 'calendar-view',
+                                    title: translateService.instant('CalendarView'),
+                                    type: 'basic',
+                                    icon: 'heroicons_outline:calendar-days',
+                                    link: `/${e.acronym}/volunteer-planning/calendar`,
+                                },
                             ]
                         },
                         {

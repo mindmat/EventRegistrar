@@ -72,6 +72,8 @@ import { FixRawProcessingComponent } from './modules/admin/registration/fix-raw-
 import { FixRawProcessingResolver } from './modules/admin/registration/fix-raw-processing/fix-raw-processing.resolver';
 import { ShiftsOverviewComponent } from './modules/admin/volunteer-planning/shifts-overview/shifts-overview.component';
 import { ShiftsOverviewResolver } from './modules/admin/volunteer-planning/shifts-overview/shifts-overview.resolver';
+import { CalendarViewComponent } from './modules/admin/volunteer-planning/calendar-view/calendar-view.component';
+import { CalendarViewResolver } from './modules/admin/volunteer-planning/calendar-view/calendar-view.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -383,6 +385,12 @@ export const appRoutes: Route[] =
                             canActivate: [AuthGuard],
                             component: ShiftsOverviewComponent,
                             resolve: { initialData: ShiftsOverviewResolver }
+                        },
+                        {
+                            path: 'calendar',
+                            canActivate: [AuthGuard],
+                            component: CalendarViewComponent,
+                            resolve: { initialData: CalendarViewResolver }
                         }
                     ]
                 },

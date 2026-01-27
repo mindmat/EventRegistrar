@@ -23,6 +23,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { ShiftsOverviewComponent } from './shifts-overview/shifts-overview.component';
 import { ShiftEditComponent } from './shift-edit/shift-edit.component';
+import { CalendarViewComponent } from './calendar-view/calendar-view.component';
 
 export const DE_FORMATS = {
     parse: {
@@ -38,7 +39,8 @@ export const DE_FORMATS = {
 @NgModule({
     declarations: [
         ShiftsOverviewComponent,
-        ShiftEditComponent
+        ShiftEditComponent,
+        CalendarViewComponent
     ],
     imports: [
         CommonModule,
