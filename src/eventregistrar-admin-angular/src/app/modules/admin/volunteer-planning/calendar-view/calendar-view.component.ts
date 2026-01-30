@@ -252,7 +252,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy
     }
 
     /**
-     * Get the width percentage of an event based on its duration in hour slots
+     * Get the width percentage of an event based on its actual duration
      */
     getEventWidth(item: CalendarIcsItem): number
     {
@@ -270,67 +270,18 @@ export class CalendarViewComponent implements OnInit, OnDestroy
             return 8;
         }
 
-        const startHour = this.getEventDisplayHour(item);
+        // Calculate duration in hours (including fractional hours)
+        const durationMs = endDate.getTime() - startDate.getTime();
+        const durationHours = durationMs / (1000 * 60 * 60);
 
-        // Calculate end hour (handle events that cross midnight)
-        let endHour = endDate.getHours();
-        const startDayStr = startDate.toISOString().split('T')[0];
-        const endDayStr = endDate.toISOString().split('T')[0];
+        // Total hours displayed on the axis
+        const totalHoursDisplayed = hours.length;
 
-        // If event crosses to next day, add 24 hours for each day difference
-        if (startDayStr !== endDayStr)
-        {
-            const startDay = new Date(startDayStr);
-            const endDay = new Date(endDayStr);
-            const daysDiff = Math.round((endDay.getTime() - startDay.getTime()) / (1000 * 60 * 60 * 24));
-            endHour = endDate.getHours() + (daysDiff * 24);
-        }
-        // Handle edge case: event starts late and ends at hour 0 on "same day" (midnight stored as 00:00)
-        else if (startHour > endHour)
-        {
-            endHour += 24;
-        }
+        // Calculate width as percentage of total displayed hours
+        const widthPercentage = (durationHours / totalHoursDisplayed) * 100;
 
-        const endMinutes = endDate.getMinutes();
-
-        // Count how many hour slots this event spans
-        let hourSlotCount = 0;
-        let foundStart = false;
-
-        for (const hour of hours)
-        {
-            if (hour === startHour)
-            {
-                foundStart = true;
-            }
-
-            if (foundStart)
-            {
-                hourSlotCount++;
-
-                // Stop counting if we've reached the end hour
-                if (hour === endHour)
-                {
-                    // If event ends at minute 0 of an hour, don't count that full hour
-                    if (endMinutes === 0)
-                    {
-                        hourSlotCount--;
-                    }
-                    break;
-                }
-            }
-        }
-
-        if (hourSlotCount === 0)
-        {
-            hourSlotCount = 1; // Minimum one slot
-        }
-
-        // Calculate width as percentage of total hour slots
-        const widthPercentage = (hourSlotCount / hours.length) * 100;
-
-        // Minimum width of 8% for very short events, maximum of 95% to prevent overflow
-        return Math.max(8, Math.min(widthPercentage, 95));
+        // Minimum width of 5% for very short events, maximum of 95% to prevent overflow
+        return Math.max(5, Math.min(widthPercentage, 95));
     }
 
     /**
