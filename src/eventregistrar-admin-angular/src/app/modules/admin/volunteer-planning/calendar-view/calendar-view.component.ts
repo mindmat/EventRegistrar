@@ -48,6 +48,11 @@ export class CalendarViewComponent implements OnInit, OnDestroy
     hours: number[] = [];
     dateLocations: CalendarRow[] = []; // Temporary for building
 
+    // New properties for time-based calendar
+    selectedDateIndex: number = 0;
+    dayStartHour: number = 6; // Calendar starts at 6 AM
+    dayEndHour: number = 23; // Calendar ends at 11 PM
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -81,193 +86,288 @@ export class CalendarViewComponent implements OnInit, OnDestroy
         this._unsubscribeAll.complete();
     }
 
-    /**
-     * Process calendar data and build grid structure
-     */
-    private processCalendarData(): void
-    {
-        if (!this.calendarData || this.calendarData.length === 0)
-        {
-            this.columns = [];
-            this.rows = [];
-            return;
-        }
+    // New methods for time-based calendar
 
-        this.buildColumns();
-        this.buildRows();
+    /**
+     * Get the currently selected date group
+     */
+    getSelectedDateGroup(): DateGroup | null
+    {
+        return this.calendarData && this.calendarData.length > this.selectedDateIndex
+            ? this.calendarData[this.selectedDateIndex]
+            : null;
     }
 
     /**
-     * Build columns (one per hour) - only for hours with events
+     * Get the selected date group (no longer moves events between days)
      */
-    private buildColumns(): void
+    getSelectedDateGroupWithExtendedHours(): DateGroup | null
     {
-        // Find only the hours that have actual events
-        const hourSet = new Set<number>();
-
-        this.calendarData.forEach(dateGroup =>
-        {
-            if (dateGroup.locationGroups)
-            {
-                dateGroup.locationGroups.forEach(locationGroup =>
-                {
-                    if (locationGroup.items)
-                    {
-                        locationGroup.items.forEach(item =>
-                        {
-                            if (item.start && item.end)
-                            {
-                                const startTime = new Date(item.start);
-                                const endTime = new Date(item.end);
-                                const startHour = startTime.getHours();
-                                const endHour = endTime.getHours();
-
-                                // Add all hours that this event spans
-                                for (let hour = startHour; hour <= endHour; hour++)
-                                {
-                                    // Only add the hour if the event actually occupies it
-                                    if (hour === startHour || 
-                                        hour < endHour || 
-                                        (hour === endHour && endTime.getMinutes() > 0))
-                                    {
-                                        hourSet.add(hour);
-                                    }
-                                }
-                            }
-                        });
-                    }
-                });
-            }
-        });
-
-        // If no hours found, default to common work hours
-        if (hourSet.size === 0)
-        {
-            for (let i = 8; i <= 18; i++)
-            {
-                hourSet.add(i);
-            }
-        }
-
-        // Only use hours that have events (no padding)
-        this.hours = Array.from(hourSet).sort((a, b) => a - b);
-
-        // Build hour columns
-        this.columns = this.hours.map(hour => ({
-            hour,
-            displayHour: this.formatHour(hour)
-        }));
+        return this.getSelectedDateGroup();
     }
 
     /**
-     * Build rows (one per date/location combination)
+     * Get total number of events across all dates
      */
-    private buildRows(): void
+    getTotalEvents(): number
     {
-        // Build date/location combinations
-        const dateLocationCombinations: CalendarRow[] = [];
+        return this.calendarData.reduce((total, dateGroup) =>
+            total + (dateGroup.locationGroups?.reduce((locationTotal, locationGroup) =>
+                locationTotal + (locationGroup.items?.length || 0)
+                , 0) || 0)
+            , 0);
+    }
 
-        this.calendarData.forEach(dateGroup =>
+    /**
+     * Get total number of unique locations across all dates
+     */
+    getLocationCount(): number
+    {
+        const uniqueLocations = new Set<string>();
+        this.calendarData.forEach((dateGroup) =>
         {
-            if (dateGroup.locationGroups)
+            dateGroup.locationGroups?.forEach((locationGroup) =>
             {
-                dateGroup.locationGroups.forEach(locationGroup =>
+                if (locationGroup.location)
                 {
-                    const dateLocationRow: CalendarRow = {
-                        date: dateGroup.date!,
-                        location: locationGroup.location || 'No Location',
-                        dateLocationKey: this.getDateLocationKey(dateGroup.date!, locationGroup.location),
-                        displayDate: this.formatDate(dateGroup.date!),
-                        displayLocation: locationGroup.location || 'No Location',
-                        cells: []
-                    };
-                    dateLocationCombinations.push(dateLocationRow);
-                });
-            }
-        });
-
-        // Sort by date first, then by location
-        dateLocationCombinations.sort((a, b) =>
-        {
-            const dateCompare = new Date(a.date).getTime() - new Date(b.date).getTime();
-            if (dateCompare !== 0) return dateCompare;
-            return a.location.localeCompare(b.location);
-        });
-
-        // Build cells for each row (hour cells)
-        this.rows = dateLocationCombinations.map(row =>
-        {
-            const cells: CalendarCell[] = this.hours.map(hour =>
-            {
-                const items = this.getItemsForHourAndDateLocation(hour, row.dateLocationKey);
-                return {
-                    hour,
-                    items,
-                    isEmpty: items.length === 0
-                };
+                    uniqueLocations.add(locationGroup.location);
+                }
             });
-
-            return {
-                ...row,
-                cells
-            };
         });
+        return uniqueLocations.size;
     }
-
     /**
-     * Get items that occur during a specific hour for a specific date/location
+     * Get hours to display for the current day (only hours covered by events)
+     * Events that start on this day but end past midnight will extend the hours accordingly
      */
-    private getItemsForHourAndDateLocation(hour: number, dateLocationKey: string): CalendarIcsItem[]
+    getHoursForDay(): number[]
     {
-        const items: CalendarIcsItem[] = [];
-
-        this.calendarData.forEach(dateGroup =>
+        const selectedDate = this.getSelectedDateGroup();
+        if (!selectedDate || !selectedDate.locationGroups)
         {
-            if (dateGroup.locationGroups)
+            return [];
+        }
+
+        let earliestHour = 24; // Start with impossible high value
+        let latestHour = -1; // Start with impossible low value (can go up to 27+ for next day)
+
+        // Collect all hours that have events for the current day
+        selectedDate.locationGroups.forEach((locationGroup) =>
+        {
+            locationGroup.items?.forEach((item) =>
             {
-                dateGroup.locationGroups.forEach(locationGroup =>
+                if (item.start && item.end)
                 {
-                    const currentKey = this.getDateLocationKey(dateGroup.date!, locationGroup.location);
+                    const startDate = new Date(item.start);
+                    const endDate = new Date(item.end);
+                    const startHour = startDate.getHours();
 
-                    if (currentKey === dateLocationKey && locationGroup.items)
+                    // Track earliest hour (only from events starting on this day)
+                    earliestHour = Math.min(earliestHour, startHour);
+
+                    // Calculate end hour - handle events crossing midnight
+                    let effectiveEndHour = endDate.getHours();
+                    const startDayStr = startDate.toISOString().split('T')[0];
+                    const endDayStr = endDate.toISOString().split('T')[0];
+
+                    // If event ends on a different day, add 24 hours for each day difference
+                    if (endDayStr !== startDayStr)
                     {
-                        locationGroup.items.forEach(item =>
-                        {
-                            if (item.start && item.end)
-                            {
-                                const startHour = new Date(item.start).getHours();
-                                const endHour = new Date(item.end).getHours();
-
-                                // Item occurs during this hour if it starts before or at this hour
-                                // and ends after this hour (or at the next hour)
-                                if (startHour <= hour && endHour > hour)
-                                {
-                                    items.push(item);
-                                }
-                            }
-                        });
+                        const startDay = new Date(startDayStr);
+                        const endDay = new Date(endDayStr);
+                        const daysDiff = Math.round((endDay.getTime() - startDay.getTime()) / (1000 * 60 * 60 * 24));
+                        effectiveEndHour = endDate.getHours() + (daysDiff * 24);
                     }
-                });
-            }
+                    // Handle edge case: event starts late and ends at hour 0 on "same day" (midnight stored as 00:00)
+                    else if (startHour > effectiveEndHour)
+                    {
+                        // Event clearly crosses midnight (e.g., 20:00 to 00:00)
+                        effectiveEndHour += 24;
+                    }
+
+                    // If event ends exactly at the hour (0 minutes), don't include that hour
+                    if (endDate.getMinutes() === 0 && endDate.getSeconds() === 0)
+                    {
+                        effectiveEndHour--;
+                    }
+
+                    // Track latest hour
+                    latestHour = Math.max(latestHour, effectiveEndHour);
+                }
+            });
         });
 
-        return items;
+        // If no valid hours found, return empty array
+        if (earliestHour > latestHour || earliestHour === 24 || latestHour === -1)
+        {
+            return [];
+        }
+
+        // Build continuous range from earliest to latest hour, with extra hours at start and end for visual breathing room
+        const hours: number[] = [];
+        const startHour = Math.max(0, earliestHour - 1); // Add one hour before, but not below 0
+        for (let hour = startHour; hour <= latestHour + 1; hour++)
+        {
+            hours.push(hour);
+        }
+
+        return hours;
     }
 
     /**
-     * Generate a unique key for date/location combination
+     * Get the left position percentage of an event based on its start time
      */
-    private getDateLocationKey(date: Date, location: string | null): string
+    getEventLeftPosition(item: CalendarIcsItem): number
     {
-        const dateStr = new Date(date).toISOString().split('T')[0];
-        const locationStr = location || 'no-location';
-        return `${dateStr}_${locationStr}`;
+        if (!item.start)
+        {
+            return 0;
+        }
+
+        const startDate = new Date(item.start);
+        const startHour = this.getEventDisplayHour(item);
+        const startMinutes = startDate.getMinutes();
+        const hours = this.getHoursForDay();
+
+        if (hours.length === 0)
+        {
+            return 0;
+        }
+
+        const startHourIndex = hours.indexOf(startHour);
+        if (startHourIndex === -1)
+        {
+            // If the exact start hour is not in the array, find the closest one
+            const closestHourIndex = hours.findIndex(hour => hour > startHour);
+            if (closestHourIndex === -1)
+            {
+                return 95; // Event starts after all displayed hours
+            }
+            return (closestHourIndex / hours.length) * 100;
+        }
+
+        // Calculate position including minutes within the hour slot
+        const positionInHours = startHourIndex + (startMinutes / 60);
+        return (positionInHours / hours.length) * 100;
+    }
+
+    /**
+     * Get the width percentage of an event based on its duration in hour slots
+     */
+    getEventWidth(item: CalendarIcsItem): number
+    {
+        if (!item.start || !item.end)
+        {
+            return 8; // Minimum width
+        }
+
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const hours = this.getHoursForDay();
+
+        if (hours.length === 0)
+        {
+            return 8;
+        }
+
+        const startHour = this.getEventDisplayHour(item);
+
+        // Calculate end hour (handle events that cross midnight)
+        let endHour = endDate.getHours();
+        const startDayStr = startDate.toISOString().split('T')[0];
+        const endDayStr = endDate.toISOString().split('T')[0];
+
+        // If event crosses to next day, add 24 hours for each day difference
+        if (startDayStr !== endDayStr)
+        {
+            const startDay = new Date(startDayStr);
+            const endDay = new Date(endDayStr);
+            const daysDiff = Math.round((endDay.getTime() - startDay.getTime()) / (1000 * 60 * 60 * 24));
+            endHour = endDate.getHours() + (daysDiff * 24);
+        }
+        // Handle edge case: event starts late and ends at hour 0 on "same day" (midnight stored as 00:00)
+        else if (startHour > endHour)
+        {
+            endHour += 24;
+        }
+
+        const endMinutes = endDate.getMinutes();
+
+        // Count how many hour slots this event spans
+        let hourSlotCount = 0;
+        let foundStart = false;
+
+        for (const hour of hours)
+        {
+            if (hour === startHour)
+            {
+                foundStart = true;
+            }
+
+            if (foundStart)
+            {
+                hourSlotCount++;
+
+                // Stop counting if we've reached the end hour
+                if (hour === endHour)
+                {
+                    // If event ends at minute 0 of an hour, don't count that full hour
+                    if (endMinutes === 0)
+                    {
+                        hourSlotCount--;
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (hourSlotCount === 0)
+        {
+            hourSlotCount = 1; // Minimum one slot
+        }
+
+        // Calculate width as percentage of total hour slots
+        const widthPercentage = (hourSlotCount / hours.length) * 100;
+
+        // Minimum width of 8% for very short events, maximum of 95% to prevent overflow
+        return Math.max(8, Math.min(widthPercentage, 95));
+    }
+
+    /**
+     * Get tooltip text for an event
+     */
+    getEventTooltip(item: CalendarIcsItem): string
+    {
+        const title = item.title || item.registrableName || 'Event';
+        const time = item.start && item.end ?
+            `${this.formatTime(item.start)} - ${this.formatTime(item.end)} (${this.getItemDuration(item)})` :
+            'Time not specified';
+        const location = item.location ? `\nLocation: ${item.location}` : '';
+        const content = item.contentHtml ? `\n${item.contentHtml.replace(/<[^>]*>/g, '')}` : '';
+
+        return `${title}\n${time}${location}${content}`;
+    }
+
+    /**
+     * Track by function for hours
+     */
+    trackByHour(index: number, hour: number): number
+    {
+        return hour;
+    }
+
+    /**
+     * Track by function for location groups
+     */
+    trackByLocationGroup(index: number, locationGroup: LocationGroup): string
+    {
+        return locationGroup.location || `no-location-${index}`;
     }
 
     /**
      * Format date for display
      */
-    private formatDate(date: Date): string
+    formatDate(date: Date): string
     {
         return new Date(date).toLocaleDateString('en-US', {
             weekday: 'short',
@@ -279,8 +379,14 @@ export class CalendarViewComponent implements OnInit, OnDestroy
     /**
      * Format hour for display
      */
-    private formatHour(hour: number): string
+    formatHour(hour: number): string
     {
+        // Handle extended hours (24-27 represent midnight-4am of next day)
+        if (hour >= 24)
+        {
+            const displayHour = hour - 24;
+            return `${displayHour.toString().padStart(2, '0')}:00+1`;
+        }
         return `${hour.toString().padStart(2, '0')}:00`;
     }
 
@@ -358,5 +464,205 @@ export class CalendarViewComponent implements OnInit, OnDestroy
     trackByItem(index: number, item: CalendarIcsItem): string
     {
         return item.id || `${index}_${item.registrableId}_${item.start}`;
+    }
+
+    /**
+     * Get the hour value for positioning (always returns actual start hour since we don't move events)
+     */
+    private getEventDisplayHour(item: CalendarIcsItem): number
+    {
+        if (!item.start)
+        {
+            return 0;
+        }
+
+        const startDate = new Date(item.start);
+        return startDate.getHours();
+    }
+
+    /**
+     * Process calendar data and build grid structure
+     */
+    private processCalendarData(): void
+    {
+        if (!this.calendarData || this.calendarData.length === 0)
+        {
+            this.columns = [];
+            this.rows = [];
+            return;
+        }
+
+        this.buildColumns();
+        this.buildRows();
+    }
+
+    /**
+     * Build columns (one per hour) - only for hours with events
+     */
+    private buildColumns(): void
+    {
+        // Find only the hours that have actual events
+        const hourSet = new Set<number>();
+
+        this.calendarData.forEach((dateGroup) =>
+        {
+            if (dateGroup.locationGroups)
+            {
+                dateGroup.locationGroups.forEach((locationGroup) =>
+                {
+                    if (locationGroup.items)
+                    {
+                        locationGroup.items.forEach((item) =>
+                        {
+                            if (item.start && item.end)
+                            {
+                                const startTime = new Date(item.start);
+                                const endTime = new Date(item.end);
+                                const startHour = startTime.getHours();
+                                const endHour = endTime.getHours();
+
+                                // Add all hours that this event spans
+                                for (let hour = startHour; hour <= endHour; hour++)
+                                {
+                                    // Only add the hour if the event actually occupies it
+                                    if (hour === startHour ||
+                                        hour < endHour ||
+                                        (hour === endHour && endTime.getMinutes() > 0))
+                                    {
+                                        hourSet.add(hour);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        // If no hours found, default to common work hours
+        if (hourSet.size === 0)
+        {
+            for (let i = 8; i <= 18; i++)
+            {
+                hourSet.add(i);
+            }
+        }
+
+        // Only use hours that have events (no padding)
+        this.hours = Array.from(hourSet).sort((a, b) => a - b);
+
+        // Build hour columns
+        this.columns = this.hours.map(hour => ({
+            hour,
+            displayHour: this.formatHour(hour)
+        }));
+    }
+
+    /**
+     * Build rows (one per date/location combination)
+     */
+    private buildRows(): void
+    {
+        // Build date/location combinations
+        const dateLocationCombinations: CalendarRow[] = [];
+
+        this.calendarData.forEach((dateGroup) =>
+        {
+            if (dateGroup.locationGroups && dateGroup.date)
+            {
+                dateGroup.locationGroups.forEach((locationGroup) =>
+                {
+                    const dateLocationRow: CalendarRow = {
+                        date: dateGroup.date,
+                        location: locationGroup.location || 'No Location',
+                        dateLocationKey: this.getDateLocationKey(dateGroup.date, locationGroup.location),
+                        displayDate: this.formatDate(dateGroup.date),
+                        displayLocation: locationGroup.location || 'No Location',
+                        cells: []
+                    };
+                    dateLocationCombinations.push(dateLocationRow);
+                });
+            }
+        });
+
+        // Sort by date first, then by location
+        dateLocationCombinations.sort((a, b) =>
+        {
+            const dateCompare = new Date(a.date).getTime() - new Date(b.date).getTime();
+            if (dateCompare !== 0)
+            {
+                return dateCompare;
+            }
+            return a.location.localeCompare(b.location);
+        });
+
+        // Build cells for each row (hour cells)
+        this.rows = dateLocationCombinations.map((row) =>
+        {
+            const cells: CalendarCell[] = this.hours.map((hour) =>
+            {
+                const items = this.getItemsForHourAndDateLocation(hour, row.dateLocationKey);
+                return {
+                    hour,
+                    items,
+                    isEmpty: items.length === 0
+                };
+            });
+
+            return {
+                ...row,
+                cells
+            };
+        });
+    }
+
+    /**
+     * Get items that occur during a specific hour for a specific date/location
+     */
+    private getItemsForHourAndDateLocation(hour: number, dateLocationKey: string): CalendarIcsItem[]
+    {
+        const items: CalendarIcsItem[] = [];
+
+        this.calendarData.forEach((dateGroup) =>
+        {
+            if (dateGroup.locationGroups && dateGroup.date)
+            {
+                dateGroup.locationGroups.forEach((locationGroup) =>
+                {
+                    const currentKey = this.getDateLocationKey(dateGroup.date, locationGroup.location);
+
+                    if (currentKey === dateLocationKey && locationGroup.items)
+                    {
+                        locationGroup.items.forEach((item) =>
+                        {
+                            if (item.start && item.end)
+                            {
+                                const startHour = new Date(item.start).getHours();
+                                const endHour = new Date(item.end).getHours();
+
+                                // Item occurs during this hour if it starts before or at this hour
+                                // and ends after this hour (or at the next hour)
+                                if (startHour <= hour && endHour > hour)
+                                {
+                                    items.push(item);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        return items;
+    }
+
+    /**
+     * Generate a unique key for date/location combination
+     */
+    private getDateLocationKey(date: Date, location: string | null): string
+    {
+        const dateStr = new Date(date).toISOString().split('T')[0];
+        const locationStr = location || 'no-location';
+        return `${dateStr}_${locationStr}`;
     }
 }
