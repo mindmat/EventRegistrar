@@ -150,7 +150,7 @@ export class NavigationService
                                     title: translateService.instant('CalendarView'),
                                     type: 'basic',
                                     icon: 'heroicons_outline:calendar-days',
-                                    link: `/${e.acronym}/volunteer-planning/calendar`,
+                                    link: `/${e.acronym}/calendar`,
                                 },
                             ]
                         },
@@ -344,3 +344,4 @@ export class NavigationService
     //     // );
     // }
 }
+

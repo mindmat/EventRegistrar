@@ -380,20 +380,29 @@ export const appRoutes: Route[] =
                     component: LayoutComponent,
                     resolve: { initialData: InitialDataResolver },
                     children: [
-                        {
-                            path: '',
-                            canActivate: [AuthGuard],
-                            component: ShiftsOverviewComponent,
-                            resolve: { initialData: ShiftsOverviewResolver }
-                        },
-                        {
-                            path: 'calendar',
-                            canActivate: [AuthGuard],
-                            component: CalendarViewComponent,
-                            resolve: { initialData: CalendarViewResolver }
-                        }
-                    ]
-                },
+                          {
+                              path: '',
+                              canActivate: [AuthGuard],
+                              component: ShiftsOverviewComponent,
+                              resolve: { initialData: ShiftsOverviewResolver }
+                          }
+                      ]
+                  },
+                  {
+                      path: 'calendar',
+                      canActivate: [AuthGuard],
+                      canActivateChild: [AuthGuard],
+                      component: LayoutComponent,
+                      resolve: { initialData: InitialDataResolver },
+                      children: [
+                          {
+                              path: '',
+                              canActivate: [AuthGuard],
+                              component: CalendarViewComponent,
+                              resolve: { initialData: CalendarViewResolver }
+                          }
+                      ]
+                  },
                 {
                     path: 'admin',
                     canActivate: [AuthGuard],
@@ -429,3 +438,4 @@ export const appRoutes: Route[] =
                 }]
         }
     ];
+
