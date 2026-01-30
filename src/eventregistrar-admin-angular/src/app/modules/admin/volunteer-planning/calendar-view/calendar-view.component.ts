@@ -350,10 +350,11 @@ export class CalendarViewComponent implements OnInit, OnDestroy
      */
     formatDate(date: Date): string
     {
-        return new Date(date).toLocaleDateString('en-US', {
-            weekday: 'short',
-            month: 'short',
-            day: 'numeric'
+        return new Date(date).toLocaleDateString('de-CH', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
         });
     }
 
@@ -775,3 +776,4 @@ export class CalendarViewComponent implements OnInit, OnDestroy
         return Math.max(5, Math.min(widthPercentage, 95));
     }
 }
+
