@@ -646,14 +646,132 @@ export class CalendarViewComponent implements OnInit, OnDestroy
         const locationStr = location || 'no-location';
         return `${dateStr}_${locationStr}`;
     }
+
+    /**
+     * Get hours array for a specific date group
+     */
+    getHoursForDayGroup(dateGroup: DateGroup): number[]
+    {
+        if (!dateGroup || !dateGroup.locationGroups)
+        {
+            return [];
+        }
+
+        let earliestHour = 24;
+        let latestHour = -1;
+
+        dateGroup.locationGroups.forEach((locationGroup) =>
+        {
+            locationGroup.items?.forEach((item) =>
+            {
+                if (item.start && item.end)
+                {
+                    const startDate = new Date(item.start);
+                    const endDate = new Date(item.end);
+                    const startHour = startDate.getHours();
+
+                    earliestHour = Math.min(earliestHour, startHour);
+
+                    let effectiveEndHour = endDate.getHours();
+                    const startDayStr = startDate.toISOString().split('T')[0];
+                    const endDayStr = endDate.toISOString().split('T')[0];
+
+                    if (endDayStr !== startDayStr)
+                    {
+                        const startDay = new Date(startDayStr);
+                        const endDay = new Date(endDayStr);
+                        const daysDiff = Math.round((endDay.getTime() - startDay.getTime()) / (1000 * 60 * 60 * 24));
+                        effectiveEndHour = endDate.getHours() + (daysDiff * 24);
+                    }
+                    else if (startHour > effectiveEndHour)
+                    {
+                        effectiveEndHour += 24;
+                    }
+
+                    if (endDate.getMinutes() === 0 && endDate.getSeconds() === 0)
+                    {
+                        effectiveEndHour--;
+                    }
+
+                    latestHour = Math.max(latestHour, effectiveEndHour);
+                }
+            });
+        });
+
+        if (earliestHour > latestHour || earliestHour === 24 || latestHour === -1)
+        {
+            return [];
+        }
+
+        const paddedStart = Math.max(0, earliestHour - 1);
+        const hours: number[] = [];
+        for (let hour = paddedStart; hour <= latestHour + 1; hour++)
+        {
+            hours.push(hour);
+        }
+
+        return hours;
+    }
+
+    /**
+     * Get event left position for a specific day
+     */
+    getEventLeftPositionForDay(item: CalendarIcsItem, dateGroup: DateGroup): number
+    {
+        if (!item.start)
+        {
+            return 0;
+        }
+
+        const startDate = new Date(item.start);
+        const startHour = startDate.getHours();
+        const startMinutes = startDate.getMinutes();
+        const hours = this.getHoursForDayGroup(dateGroup);
+
+        if (hours.length === 0)
+        {
+            return 0;
+        }
+
+        const startHourIndex = hours.indexOf(startHour);
+        if (startHourIndex === -1)
+        {
+            const closestHourIndex = hours.findIndex(hour => hour > startHour);
+            if (closestHourIndex === -1)
+            {
+                return 95;
+            }
+            return (closestHourIndex / hours.length) * 100;
+        }
+
+        const positionInHours = startHourIndex + (startMinutes / 60);
+        return (positionInHours / hours.length) * 100;
+    }
+
+    /**
+     * Get event width for a specific day
+     */
+    getEventWidthForDay(item: CalendarIcsItem, dateGroup: DateGroup): number
+    {
+        if (!item.start || !item.end)
+        {
+            return 8;
+        }
+
+        const startDate = new Date(item.start);
+        const endDate = new Date(item.end);
+        const hours = this.getHoursForDayGroup(dateGroup);
+
+        if (hours.length === 0)
+        {
+            return 8;
+        }
+
+        const durationMs = endDate.getTime() - startDate.getTime();
+        const durationHours = durationMs / (1000 * 60 * 60);
+        const totalHoursDisplayed = hours.length;
+        const widthPercentage = (durationHours / totalHoursDisplayed) * 100;
+
+        return Math.max(5, Math.min(widthPercentage, 95));
+    }
 }
-
-
-
-
-
-
-
-
-
-

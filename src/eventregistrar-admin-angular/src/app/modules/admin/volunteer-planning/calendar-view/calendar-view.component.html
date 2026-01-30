@@ -1,10 +1,10 @@
 <div class="flex flex-col h-full w-full">
     <!-- Header -->
-    <div class="bg-white shadow-sm border-b border-gray-200 px-6 py-4">
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">Volunteer Calendar</h2>
-        <p class="text-sm text-gray-600" *ngIf="calendarData.length > 0">
-            Showing {{ getTotalEvents() }} event(s) across {{ calendarData.length }} day(s) and {{ getLocationCount() }} location(s)
-        </p>
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <div class="flex min-w-0 flex-row items-baseline gap-2">
+            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'CalendarView' | translate }}</div>
+            <!-- <div class="mt-1.5 text-lg text-secondary" *ngIf="calendarData.length > 0">({{ getTotalEvents() }} events)</div> -->
+        </div>
     </div>
 
     <!-- Loading state -->
@@ -12,79 +12,80 @@
         <div class="text-center">
             <mat-icon class="text-6xl text-gray-400 mb-4">calendar_today</mat-icon>
             <h3 class="text-lg font-medium text-gray-900 mb-2">Loading calendar data...</h3>
-            <p class="text-sm text-gray-500">Please wait while we fetch your volunteer schedule.</p>
+            <p class="text-sm text-gray-500">Please wait while we fetch the calendar.</p>
         </div>
     </div>
 
-    <!-- Calendar Content -->
-    <div *ngIf="calendarData.length > 0" class="flex-1 w-full">
-        <!-- Date tabs -->
-        <div class="bg-white border-b border-gray-200 w-full">
-            <nav class="flex space-x-8 px-6 py-3 w-full" aria-label="Dates">
-                <button *ngFor="let dateGroup of calendarData; let i = index" (click)="selectedDateIndex = i"
-                    class="whitespace-nowrap py-2 px-3 border-b-2 font-medium text-sm transition-colors duration-200" [class.border-blue-500]="selectedDateIndex === i"
-                    [class.text-blue-600]="selectedDateIndex === i" [class.border-transparent]="selectedDateIndex !== i" [class.text-gray-500]="selectedDateIndex !== i"
-                    [class.hover:text-gray-700]="selectedDateIndex !== i" [class.hover:border-gray-300]="selectedDateIndex !== i">
-                    {{ formatDate(dateGroup.date!) }}
-                </button>
-            </nav>
-        </div>
+    <!-- Calendar Content - All days stacked vertically -->
+    <div *ngIf="calendarData.length > 0" class="flex-1 w-full overflow-auto">
+        <!-- Day sections -->
+        <div *ngFor="let dateGroup of calendarData; let dayIndex = index" class="mb-6 last:mb-0">
+            <!-- Day header -->
+            <div class="flex min-w-0 flex-row items-baseline gap-2 px-6 py-4 border-b bg-card dark:bg-transparent">
+                <div class="text-xl font-bold tracking-tight leading-none">{{ formatDate(dateGroup.date!) }}</div>
+            </div>
 
-        <!-- Calendar Grid for Selected Date -->
-        <div class="flex-1 w-full h-full overflow-auto" *ngIf="getSelectedDateGroupWithExtendedHours()">
-            <div class="w-full min-h-full bg-white">
-                <!-- Time grid header -->
-                <div class="grid grid-cols-[250px_1fr] bg-gray-50 border-b border-gray-200 w-full">
+            <div class="bg-white">
+                <!-- Time grid header for this day -->
+                <div class="grid grid-cols-[200px_1fr] bg-gray-50 border-b border-gray-200 w-full">
                     <!-- Location header -->
-                    <div class="p-4 text-xs font-medium text-gray-500 uppercase tracking-wide border-r border-gray-200">
-                        Locations
+                    <div class="p-3 text-xs font-medium text-gray-500 uppercase tracking-wide border-r border-gray-200">
+                        Location
                     </div>
                     <!-- Time scale header -->
-                    <div class="relative h-12 border-gray-200 overflow-hidden">
+                    <div class="relative h-10 border-gray-200 overflow-hidden">
                         <div class="absolute inset-0 flex">
-                            <div *ngFor="let hour of getHoursForDay(); let first = first; trackBy: trackByHour" class="flex-1 border-r border-gray-200 last:border-r-0 relative">
-                                <!-- Hour label at left edge (skip first as it's cut off) -->
-                                <span *ngIf="!first" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 text-xs font-medium text-gray-600 bg-gray-50 px-1">{{ formatHour(hour) }}</span>
+                            <div *ngFor="let hour of getHoursForDayGroup(dateGroup); let first = first; trackBy: trackByHour" 
+                                class="flex-1 border-r border-gray-200 last:border-r-0 relative">
+                                <span *ngIf="!first" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 text-xs font-medium text-gray-600 bg-gray-50 px-1">
+                                    {{ formatHour(hour) }}
+                                </span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Location rows -->
-                <div *ngFor="let locationGroup of getSelectedDateGroupWithExtendedHours()?.locationGroups; let locationIndex = index; trackBy: trackByLocationGroup"
-                    class="grid grid-cols-[250px_1fr] border-b border-gray-100 last:border-b-0 min-h-16 w-full" [class.bg-gray-50]="locationIndex % 2 === 0" [class.bg-white]="locationIndex % 2 !== 0">
+                <!-- Location rows for this day -->
+                <div *ngFor="let locationGroup of dateGroup.locationGroups; let locationIndex = index; trackBy: trackByLocationGroup"
+                    class="grid grid-cols-[200px_1fr] border-b border-gray-100 last:border-b-0 min-h-14 w-full"
+                    [class.bg-gray-50]="locationIndex % 2 === 0" [class.bg-white]="locationIndex % 2 !== 0">
 
                     <!-- Location label -->
-                    <div class="p-4 border-r border-gray-200 flex items-center">
-                        <div class="text-base font-medium text-gray-900 leading-tight">
+                    <div class="p-3 border-r border-gray-200 flex items-center">
+                        <div class="text-sm font-medium text-gray-900 leading-tight">
                             {{ locationGroup.location || 'No Location' }}
                         </div>
                     </div>
 
                     <!-- Events timeline -->
-                    <div class="relative p-2 min-h-12 w-full overflow-hidden">
-                        <!-- Hour grid lines (visual guide) -->
+                    <div class="relative p-1.5 min-h-12 w-full overflow-hidden">
+                        <!-- Hour grid lines -->
                         <div class="absolute inset-0 flex pointer-events-none w-full">
-                            <div *ngFor="let hour of getHoursForDay(); let hourIndex = index" class="flex-1 border-r border-gray-100 last:border-r-0" [class.border-gray-200]="hour % 6 === 0">
+                            <div *ngFor="let hour of getHoursForDayGroup(dateGroup)" 
+                                class="flex-1 border-r border-gray-100 last:border-r-0"
+                                [class.border-gray-200]="hour % 6 === 0">
                             </div>
                         </div>
 
                         <!-- Event cards -->
                         <div *ngFor="let item of locationGroup.items; trackBy: trackByItem"
-                            class="absolute top-2 bottom-2 rounded-lg shadow-sm border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer overflow-hidden"`n                            (click)="openEventDialog(item)"
-                            [class.border-l-4]="true" [class.border-blue-400]="!getItemClasses(item)?.includes('has-registrable')"
-                            [class.border-emerald-500]="getItemClasses(item)?.includes('has-registrable')" [class.bg-blue-50]="!getItemClasses(item)?.includes('has-registrable')"
-                            [class.bg-emerald-50]="getItemClasses(item)?.includes('has-registrable')" [style.left.%]="getEventLeftPosition(item)" [style.width.%]="getEventWidth(item)"
+                            class="absolute top-1.5 bottom-1.5 rounded-lg shadow-sm border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer overflow-hidden"
+                            (click)="openEventDialog(item)"
+                            [class.border-l-4]="true"
+                            [class.border-blue-400]="!getItemClasses(item)?.includes('has-registrable')"
+                            [class.border-emerald-500]="getItemClasses(item)?.includes('has-registrable')"
+                            [class.bg-blue-50]="!getItemClasses(item)?.includes('has-registrable')"
+                            [class.bg-emerald-50]="getItemClasses(item)?.includes('has-registrable')"
+                            [style.left.%]="getEventLeftPositionForDay(item, dateGroup)"
+                            [style.width.%]="getEventWidthForDay(item, dateGroup)"
                             [title]="getEventTooltip(item)">
 
                             <div class="h-full px-2 py-0.5 flex flex-col justify-center overflow-hidden">
-                                <!-- If title is set, show only title -->
                                 <ng-container *ngIf="item.title; else noTitle">
                                     <div class="text-xs font-semibold text-gray-900 leading-tight truncate">
                                         {{ item.title }}
                                     </div>
                                 </ng-container>
-                                <!-- If no title, show name and nameSecondary -->
                                 <ng-template #noTitle>
                                     <div class="text-xs font-semibold text-gray-900 leading-tight truncate">
                                         {{ item.registrableName }}
@@ -98,11 +99,9 @@
                     </div>
                 </div>
 
-                <!-- No events message -->
-                <div *ngIf="!getSelectedDateGroupWithExtendedHours()?.locationGroups?.length" class="p-8 text-center">
-                    <mat-icon class="text-4xl text-gray-400 mb-2">event_busy</mat-icon>
-                    <h3 class="text-lg font-medium text-gray-900 mb-1">No events scheduled</h3>
-                    <p class="text-sm text-gray-500">There are no volunteer activities on this date.</p>
+                <!-- No events for this day -->
+                <div *ngIf="!dateGroup.locationGroups?.length" class="p-6 text-center">
+                    <p class="text-sm text-gray-500">No events scheduled for this day.</p>
                 </div>
             </div>
         </div>
