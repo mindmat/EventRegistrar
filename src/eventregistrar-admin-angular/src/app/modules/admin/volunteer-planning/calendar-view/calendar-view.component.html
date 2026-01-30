@@ -76,17 +76,22 @@
                             [class.bg-emerald-50]="getItemClasses(item)?.includes('has-registrable')" [style.left.%]="getEventLeftPosition(item)" [style.width.%]="getEventWidth(item)"
                             [title]="getEventTooltip(item)">
 
-                            <div class="h-full px-2 py-1 flex items-center gap-2 overflow-hidden">
-                                <!-- Event titles -->
-                                <div class="flex-1 min-w-0 truncate">
-                                    <span class="text-xs font-semibold text-gray-900 leading-tight">{{ item.title || item.registrableName }}</span>
-                                    <span *ngIf="item.registrableNameSecondary" class="text-xs text-gray-600 leading-tight"> - {{ item.registrableNameSecondary }}</span>
-                                </div>
-
-                                <!-- Time display -->
-                                <div class="text-xs text-gray-500 font-medium whitespace-nowrap flex-shrink-0">
-                                    {{ formatTime(item.start) }} - {{ formatTime(item.end) }}
-                                </div>
+                            <div class="h-full px-2 py-0.5 flex flex-col justify-center overflow-hidden">
+                                <!-- If title is set, show only title -->
+                                <ng-container *ngIf="item.title; else noTitle">
+                                    <div class="text-xs font-semibold text-gray-900 leading-tight truncate">
+                                        {{ item.title }}
+                                    </div>
+                                </ng-container>
+                                <!-- If no title, show name and nameSecondary -->
+                                <ng-template #noTitle>
+                                    <div class="text-xs font-semibold text-gray-900 leading-tight truncate">
+                                        {{ item.registrableName }}
+                                    </div>
+                                    <div *ngIf="item.registrableNameSecondary" class="text-xs text-gray-600 leading-tight truncate">
+                                        {{ item.registrableNameSecondary }}
+                                    </div>
+                                </ng-template>
                             </div>
                         </div>
                     </div>

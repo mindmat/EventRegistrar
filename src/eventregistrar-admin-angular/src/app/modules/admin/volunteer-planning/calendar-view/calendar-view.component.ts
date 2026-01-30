@@ -307,14 +307,25 @@ export class CalendarViewComponent implements OnInit, OnDestroy
      */
     getEventTooltip(item: CalendarIcsItem): string
     {
-        const title = item.title || item.registrableName || 'Event';
-        const secondary = item.registrableNameSecondary ? ` - ${item.registrableNameSecondary}` : '';
+        let name: string;
+        if (item.title)
+        {
+            name = item.title;
+        }
+        else
+        {
+            name = item.registrableName || 'Event';
+            if (item.registrableNameSecondary)
+            {
+                name += `\n${item.registrableNameSecondary}`;
+            }
+        }
         const time = item.start && item.end ?
             `${this.formatTime(item.start)} - ${this.formatTime(item.end)} (${this.getItemDuration(item)})` :
             'Time not specified';
         const content = item.contentHtml ? `\n${item.contentHtml.replace(/<[^>]*>/g, '')}` : '';
 
-        return `${title}${secondary}\n${time}${content}`;
+        return `${name}\n${time}${content}`;
     }
 
     /**
