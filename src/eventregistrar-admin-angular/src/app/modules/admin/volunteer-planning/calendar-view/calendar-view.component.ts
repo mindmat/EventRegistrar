@@ -207,10 +207,10 @@ export class CalendarViewComponent implements OnInit, OnDestroy
             return [];
         }
 
-        // Build continuous range from earliest to latest hour, with extra hours at start and end for visual breathing room
+        // Build continuous range with one hour padding at start and end for visual breathing room
+        const paddedStart = Math.max(0, earliestHour - 1);
         const hours: number[] = [];
-        const startHour = Math.max(0, earliestHour - 1); // Add one hour before, but not below 0
-        for (let hour = startHour; hour <= latestHour + 1; hour++)
+        for (let hour = paddedStart; hour <= latestHour + 1; hour++)
         {
             hours.push(hour);
         }
@@ -647,6 +647,12 @@ export class CalendarViewComponent implements OnInit, OnDestroy
         return `${dateStr}_${locationStr}`;
     }
 }
+
+
+
+
+
+
 
 
 

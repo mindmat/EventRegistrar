@@ -42,8 +42,9 @@
                     <!-- Time scale header -->
                     <div class="relative h-12 border-gray-200 overflow-hidden">
                         <div class="absolute inset-0 flex">
-                            <div *ngFor="let hour of getHoursForDay(); trackBy: trackByHour" class="flex-1 border-r border-gray-200 last:border-r-0 flex items-center justify-center">
-                                <span class="text-xs font-medium text-gray-600">{{ formatHour(hour) }}</span>
+                            <div *ngFor="let hour of getHoursForDay(); let first = first; trackBy: trackByHour" class="flex-1 border-r border-gray-200 last:border-r-0 relative">
+                                <!-- Hour label at left edge (skip first as it's cut off) -->
+                                <span *ngIf="!first" class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 text-xs font-medium text-gray-600 bg-gray-50 px-1">{{ formatHour(hour) }}</span>
                             </div>
                         </div>
                     </div>
@@ -116,3 +117,5 @@
         </div>
     </div>
 </div>
+
+
