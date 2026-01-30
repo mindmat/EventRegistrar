@@ -1,4 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { RegistrableIcsComponent } from '../../registrables/registrable-ics/registrable-ics.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CalendarViewService } from './calendar-view.service';
@@ -56,7 +58,8 @@ export class CalendarViewComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
-        private _calendarViewService: CalendarViewService
+        private _calendarViewService: CalendarViewService,
+        private _matDialog: MatDialog
     )
     {
     }
@@ -282,6 +285,21 @@ export class CalendarViewComponent implements OnInit, OnDestroy
 
         // Minimum width of 5% for very short events, maximum of 95% to prevent overflow
         return Math.max(5, Math.min(widthPercentage, 95));
+    }
+
+    /**
+     * Open the event dialog when clicking on an event
+     */
+    openEventDialog(item: CalendarIcsItem): void
+    {
+        this._matDialog.open(RegistrableIcsComponent, {
+            autoFocus: true,
+            data: {
+                icsId: item.id,
+                registrableId: item.registrableId,
+                name: item.registrableName
+            }
+        });
     }
 
     /**

@@ -70,7 +70,7 @@
 
                         <!-- Event cards -->
                         <div *ngFor="let item of locationGroup.items; trackBy: trackByItem"
-                            class="absolute top-2 bottom-2 rounded-lg shadow-sm border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer overflow-hidden"
+                            class="absolute top-2 bottom-2 rounded-lg shadow-sm border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer overflow-hidden"`n                            (click)="openEventDialog(item)"
                             [class.border-l-4]="true" [class.border-blue-400]="!getItemClasses(item)?.includes('has-registrable')"
                             [class.border-emerald-500]="getItemClasses(item)?.includes('has-registrable')" [class.bg-blue-50]="!getItemClasses(item)?.includes('has-registrable')"
                             [class.bg-emerald-50]="getItemClasses(item)?.includes('has-registrable')" [style.left.%]="getEventLeftPosition(item)" [style.width.%]="getEventWidth(item)"
