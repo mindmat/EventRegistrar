@@ -290,13 +290,13 @@ export class CalendarViewComponent implements OnInit, OnDestroy
     getEventTooltip(item: CalendarIcsItem): string
     {
         const title = item.title || item.registrableName || 'Event';
+        const secondary = item.registrableNameSecondary ? ` - ${item.registrableNameSecondary}` : '';
         const time = item.start && item.end ?
             `${this.formatTime(item.start)} - ${this.formatTime(item.end)} (${this.getItemDuration(item)})` :
             'Time not specified';
-        const location = item.location ? `\nLocation: ${item.location}` : '';
         const content = item.contentHtml ? `\n${item.contentHtml.replace(/<[^>]*>/g, '')}` : '';
 
-        return `${title}\n${time}${location}${content}`;
+        return `${title}${secondary}\n${time}${content}`;
     }
 
     /**

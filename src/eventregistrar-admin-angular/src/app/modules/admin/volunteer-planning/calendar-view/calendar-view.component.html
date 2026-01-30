@@ -77,9 +77,10 @@
                             [title]="getEventTooltip(item)">
 
                             <div class="h-full px-2 py-1 flex items-center gap-2 overflow-hidden">
-                                <!-- Event title -->
-                                <div class="text-xs font-semibold text-gray-900 leading-tight truncate flex-1 min-w-0">
-                                    {{ item.title || item.registrableName }}
+                                <!-- Event titles -->
+                                <div class="flex-1 min-w-0 truncate">
+                                    <span class="text-xs font-semibold text-gray-900 leading-tight">{{ item.title || item.registrableName }}</span>
+                                    <span *ngIf="item.registrableNameSecondary" class="text-xs text-gray-600 leading-tight"> - {{ item.registrableNameSecondary }}</span>
                                 </div>
 
                                 <!-- Time display -->
