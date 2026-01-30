@@ -51,14 +51,9 @@ export class CalendarViewService extends FetchService<DateGroup[]>
      */
     fetchCalendarData(): Observable<DateGroup[]>
     {
-        console.log('CalendarViewService: fetchCalendarData called');
-        console.log('CalendarViewService: selectedId:', this._eventService.selectedId);
-
         const query: TracksCalendarQuery = {
             eventId: this._eventService.selectedId
         };
-
-        console.log('CalendarViewService: Query object:', query);
 
         const request = this._api.tracksCalendar_Query(query);
 

@@ -50,9 +50,9 @@ export class NotificationService
         this.initializeSubscriptions();
         this.startConnection();
 
-        this.serverEvents$.subscribe(
-            ntf => console.log(`notification ${ntf.queryName}`)
-        );
+        // this.serverEvents$.subscribe(
+        //     ntf => console.log(`notification ${ntf.queryName}`)
+        // );
     }
 
     public subscribe(queryName: string): Observable<QueryChanged>

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { RegistrableIcsComponent } from '../../registrables/registrable-ics/registrable-ics.component';
 import { Subject } from 'rxjs';
@@ -59,7 +59,8 @@ export class CalendarViewComponent implements OnInit, OnDestroy
 
     constructor(
         private _calendarViewService: CalendarViewService,
-        private _matDialog: MatDialog
+        private _matDialog: MatDialog,
+        private _changeDetectorRef: ChangeDetectorRef
     )
     {
     }
@@ -73,7 +74,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy
             {
                 this.calendarData = data;
                 this.processCalendarData();
-                console.log('CalendarViewComponent: calendarData updated', data);
+                this._changeDetectorRef.markForCheck();
             });
 
         // Fetch initial data
@@ -646,3 +647,7 @@ export class CalendarViewComponent implements OnInit, OnDestroy
         return `${dateStr}_${locationStr}`;
     }
 }
+
+
+
+
