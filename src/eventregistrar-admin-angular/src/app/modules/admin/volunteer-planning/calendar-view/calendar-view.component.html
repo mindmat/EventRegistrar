@@ -47,8 +47,9 @@
 
                 <!-- Location rows for this day -->
                 <div *ngFor="let locationGroup of dateGroup.locationGroups; let locationIndex = index; trackBy: trackByLocationGroup"
-                    class="grid grid-cols-[200px_1fr] border-b border-gray-100 last:border-b-0 min-h-14 w-full"
-                    [class.bg-gray-50]="locationIndex % 2 === 0" [class.bg-white]="locationIndex % 2 !== 0">
+                    class="grid grid-cols-[200px_1fr] border-b border-gray-100 last:border-b-0 w-full"
+                    [class.bg-gray-50]="locationIndex % 2 === 0" [class.bg-white]="locationIndex % 2 !== 0"
+                    [style.min-height.px]="getOverlapRowCount(locationGroup) * 40 + 12">
 
                     <!-- Location label -->
                     <div class="p-3 border-r border-gray-200 flex items-center">
@@ -58,7 +59,7 @@
                     </div>
 
                     <!-- Events timeline -->
-                    <div class="relative p-1.5 min-h-12 w-full overflow-hidden">
+                    <div class="relative p-1.5 w-full overflow-visible" [style.min-height.px]="getOverlapRowCount(locationGroup) * 40">
                         <!-- Hour grid lines -->
                         <div class="absolute inset-0 flex pointer-events-none w-full">
                             <div *ngFor="let hour of getHoursForDayGroup(dateGroup)" 
@@ -69,7 +70,7 @@
 
                         <!-- Event cards -->
                         <div *ngFor="let item of locationGroup.items; trackBy: trackByItem"
-                            class="absolute top-1.5 bottom-1.5 rounded-lg shadow-sm border transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 cursor-pointer overflow-hidden"
+                            class="absolute rounded-lg shadow-sm border transition-all duration-200 hover:shadow-md cursor-pointer overflow-hidden"
                             (click)="openEventDialog(item)"
                             [class.border-l-4]="true"
                             [class.border-blue-400]="!getItemClasses(item)?.includes('has-registrable')"
@@ -78,6 +79,8 @@
                             [class.bg-emerald-50]="getItemClasses(item)?.includes('has-registrable')"
                             [style.left.%]="getEventLeftPositionForDay(item, dateGroup)"
                             [style.width.%]="getEventWidthForDay(item, dateGroup)"
+                            [style.top.px]="getEventRow(item, locationGroup) * 40 + 2"
+                            [style.height.px]="36"
                             [title]="getEventTooltip(item)">
 
                             <div class="h-full px-2 py-0.5 flex flex-col justify-center overflow-hidden">
@@ -116,5 +119,6 @@
         </div>
     </div>
 </div>
+
 
 

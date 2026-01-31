@@ -775,5 +775,88 @@ export class CalendarViewComponent implements OnInit, OnDestroy
 
         return Math.max(5, Math.min(widthPercentage, 95));
     }
-}
 
+    /**
+     * Calculate the number of overlap rows needed for a location group
+     */
+    getOverlapRowCount(locationGroup: LocationGroup): number
+    {
+        if (!locationGroup.items || locationGroup.items.length === 0)
+        {
+            return 1;
+        }
+
+        const positions = this.calculateEventPositions(locationGroup.items);
+        return Math.max(...positions.values(), 0) + 1;
+    }
+
+    /**
+     * Get the vertical row position for an event (0-based)
+     */
+    getEventRow(item: CalendarIcsItem, locationGroup: LocationGroup): number
+    {
+        if (!locationGroup.items)
+        {
+            return 0;
+        }
+
+        const positions = this.calculateEventPositions(locationGroup.items);
+        return positions.get(item.id!) || 0;
+    }
+
+    /**
+     * Calculate row positions for all events to avoid overlaps
+     * Returns a Map of itemId -> row position
+     */
+    private calculateEventPositions(items: CalendarIcsItem[]): Map<string, number>
+    {
+        const positions = new Map<string, number>();
+
+        if (!items || items.length === 0)
+        {
+            return positions;
+        }
+
+        // Sort items by start time
+        const sortedItems = [...items].sort((a, b) =>
+        {
+            const startA = a.start ? new Date(a.start).getTime() : 0;
+            const startB = b.start ? new Date(b.start).getTime() : 0;
+            return startA - startB;
+        });
+
+        // Track end times for each row
+        const rowEndTimes: number[] = [];
+
+        for (const item of sortedItems)
+        {
+            const startTime = item.start ? new Date(item.start).getTime() : 0;
+            const endTime = item.end ? new Date(item.end).getTime() : startTime + 3600000;
+
+            // Find the first row where this event fits
+            let assignedRow = 0;
+            for (let row = 0; row < rowEndTimes.length; row++)
+            {
+                if (rowEndTimes[row] <= startTime)
+                {
+                    assignedRow = row;
+                    break;
+                }
+                assignedRow = row + 1;
+            }
+
+            positions.set(item.id!, assignedRow);
+
+            if (assignedRow < rowEndTimes.length)
+            {
+                rowEndTimes[assignedRow] = endTime;
+            }
+            else
+            {
+                rowEndTimes.push(endTime);
+            }
+        }
+
+        return positions;
+    }
+}
