@@ -79,7 +79,7 @@
                             [class.bg-emerald-50]="getItemClasses(item)?.includes('has-registrable')"
                             [style.left.%]="getEventLeftPositionForDay(item, dateGroup)"
                             [style.width.%]="getEventWidthForDay(item, dateGroup)"
-                            [style.top.px]="getEventRow(item, locationGroup) * 40 + 2"
+                            [style.top.px]="getEventRow(item, locationGroup) * 40 + 6"
                             [style.height.px]="36"
                             [title]="getEventTooltip(item)">
 
@@ -119,6 +119,7 @@
         </div>
     </div>
 </div>
+
 
 
 
