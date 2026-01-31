@@ -1,6 +1,9 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import { RegistrableIcsComponent } from '../../registrables/registrable-ics/registrable-ics.component';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
+import { RegistrableIcsComponent } from '../registrables/registrable-ics/registrable-ics.component';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CalendarViewService } from './calendar-view.service';
@@ -39,6 +42,12 @@ interface CalendarEventItem extends CalendarIcsItem
 
 @Component({
     selector: 'calendar-view',
+    standalone: true,
+    imports: [
+        CommonModule,
+        MatIconModule,
+        TranslateModule
+    ],
     templateUrl: './calendar-view.component.html',
     styleUrls: ['./calendar-view.component.scss']
 })

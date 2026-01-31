@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Api, DateGroup, TracksCalendarQuery } from 'app/api/api';
-import { EventService } from '../../events/event.service';
-import { FetchService } from '../../infrastructure/fetchService';
-import { NotificationService } from '../../infrastructure/notification.service';
+import { EventService } from '../events/event.service';
+import { FetchService } from '../infrastructure/fetchService';
+import { NotificationService } from '../infrastructure/notification.service';
 
 @Injectable({
     providedIn: 'root'
