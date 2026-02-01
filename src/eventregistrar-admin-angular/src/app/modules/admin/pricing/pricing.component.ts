@@ -90,8 +90,9 @@ export class PricingComponent implements OnInit
   {
     this.getParts(packageForm).push(this.fb.group({
       id: createUuid(),
-      isOptional: false,
-      reduction: 0,
+      selectionType: null,
+      priceAdjustment: 0,
+      showInMailSpotList: false,
       registrableIds: this.fb.array([] as string[])
     }));
 
