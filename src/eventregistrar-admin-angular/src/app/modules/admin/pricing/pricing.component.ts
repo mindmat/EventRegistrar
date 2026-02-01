@@ -39,7 +39,7 @@ export class PricingComponent implements OnInit
             parts: this.fb.array(ppg.parts?.map(ppp => this.fb.group(
               {
                 ...ppp,
-                registrableIds: this.fb.array(ppp.registrableIds)
+                registrableIds: [ppp.registrableIds ?? []]
               })))
           }));
 
@@ -93,7 +93,7 @@ export class PricingComponent implements OnInit
       selectionType: null,
       priceAdjustment: 0,
       showInMailSpotList: false,
-      registrableIds: this.fb.array([] as string[])
+      registrableIds: [[]]
     }));
 
     this.changeDetectorRef.markForCheck();
