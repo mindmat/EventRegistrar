@@ -4,14 +4,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatRippleModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { TagsPickerComponent } from './tags-picker/tags-picker.component';
+import { HtmlMailEditorComponent } from './html-mail-editor/html-mail-editor.component';
 
 @NgModule({
     declarations: [
-        TagsPickerComponent
+        TagsPickerComponent,
+        HtmlMailEditorComponent
     ],
     imports: [
         CommonModule,
@@ -20,6 +24,8 @@ import { TagsPickerComponent } from './tags-picker/tags-picker.component';
         MatIconModule,
         MatTooltipModule,
         MatRippleModule,
+        MatButtonModule,
+        MatMenuModule,
         OverlayModule,
         PortalModule,
         TranslateModule
@@ -28,7 +34,8 @@ import { TagsPickerComponent } from './tags-picker/tags-picker.component';
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        TagsPickerComponent
+        TagsPickerComponent,
+        HtmlMailEditorComponent
     ],
     providers: [
         DatePipe,

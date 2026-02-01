@@ -72,9 +72,9 @@
 
             <div class="sm:col-span-6">
                 <mat-label>{{ 'IcsContent' | translate }}</mat-label>
-                <div class="text-md text-secondary">{{ 'IcsContentSecondary' | translate }}</div>
+                <div class="text-md text-secondary mb-2">{{ 'IcsContentSecondary' | translate }}</div>
 
-                <div class="mt-2" [froalaEditor]="options" #editor [formControlName]="'contentHtml'"></div>
+                <app-html-mail-editor #editor [formControlName]="'contentHtml'"></app-html-mail-editor>
             </div>
         </div>
 

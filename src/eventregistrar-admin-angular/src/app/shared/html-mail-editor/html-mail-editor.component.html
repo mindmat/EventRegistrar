@@ -1,0 +1,135 @@
+<div class="html-mail-editor">
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <!-- View mode toggle -->
+        <div class="toolbar-group view-toggle">
+            <button type="button" mat-icon-button [class.active]="viewMode === 'code'" (click)="setViewMode('code')" matTooltip="Code View">
+                <mat-icon>code</mat-icon>
+            </button>
+            <button type="button" mat-icon-button [class.active]="viewMode === 'split'" (click)="setViewMode('split')" matTooltip="Split View">
+                <mat-icon>vertical_split</mat-icon>
+            </button>
+            <button type="button" mat-icon-button [class.active]="viewMode === 'preview'" (click)="setViewMode('preview')" matTooltip="Preview">
+                <mat-icon>visibility</mat-icon>
+            </button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <!-- Text formatting -->
+        <div class="toolbar-group">
+            <button type="button" mat-icon-button (click)="bold()" matTooltip="Bold">
+                <mat-icon>format_bold</mat-icon>
+            </button>
+            <button type="button" mat-icon-button (click)="italic()" matTooltip="Italic">
+                <mat-icon>format_italic</mat-icon>
+            </button>
+            <button type="button" mat-icon-button (click)="underline()" matTooltip="Underline">
+                <mat-icon>format_underlined</mat-icon>
+            </button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <!-- Headings -->
+        <div class="toolbar-group">
+            <button type="button" mat-icon-button [matMenuTriggerFor]="headingMenu" matTooltip="Heading">
+                <mat-icon>title</mat-icon>
+            </button>
+            <mat-menu #headingMenu="matMenu">
+                <button mat-menu-item (click)="insertHeading(1)">Heading 1</button>
+                <button mat-menu-item (click)="insertHeading(2)">Heading 2</button>
+                <button mat-menu-item (click)="insertHeading(3)">Heading 3</button>
+                <button mat-menu-item (click)="insertParagraph()">Paragraph</button>
+            </mat-menu>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <!-- Alignment -->
+        <div class="toolbar-group">
+            <button type="button" mat-icon-button (click)="alignText('left')" matTooltip="Align Left">
+                <mat-icon>format_align_left</mat-icon>
+            </button>
+            <button type="button" mat-icon-button (click)="alignText('center')" matTooltip="Align Center">
+                <mat-icon>format_align_center</mat-icon>
+            </button>
+            <button type="button" mat-icon-button (click)="alignText('right')" matTooltip="Align Right">
+                <mat-icon>format_align_right</mat-icon>
+            </button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <!-- Lists -->
+        <div class="toolbar-group">
+            <button type="button" mat-icon-button (click)="insertList(false)" matTooltip="Bullet List">
+                <mat-icon>format_list_bulleted</mat-icon>
+            </button>
+            <button type="button" mat-icon-button (click)="insertList(true)" matTooltip="Numbered List">
+                <mat-icon>format_list_numbered</mat-icon>
+            </button>
+        </div>
+
+        <div class="toolbar-divider"></div>
+
+        <!-- Insert elements -->
+        <div class="toolbar-group">
+            <button type="button" mat-icon-button (click)="insertLink()" matTooltip="Insert Link">
+                <mat-icon>link</mat-icon>
+            </button>
+            <button type="button" mat-icon-button (click)="insertImage()" matTooltip="Insert Image">
+                <mat-icon>image</mat-icon>
+            </button>
+            <button type="button" mat-icon-button (click)="insertTable()" matTooltip="Insert Table">
+                <mat-icon>table_chart</mat-icon>
+            </button>
+            <button type="button" mat-icon-button (click)="insertHorizontalRule()" matTooltip="Horizontal Rule">
+                <mat-icon>horizontal_rule</mat-icon>
+            </button>
+        </div>
+
+        <div class="toolbar-divider" *ngIf="placeholders?.length"></div>
+
+        <!-- Placeholders -->
+        <div class="toolbar-group" *ngIf="placeholders?.length">
+            <button type="button" mat-icon-button (click)="showPlaceholders($event)" matTooltip="Insert Placeholder (@)">
+                <mat-icon>alternate_email</mat-icon>
+            </button>
+        </div>
+    </div>
+
+    <!-- Editor content -->
+    <div class="editor-content" [ngClass]="'view-' + viewMode">
+        <!-- Code editor -->
+        <div class="code-panel" *ngIf="viewMode !== 'preview'">
+            <textarea #codeEditor class="code-editor" [value]="html" (input)="onHtmlInput($event)" (keydown)="onKeyDown($event)" placeholder="Enter your HTML email content here..."
+                spellcheck="false"></textarea>
+        </div>
+
+        <!-- Visual editor panel (editable) -->
+        <div class="preview-panel" *ngIf="viewMode !== 'code'">
+            <div class="preview-label">Visual Editor</div>
+            <div #visualEditor class="preview-content editable" contenteditable="true" (input)="onVisualInput($event)" (keydown)="onVisualKeyDown($event)"></div>
+        </div>
+    </div>
+
+    <!-- Placeholder menu overlay -->
+    <div class="placeholder-overlay" *ngIf="showPlaceholderMenu" (click)="closePlaceholderMenu()">
+        <div class="placeholder-menu" [style.top.px]="placeholderMenuPosition.top" [style.left.px]="placeholderMenuPosition.left" (click)="$event.stopPropagation()">
+            <div class="placeholder-search">
+                <mat-icon>search</mat-icon>
+                <input type="text" [(ngModel)]="placeholderFilter" (ngModelChange)="filterPlaceholders()" placeholder="Search placeholders..." autofocus>
+            </div>
+            <div class="placeholder-list">
+                <div class="placeholder-item" *ngFor="let placeholder of filteredPlaceholders" (click)="insertPlaceholder(placeholder)">
+                    <span class="placeholder-code">{{ placeholder.placeholder }}</span>
+                    <span class="placeholder-desc">{{ placeholder.description }}</span>
+                </div>
+                <div class="placeholder-empty" *ngIf="filteredPlaceholders.length === 0">
+                    No placeholders found
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

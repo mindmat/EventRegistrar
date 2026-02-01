@@ -84,10 +84,12 @@
             </div>
 
             <!-- content -->
-            <div class="sm:col-span-4 mt-4" *ngIf="options">
-                <mat-label>{{ 'MailTemplate' | translate }}</mat-label>
-                <button mat-stroked-button type="button" [color]="'primary'" class="ml-2" (click)="openPreview()">{{ 'Preview' | translate }}</button>
-                <div class="mt-2" [froalaEditor]="options" #editor></div>
+            <div class="sm:col-span-4 mt-4">
+                <div class="flex items-center mb-2">
+                    <mat-label>{{ 'MailTemplate' | translate }}</mat-label>
+                    <button mat-stroked-button type="button" [color]="'primary'" class="ml-2" (click)="openPreview()">{{ 'Preview' | translate }}</button>
+                </div>
+                <app-html-mail-editor #editor formControlName="contentHtml" [placeholders]="placeholders"></app-html-mail-editor>
             </div>
 
         </div>
