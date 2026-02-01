@@ -76,6 +76,10 @@ export class PricingComponent implements OnInit
       id: createUuid(),
       name: '',
       price: 0,
+      allowAsAutomaticFallback: false,
+      allowAsManualFallback: false,
+      isCorePackage: false,
+      showInOverview: false,
       parts: this.fb.array([])
     }));
 

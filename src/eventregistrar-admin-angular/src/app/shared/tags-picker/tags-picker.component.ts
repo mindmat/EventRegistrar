@@ -184,7 +184,8 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
   openTagsPanel(): void
   {
     // Guard against ViewChild not being available yet
-    if (!this._tagsPanelOrigin?.nativeElement || !this._tagsPanel) {
+    if (!this._tagsPanelOrigin?.nativeElement || !this._tagsPanel)
+    {
       return;
     }
 
@@ -213,7 +214,8 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
     {
 
       // Add a class to the origin
-      if (this._tagsPanelOrigin?.nativeElement) {
+      if (this._tagsPanelOrigin?.nativeElement)
+      {
         this.renderer2.addClass(this._tagsPanelOrigin.nativeElement, 'panel-opened');
       }
 
@@ -234,7 +236,8 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
   closeTagOverlay()
   {
     // Remove the class from the origin
-    if (this._tagsPanelOrigin?.nativeElement) {
+    if (this._tagsPanelOrigin?.nativeElement)
+    {
       this.renderer2.removeClass(this._tagsPanelOrigin.nativeElement, 'panel-opened');
     }
 
