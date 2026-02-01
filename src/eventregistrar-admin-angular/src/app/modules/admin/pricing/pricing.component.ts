@@ -79,7 +79,7 @@ export class PricingComponent implements OnInit
       parts: this.fb.array([])
     }));
 
-    // this.changeDetectorRef.markForCheck();
+    this.changeDetectorRef.markForCheck();
   }
 
   addPart(packageForm: FormGroup): void
@@ -91,17 +91,19 @@ export class PricingComponent implements OnInit
       registrableIds: this.fb.array([] as string[])
     }));
 
-    // this.changeDetectorRef.markForCheck();
+    this.changeDetectorRef.markForCheck();
   }
 
   removePackage(index: number): void
   {
     this.packagesForms.splice(index, 1);
+    this.changeDetectorRef.markForCheck();
   }
 
   removePackagePart(packageForm: FormGroup, index: number): void
   {
     this.getParts(packageForm).removeAt(index);
+    this.changeDetectorRef.markForCheck();
   }
 
   save(): void
