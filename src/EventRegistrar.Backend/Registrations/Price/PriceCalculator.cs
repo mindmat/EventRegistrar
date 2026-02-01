@@ -104,7 +104,8 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             else
             {
                 var anyCorePackageAdmitted = packagesAdmitted.Any(ppk => ppk.IsCorePackage);
-                isOnWaitingList = !anyCorePackageAdmitted;
+                isOnWaitingList = !anyCorePackageAdmitted
+                               && registration.PricePackageIds_ManualFallback?.Count == 0;
                 possibleFallbackPackages = isOnWaitingList
                                                ? packagesAdmitted.Where(ppk => !ppk.IsCorePackage)
                                                : [];
