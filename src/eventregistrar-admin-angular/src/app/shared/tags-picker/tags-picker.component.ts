@@ -183,6 +183,11 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
 
   openTagsPanel(): void
   {
+    // Guard against ViewChild not being available yet
+    if (!this._tagsPanelOrigin?.nativeElement || !this._tagsPanel) {
+      return;
+    }
+
     // Create the overlay
     this.tagsPanelOverlayRef = this.overlay.create({
       backdropClass: '',
@@ -208,10 +213,12 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
     {
 
       // Add a class to the origin
-      this.renderer2.addClass(this._tagsPanelOrigin.nativeElement, 'panel-opened');
+      if (this._tagsPanelOrigin?.nativeElement) {
+        this.renderer2.addClass(this._tagsPanelOrigin.nativeElement, 'panel-opened');
+      }
 
       // Focus to the search input once the overlay has been attached
-      this.tagsPanelOverlayRef.overlayElement.querySelector('input').focus();
+      this.tagsPanelOverlayRef.overlayElement?.querySelector('input')?.focus();
     });
 
     // Create a portal from the template
@@ -227,7 +234,9 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
   closeTagOverlay()
   {
     // Remove the class from the origin
-    this.renderer2.removeClass(this._tagsPanelOrigin.nativeElement, 'panel-opened');
+    if (this._tagsPanelOrigin?.nativeElement) {
+      this.renderer2.removeClass(this._tagsPanelOrigin.nativeElement, 'panel-opened');
+    }
 
     // If overlay exists and attached...
     if (this.tagsPanelOverlayRef && this.tagsPanelOverlayRef.hasAttached())
