@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "src/eventregistrar-admin-angular"
+		},
+		{
+			"path": "src/EventRegistrar.Backend"
+		},
+		{
+			"path": ".github"
+		}
+	],
+	"settings": {
+		"chat.tools.terminal.autoApprove": {
+			"ng": true,
+			"Set-Content": true
+		}
+	}
+}

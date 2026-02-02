@@ -1,5 +1,6 @@
 import
 {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -34,7 +35,7 @@ export interface PlaceholderItem
         }
     ]
 })
-export class HtmlMailEditorComponent implements OnInit, OnDestroy, ControlValueAccessor
+export class HtmlMailEditorComponent implements OnInit, OnDestroy, AfterViewInit, ControlValueAccessor
 {
     @ViewChild('codeEditor') codeEditor: ElementRef<HTMLTextAreaElement>;
     @ViewChild('visualEditor') visualEditor: ElementRef<HTMLDivElement>;
@@ -54,6 +55,7 @@ export class HtmlMailEditorComponent implements OnInit, OnDestroy, ControlValueA
     private onTouched: () => void = () => { };
     private isUpdatingFromCode = false;
     private isUpdatingFromVisual = false;
+    private pendingHtmlUpdate = false;
 
     constructor(
         private changeDetectorRef: ChangeDetectorRef
@@ -62,6 +64,16 @@ export class HtmlMailEditorComponent implements OnInit, OnDestroy, ControlValueA
     ngOnInit(): void
     {
         this.filteredPlaceholders = this.placeholders;
+    }
+
+    ngAfterViewInit(): void
+    {
+        // Apply pending HTML update after view is initialized
+        if (this.pendingHtmlUpdate)
+        {
+            this.pendingHtmlUpdate = false;
+            this.updateVisualEditor();
+        }
     }
 
     ngOnDestroy(): void
@@ -74,7 +86,15 @@ export class HtmlMailEditorComponent implements OnInit, OnDestroy, ControlValueA
     writeValue(value: string): void
     {
         this.html = value || '';
-        this.updateVisualEditor();
+        // If visualEditor is not yet available, mark for update after view init
+        if (!this.visualEditor?.nativeElement)
+        {
+            this.pendingHtmlUpdate = true;
+        }
+        else
+        {
+            this.updateVisualEditor();
+        }
         this.changeDetectorRef.markForCheck();
     }
 
