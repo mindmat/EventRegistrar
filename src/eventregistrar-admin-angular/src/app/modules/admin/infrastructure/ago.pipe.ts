@@ -1,7 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { ChangeDetectorRef, Pipe } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { formatDistanceToNow, parseISO } from 'date-fns';
+import { formatDistanceToNow, parseISO, Locale } from 'date-fns';
 import { filter, combineLatest, distinctUntilChanged, map, Observable, ReplaySubject, tap, timer } from 'rxjs';
 import { de, enUS } from 'date-fns/locale';
 
