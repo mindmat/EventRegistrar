@@ -2,93 +2,90 @@
 
 <div class="w-full max-w-3xl">
 
-    <!-- Form -->
-    <div *ngFor="let configForm of configForms; let indexPackage = index" class="flex flex-col">
-        <form class="mt-2 rounded-xl bg-card dark:bg-transparent dark:border p-6 space-y-3" [formGroup]="configForm">
-
-            <!-- Section -->
-            <div class="grid sm:grid-cols-4 gap-6 w-full">
-
-                <!-- Host -->
-                <div class="sm:col-span-3">
-                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>{{ 'Host' | translate }}</mat-label>
-                        <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'" matPrefix></mat-icon> -->
-                        <input [formControlName]="'imapHost'" matInput>
-                    </mat-form-field>
-                </div>
-
-                <!-- Port -->
-                <div class="sm:col-span-1 flex flex-row">
-                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>{{ 'Port' | translate }}</mat-label>
-                        <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'" matPrefix></mat-icon> -->
-                        <input [formControlName]="'imapPort'" matInput type="number">
-                    </mat-form-field>
-
-                    <!-- Other actions button & menu -->
-                    <button class="ml-2 mt-7" mat-icon-button [matMenuTriggerFor]="packageMenu">
-                        <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                    </button>
-                    <mat-menu #packageMenu="matMenu">
-                        <!-- Delete -->
-                        <button mat-menu-item (click)="removeImap(indexPackage)">
-                            <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                            <span>{{ 'Delete' | translate }}</span>
-                        </button>
-                    </mat-menu>
-                </div>
-
-                <!-- Username -->
-                <div class="sm:col-span-2">
-                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>{{ 'Username' | translate }}</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                        <input [formControlName]="'username'" matInput>
-                    </mat-form-field>
-                </div>
-                <!-- Password -->
-                <div class="sm:col-span-2">
-                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>{{ 'Password' | translate }}</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
-                        <input [formControlName]="'password'" matInput type="password">
-                    </mat-form-field>
-                </div>
-
-                <!-- Import mails since -->
-                <div class="sm:col-span-1">
-                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>{{ 'ImportMailsSince' | translate }}</mat-label>
-                        <input matInput [matDatepicker]="importMailSinceDatepicker" [formControlName]="'importMailsSince'">
-                        <mat-datepicker-toggle matSuffix [for]="importMailSinceDatepicker">
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #importMailSinceDatepicker></mat-datepicker>
-                    </mat-form-field>
-                </div>
-
-                <fuse-alert *ngIf="configForm.value.checkSuccessful === false" class="sm:col-span-3" [type]="'warn'" [appearance]="'outline'">
-                    <span fuseAlertTitle>{{ 'ImapImportError' | translate }}</span>
-                    {{ configForm.value.checkError }}
-                </fuse-alert>
-
-                <fuse-alert *ngIf="configForm.value.checkSuccessful === true" class="sm:col-span-3" [type]="'success'" [appearance]="'outline'">
-                    <span fuseAlertTitle>{{ 'ImapImportSuccess' | translate }}</span>
-                    {{ 'ImapImportSuccessful' | translate }}
-                    <br />
-                    <span>{{ 'ImapImportCounts' | translate : { total: configForm.value.totalImportedMails, assigned: configForm.value.totalAssignedMails } }}</span>
-                </fuse-alert>
-            </div>
-
-        </form>
+  <!-- Form -->
+  @for (configForm of configForms; track configForm; let indexPackage = $index) {
+    <div class="flex flex-col">
+      <form class="mt-2 rounded-xl bg-card dark:bg-transparent dark:border p-6 space-y-3" [formGroup]="configForm">
+        <!-- Section -->
+        <div class="grid sm:grid-cols-4 gap-6 w-full">
+          <!-- Host -->
+          <div class="sm:col-span-3">
+            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+              <mat-label>{{ 'Host' | translate }}</mat-label>
+              <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'" matPrefix></mat-icon> -->
+              <input [formControlName]="'imapHost'" matInput>
+            </mat-form-field>
+          </div>
+          <!-- Port -->
+          <div class="sm:col-span-1 flex flex-row">
+            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+              <mat-label>{{ 'Port' | translate }}</mat-label>
+              <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'" matPrefix></mat-icon> -->
+              <input [formControlName]="'imapPort'" matInput type="number">
+            </mat-form-field>
+            <!-- Other actions button & menu -->
+            <button class="ml-2 mt-7" mat-icon-button [matMenuTriggerFor]="packageMenu">
+              <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+            </button>
+            <mat-menu #packageMenu="matMenu">
+              <!-- Delete -->
+              <button mat-menu-item (click)="removeImap(indexPackage)">
+                <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+              </button>
+            </mat-menu>
+          </div>
+          <!-- Username -->
+          <div class="sm:col-span-2">
+            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+              <mat-label>{{ 'Username' | translate }}</mat-label>
+              <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
+              <input [formControlName]="'username'" matInput>
+            </mat-form-field>
+          </div>
+          <!-- Password -->
+          <div class="sm:col-span-2">
+            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+              <mat-label>{{ 'Password' | translate }}</mat-label>
+              <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
+              <input [formControlName]="'password'" matInput type="password">
+            </mat-form-field>
+          </div>
+          <!-- Import mails since -->
+          <div class="sm:col-span-1">
+            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+              <mat-label>{{ 'ImportMailsSince' | translate }}</mat-label>
+              <input matInput [matDatepicker]="importMailSinceDatepicker" [formControlName]="'importMailsSince'">
+              <mat-datepicker-toggle matSuffix [for]="importMailSinceDatepicker">
+              </mat-datepicker-toggle>
+              <mat-datepicker #importMailSinceDatepicker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          @if (configForm.value.checkSuccessful === false) {
+            <fuse-alert class="sm:col-span-3" [type]="'warn'" [appearance]="'outline'">
+              <span fuseAlertTitle>{{ 'ImapImportError' | translate }}</span>
+              {{ configForm.value.checkError }}
+            </fuse-alert>
+          }
+          @if (configForm.value.checkSuccessful === true) {
+            <fuse-alert class="sm:col-span-3" [type]="'success'" [appearance]="'outline'">
+              <span fuseAlertTitle>{{ 'ImapImportSuccess' | translate }}</span>
+              {{ 'ImapImportSuccessful' | translate }}
+              <br />
+              <span>{{ 'ImapImportCounts' | translate : { total: configForm.value.totalImportedMails, assigned: configForm.value.totalAssignedMails } }}</span>
+            </fuse-alert>
+          }
+        </div>
+      </form>
     </div>
+  }
 
-    <!-- Actions -->
-    <div class="flex items-center justify-end mt-4">
-        <button mat-stroked-button (click)="addImap()">
-            {{ 'AddImap' | translate }}
-        </button>
-        <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="save()" [disabled]="!submittable">{{ 'Save' | translate }}</button>
-    </div>
+  <!-- Actions -->
+  <div class="flex items-center justify-end mt-4">
+    <button mat-stroked-button (click)="addImap()">
+      {{ 'AddImap' | translate }}
+    </button>
+    <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="save()" [disabled]="!submittable">{{ 'Save' | translate }}</button>
+  </div>
 
 </div>

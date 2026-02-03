@@ -1,90 +1,94 @@
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-auto">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
-        <!-- Title -->
-        <div class="flex min-w-0 flex-row items-baseline gap-2">
-            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'Remarks' | translate }}</div>
-            <div class="mt-1.5 text-lg text-secondary">({{ remarksUnprocessed.length }} / {{ totalRemarkCount }})</div>
-        </div>
-
-        <!-- Filters -->
-        <!-- <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
-            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query [value]="searchString$.value" autofocus>
-        </mat-form-field> -->
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+    <!-- Title -->
+    <div class="flex min-w-0 flex-row items-baseline gap-2">
+      <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'Remarks' | translate }}</div>
+      <div class="mt-1.5 text-lg text-secondary">({{ remarksUnprocessed.length }} / {{ totalRemarkCount }})</div>
     </div>
 
-    <!-- Unprocessed -->
-    <div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
-        <div class="text-xl font-bold tracking-tight leading-none">{{ 'RemarksUnprocessed' | translate }}</div>
-        <div class="mt-1.5 text-lg text-secondary">({{ filteredRemarksUnprocessed.length }} / {{ remarksUnprocessed.length }})</div>
-    </div>
+    <!-- Filters -->
+    <!-- <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+    <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+    <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query [value]="searchString$.value" autofocus>
+  </mat-form-field> -->
+</div>
 
-    <!-- Section Filter -->
-    <div class="mx-4 mb-2" *ngIf="sectionTags.length > 0">
-        <div class="text-sm font-medium text-secondary mb-2">{{ 'FilterBySection' | translate }}:</div>
-        <mat-chip-listbox [multiple]="true" [(ngModel)]="selectedSectionIds" (ngModelChange)="onTagsSelectionChange($event)">
-            <mat-chip-option [value]="''" [selected]="selectedSectionIds.length === 0" (click)="clearSectionFilter()" class="text-sm">
-                {{ 'All' | translate }} ({{ remarksUnprocessed.length }})
-            </mat-chip-option>
-            <mat-chip-option *ngFor="let tag of sectionTags" [value]="tag.id" class="text-sm">
-                {{ tag.name }} ({{ tag.count }})
-            </mat-chip-option>
-        </mat-chip-listbox>
-    </div>
+<!-- Unprocessed -->
+<div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
+  <div class="text-xl font-bold tracking-tight leading-none">{{ 'RemarksUnprocessed' | translate }}</div>
+  <div class="mt-1.5 text-lg text-secondary">({{ filteredRemarksUnprocessed.length }} / {{ remarksUnprocessed.length }})</div>
+</div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-4">
+<!-- Section Filter -->
+@if (sectionTags.length > 0) {
+  <div class="mx-4 mb-2">
+    <div class="text-sm font-medium text-secondary mb-2">{{ 'FilterBySection' | translate }}:</div>
+    <mat-chip-listbox [multiple]="true" [(ngModel)]="selectedSectionIds" (ngModelChange)="onTagsSelectionChange($event)">
+      <mat-chip-option [value]="''" [selected]="selectedSectionIds.length === 0" (click)="clearSectionFilter()" class="text-sm">
+        {{ 'All' | translate }} ({{ remarksUnprocessed.length }})
+      </mat-chip-option>
+      @for (tag of sectionTags; track tag) {
+        <mat-chip-option [value]="tag.id" class="text-sm">
+          {{ tag.name }} ({{ tag.count }})
+        </mat-chip-option>
+      }
+    </mat-chip-listbox>
+  </div>
+}
 
-        <ng-container *ngFor="let remark of filteredRemarksUnprocessed">
-            <!-- Match -->
-            <ng-container *ngTemplateOutlet="remarktemplate; context: {$implicit: remark}"></ng-container>
-        </ng-container>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-4">
 
-    </div>
+  @for (remark of filteredRemarksUnprocessed; track remark) {
+    <!-- Match -->
+    <ng-container *ngTemplateOutlet="remarktemplate; context: {$implicit: remark}"></ng-container>
+  }
 
-    <!-- Processed -->
-    <div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
-        <div class="text-xl font-bold tracking-tight leading-none">{{ 'RemarksProcessed' | translate }}</div>
-        <div class="mt-1.5 text-lg text-secondary">({{ remarksProcessed.length }})</div>
-    </div>
+</div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
+<!-- Processed -->
+<div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
+  <div class="text-xl font-bold tracking-tight leading-none">{{ 'RemarksProcessed' | translate }}</div>
+  <div class="mt-1.5 text-lg text-secondary">({{ remarksProcessed.length }})</div>
+</div>
 
-        <ng-container *ngFor="let remark of remarksProcessed">
-            <!-- Match -->
-            <ng-container *ngTemplateOutlet="remarktemplate; context: {$implicit: remark}"></ng-container>
-        </ng-container>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
 
-    </div>
+  @for (remark of remarksProcessed; track remark) {
+    <!-- Match -->
+    <ng-container *ngTemplateOutlet="remarktemplate; context: {$implicit: remark}"></ng-container>
+  }
+
+</div>
 </div>
 
 <!-- Page result template -->
 <ng-template #remarktemplate let-remark>
-    <div class="flex flex-col min-h-32 shadow rounded-2xl overflow-hidden bg-card">
-        <div class="flex mx-4 mt-4">
-            <!-- registration -->
-            <a class="grow flex-col w-full hover:underline" [routerLink]="navigator.getRegistrationUrl(remark.registrationId)">
-                <div class="text-lg font-medium">{{ remark.displayName }}</div>
-                <div class="line-clamp-2 text-secondary">{{ remark.email }}</div>
-                <div class="w-12 h-1 mt-2 border-t-2"></div>
-            </a>
-        </div>
-
-        <div class="max-w-none mx-4 my-2 prose prose-sm">
-            <b>{{ remark.section }}:</b>&nbsp;{{ remark.remarks }}
-        </div>
-
-        <!-- Footer -->
-        <div class="flex flex-col w-full mt-auto border-t">
-            <!-- Processed -->
-            <div class="flex flex-row px-6 py-4 items-center justify-between bg-gray-50 dark:bg-transparent">
-                <div class="flex-auto cursor-pointer" (click)="processedToggle.toggle()">
-                    <div class="leading-6 font-medium">{{ 'Processed' | translate }}</div>
-                </div>
-                <mat-slide-toggle class="ml-2" [color]="'primary'" #processedToggle [checked]="remark.processed" (change)="processedChanged(remark.id, processedToggle.checked)">
-                </mat-slide-toggle>
-            </div>
-        </div>
+  <div class="flex flex-col min-h-32 shadow rounded-2xl overflow-hidden bg-card">
+    <div class="flex mx-4 mt-4">
+      <!-- registration -->
+      <a class="grow flex-col w-full hover:underline" [routerLink]="navigator.getRegistrationUrl(remark.registrationId)">
+        <div class="text-lg font-medium">{{ remark.displayName }}</div>
+        <div class="line-clamp-2 text-secondary">{{ remark.email }}</div>
+        <div class="w-12 h-1 mt-2 border-t-2"></div>
+      </a>
     </div>
+
+    <div class="max-w-none mx-4 my-2 prose prose-sm">
+      <b>{{ remark.section }}:</b>&nbsp;{{ remark.remarks }}
+    </div>
+
+    <!-- Footer -->
+    <div class="flex flex-col w-full mt-auto border-t">
+      <!-- Processed -->
+      <div class="flex flex-row px-6 py-4 items-center justify-between bg-gray-50 dark:bg-transparent">
+        <div class="flex-auto cursor-pointer" (click)="processedToggle.toggle()">
+          <div class="leading-6 font-medium">{{ 'Processed' | translate }}</div>
+        </div>
+        <mat-slide-toggle class="ml-2" [color]="'primary'" #processedToggle [checked]="remark.processed" (change)="processedChanged(remark.id, processedToggle.checked)">
+        </mat-slide-toggle>
+      </div>
+    </div>
+  </div>
 </ng-template>

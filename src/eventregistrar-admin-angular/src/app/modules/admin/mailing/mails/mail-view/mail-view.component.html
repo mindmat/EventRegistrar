@@ -1,149 +1,128 @@
 <div class="flex flex-col flex-auto overflow-y-auto lg:overflow-hidden bg-card dark:bg-default">
 
-    <ng-container *ngIf="mail; else selectMailToRead">
-
-        <!-- Header -->
-        <div class="z-10 relative flex flex-col flex-0 w-full border-b">
-
-            <!-- Toolbar -->
-            <div class="flex items-center min-h-16 px-4 md:px-6 border-b dark:bg-transparent">
-
-                <!-- Back button -->
-                <a class="lg:hidden md:-ml-2" mat-icon-button [routerLink]="['../']">
-                    <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
-                </a>
-
-                <!-- Release -->
-                <button class="m-2 ml-auto" mat-stroked-button [color]="'primary'" [matTooltip]="'Release' | translate" (click)="releaseMail(mail.id)">
-                    <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:send'"></mat-icon>
-                </button>
-
-                <!-- Subject -->
-                <div class="flex flex-auto my-1 mr-4 text-2xl">{{ mail.subject }}</div>
-
-                <!-- Other actions button & menu -->
-                <button class="ml-2 ml-auto" mat-icon-button [matMenuTriggerFor]="mailMenu">
-                    <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                </button>
-                <mat-menu #mailMenu="matMenu">
-                    <!-- Delete -->
-                    <button mat-menu-item (click)="deleteMail(mail.id)">
-                        <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                        <span>{{ 'Delete' | translate }}</span>
-                    </button>
-                    <button mat-menu-item (click)="addIcs(mail.id)">
-                        <mat-icon [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
-                        <span>{{ 'AddIcs' | translate }}</span>
-                    </button>
-                </mat-menu>
-            </div>
-        </div>
-
-        <!-- Threads -->
-        <div class="flex flex-col flex-auto shrink-0 lg:shrink p-3 lg:overflow-y-auto bg-gray-100 dark:bg-transparent" fuseScrollReset>
-
-            <!-- Thread -->
-            <div class="flex flex-col flex-0 w-full shadow rounded-2xl overflow-hidden bg-card dark:bg-black dark:bg-opacity-10">
-
-                <div class="flex flex-col py-8 px-6">
-
-                    <!-- Header -->
-                    <div class="flex items-center w-full">
-
-                        <!-- Sender avatar -->
-                        <!-- <div class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden">
-                            <img class="w-full h-full" [src]="mail.from.avatar" alt="User avatar">
-                        </div> -->
-
-                        <!-- Info -->
-                        <div class="ml-4 min-w-0">
-
-                            <!-- To -->
-                            <div class="flex items-center mt-0.5 leading-5">
-                                <div>{{ 'to' | translate }}</div>
-                                <div class="ml-1">
-                                    <a *ngFor="let recipient of mail.recipients">
-                                        <a class="hover:underline font-semibold leading-tight" [routerLink]="navigator.getRegistrationUrl(recipient.registrationId)">
-                                            {{ recipient.name }}</a>
-                                    </a>
-                                </div>
-
-                                <!-- Info details panel button -->
-                                <button class="w-5 h-5 min-h-5 ml-1" mat-icon-button (click)="openInfoDetailsPanel()" #infoDetailsPanelOrigin>
-                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:chevron-down'"></mat-icon>
-                                </button>
-
-                                <!-- Info details panel -->
-                                <ng-template #infoDetailsPanel>
-                                    <div class="flex flex-col py-4 px-6 w-full max-w-160 space-y-1.5 border text-md rounded shadow-md overflow-auto bg-card">
-                                        <!-- From -->
-                                        <div class="flex">
-                                            <div class="min-w-14 font-medium text-right">{{ 'from' | translate }}:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{ mail.from.name }} &lt;{{ mail.from.email }}&gt;</div>
-                                        </div>
-                                        <!-- To -->
-                                        <div class="flex">
-                                            <div class="min-w-14 font-medium text-right">{{ 'to' | translate }}:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{ mail.recipientsNames }} &lt;{{ mail.recipientsEmails }}&gt;</div>
-                                        </div>
-                                        <!-- Date -->
-                                        <div class="flex">
-                                            <div class="min-w-14 font-medium text-right">{{ 'date' | translate }}:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{ mail.created | date:'dd.MM.yyyy HH:mm'}}</div>
-                                        </div>
-                                        <!-- Subject -->
-                                        <div class="flex">
-                                            <div class="min-w-14 font-medium text-right">{{ 'subject' | translate }}:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{ mail.subject }}</div>
-                                        </div>
-                                    </div>
-                                </ng-template>
-
-                                <ng-container *ngFor="let attachment of mail.attachments">
-                                    <button class="w-5 h-5 min-h-5 ml-1" mat-icon-button (click)="downloadAttachment(attachment)" [matTooltip]="attachment.filename">
-                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
-                                    </button>
-                                    <!-- <div class="ml-1">({{ mail.recipients.length }})</div> -->
-                                </ng-container>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <!-- Content -->
-                    <div class="mt-8" *ngIf="mail?.content" [froalaView]="mail.content">
-                        <!-- <div *ngIf="mail?.content" [froalaEditor] [(froalaModel)]="mail.content"> -->
-                    </div>
-
+  @if (mail) {
+    <!-- Header -->
+    <div class="z-10 relative flex flex-col flex-0 w-full border-b">
+      <!-- Toolbar -->
+      <div class="flex items-center min-h-16 px-4 md:px-6 border-b dark:bg-transparent">
+        <!-- Back button -->
+        <a class="lg:hidden md:-ml-2" mat-icon-button [routerLink]="['../']">
+          <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
+        </a>
+        <!-- Release -->
+        <button class="m-2 ml-auto" mat-stroked-button [color]="'primary'" [matTooltip]="'Release' | translate" (click)="releaseMail(mail.id)">
+          <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:send'"></mat-icon>
+        </button>
+        <!-- Subject -->
+        <div class="flex flex-auto my-1 mr-4 text-2xl">{{ mail.subject }}</div>
+        <!-- Other actions button & menu -->
+        <button class="ml-2 ml-auto" mat-icon-button [matMenuTriggerFor]="mailMenu">
+          <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+        </button>
+        <mat-menu #mailMenu="matMenu">
+          <!-- Delete -->
+          <button mat-menu-item (click)="deleteMail(mail.id)">
+            <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+            <span>{{ 'Delete' | translate }}</span>
+          </button>
+          <button mat-menu-item (click)="addIcs(mail.id)">
+            <mat-icon [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+            <span>{{ 'AddIcs' | translate }}</span>
+          </button>
+        </mat-menu>
+      </div>
+    </div>
+    <!-- Threads -->
+    <div class="flex flex-col flex-auto shrink-0 lg:shrink p-3 lg:overflow-y-auto bg-gray-100 dark:bg-transparent" fuseScrollReset>
+      <!-- Thread -->
+      <div class="flex flex-col flex-0 w-full shadow rounded-2xl overflow-hidden bg-card dark:bg-black dark:bg-opacity-10">
+        <div class="flex flex-col py-8 px-6">
+          <!-- Header -->
+          <div class="flex items-center w-full">
+            <!-- Sender avatar -->
+            <!-- <div class="flex flex-0 items-center justify-center w-10 h-10 rounded-full overflow-hidden">
+            <img class="w-full h-full" [src]="mail.from.avatar" alt="User avatar">
+          </div> -->
+          <!-- Info -->
+          <div class="ml-4 min-w-0">
+            <!-- To -->
+            <div class="flex items-center mt-0.5 leading-5">
+              <div>{{ 'to' | translate }}</div>
+              <div class="ml-1">
+                @for (recipient of mail.recipients; track recipient) {
+                  <a>
+                    <a class="hover:underline font-semibold leading-tight" [routerLink]="navigator.getRegistrationUrl(recipient.registrationId)">
+                    {{ recipient.name }}</a>
+                  </a>
+                }
+              </div>
+              <!-- Info details panel button -->
+              <button class="w-5 h-5 min-h-5 ml-1" mat-icon-button (click)="openInfoDetailsPanel()" #infoDetailsPanelOrigin>
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:chevron-down'"></mat-icon>
+              </button>
+              <!-- Info details panel -->
+              <ng-template #infoDetailsPanel>
+                <div class="flex flex-col py-4 px-6 w-full max-w-160 space-y-1.5 border text-md rounded shadow-md overflow-auto bg-card">
+                  <!-- From -->
+                  <div class="flex">
+                    <div class="min-w-14 font-medium text-right">{{ 'from' | translate }}:</div>
+                    <div class="pl-2 whitespace-pre-wrap">{{ mail.from.name }} &lt;{{ mail.from.email }}&gt;</div>
+                  </div>
+                  <!-- To -->
+                  <div class="flex">
+                    <div class="min-w-14 font-medium text-right">{{ 'to' | translate }}:</div>
+                    <div class="pl-2 whitespace-pre-wrap">{{ mail.recipientsNames }} &lt;{{ mail.recipientsEmails }}&gt;</div>
+                  </div>
+                  <!-- Date -->
+                  <div class="flex">
+                    <div class="min-w-14 font-medium text-right">{{ 'date' | translate }}:</div>
+                    <div class="pl-2 whitespace-pre-wrap">{{ mail.created | date:'dd.MM.yyyy HH:mm'}}</div>
+                  </div>
+                  <!-- Subject -->
+                  <div class="flex">
+                    <div class="min-w-14 font-medium text-right">{{ 'subject' | translate }}:</div>
+                    <div class="pl-2 whitespace-pre-wrap">{{ mail.subject }}</div>
+                  </div>
                 </div>
-
-                <!-- Footer -->
-                <div class="flex w-full p-6 border-t bg-gray-50 dark:bg-transparent">
-
-                    <!-- Buttons -->
-                    <ng-container>
-                        <div class="flex flex-wrap w-full -m-2">
-                            <!-- Release -->
-                            <button class="m-2 ml-auto" mat-stroked-button [color]="'primary'" (click)="releaseMail(mail.id)">
-                                <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:send'"></mat-icon>
-                                <span class="ml-2">{{ 'Release' | translate }}</span>
-                            </button>
-                        </div>
-                    </ng-container>
-                </div>
+              </ng-template>
+              @for (attachment of mail.attachments; track attachment) {
+                <button class="w-5 h-5 min-h-5 ml-1" mat-icon-button (click)="downloadAttachment(attachment)" [matTooltip]="attachment.filename">
+                  <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                </button>
+                <!-- <div class="ml-1">({{ mail.recipients.length }})</div> -->
+              }
             </div>
+          </div>
         </div>
-    </ng-container>
+        <!-- Content -->
+        @if (mail?.content) {
+          <div class="mt-8" [froalaView]="mail.content">
+            <!-- <div *ngIf="mail?.content" [froalaEditor] [(froalaModel)]="mail.content"> -->
+          </div>
+        }
+      </div>
+      <!-- Footer -->
+      <div class="flex w-full p-6 border-t bg-gray-50 dark:bg-transparent">
+        <!-- Buttons -->
+        <ng-container>
+          <div class="flex flex-wrap w-full -m-2">
+            <!-- Release -->
+            <button class="m-2 ml-auto" mat-stroked-button [color]="'primary'" (click)="releaseMail(mail.id)">
+              <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:send'"></mat-icon>
+              <span class="ml-2">{{ 'Release' | translate }}</span>
+            </button>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div class="flex flex-col flex-auto items-center justify-center bg-gray-100 dark:bg-transparent">
+    <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:mail'"></mat-icon>
+    <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">{{ 'SelectMail' | translate }}</div>
+  </div>
+}
 
-    <!-- Select mail to read template -->
-    <ng-template #selectMailToRead>
-
-        <div class="flex flex-col flex-auto items-center justify-center bg-gray-100 dark:bg-transparent">
-            <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:mail'"></mat-icon>
-            <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">{{ 'SelectMail' | translate }}</div>
-        </div>
-
-    </ng-template>
+<!-- Select mail to read template -->
 
 </div>

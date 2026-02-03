@@ -1,392 +1,501 @@
 <div class="flex flex-col flex-auto min-w-0">
 
-    <!-- Header -->
-    <div class="flex flex-col shadow bg-card">
+  <!-- Header -->
+  <div class="flex flex-col shadow bg-card">
 
-        <!-- Cover image -->
-        <!-- <div>
-            <img class="h-40 lg:h-80 object-cover" src="assets/images/pages/profile/cover.jpg" alt="Cover image">
-        </div> -->
+    <!-- Cover image -->
+    <!-- <div>
+    <img class="h-40 lg:h-80 object-cover" src="assets/images/pages/profile/cover.jpg" alt="Cover image">
+  </div> -->
 
-        <!-- User info -->
-        <div class="flex flex-col flex-0 lg:flex-row items-center max-w-5xl w-full mx-auto px-8 lg:h-18 bg-card">
+  <!-- User info -->
+  <div class="flex flex-col flex-0 lg:flex-row items-center max-w-5xl w-full mx-auto px-8 lg:h-18 bg-card">
 
-            <!-- Avatar -->
-            <!-- <div class="-mt-26 lg:-mt-22 rounded-full">
-                <img class="w-32 h-32 rounded-full ring-4 ring-bg-card" src="assets/images/avatars/male-04.jpg" alt="User avatar">
-            </div> -->
+    <!-- Avatar -->
+    <!-- <div class="-mt-26 lg:-mt-22 rounded-full">
+    <img class="w-32 h-32 rounded-full ring-4 ring-bg-card" src="assets/images/avatars/male-04.jpg" alt="User avatar">
+  </div> -->
 
-            <!-- Details -->
-            <div class="flex flex-col items-center lg:items-start mt-4 lg:mt-0 lg:ml-8">
-                <div class="text-lg font-bold leading-none" [ngClass]="{'line-through': registration.status===RegistrationState.Cancelled}">{{ registration.firstName }} {{ registration.lastName }}
-                </div>
-                <!-- <div class="text-secondary">London, UK</div> -->
+  <!-- Details -->
+  <div class="flex flex-col items-center lg:items-start mt-4 lg:mt-0 lg:ml-8">
+    <div class="text-lg font-bold leading-none" [ngClass]="{'line-through': registration.status===RegistrationState.Cancelled}">{{ registration.firstName }} {{ registration.lastName }}
+    </div>
+    <!-- <div class="text-secondary">London, UK</div> -->
+  </div>
+
+  @if (registration.isWaitingList) {
+    <mat-icon class="icon-size-5 ml-2" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon>
+  }
+
+  <!-- Separator -->
+  <div class="hidden lg:flex h-8 mx-8 border-l-2"></div>
+
+  <!-- Stats -->
+  <!-- <div class="flex items-center mt-6 lg:mt-0 space-x-6">
+  <div class="flex flex-col items-center">
+    <span class="font-bold">200k</span>
+    <span class="text-sm font-medium text-secondary">FOLLOWERS</span>
+  </div>
+  <div class="flex flex-col items-center">
+    <span class="font-bold">1.2k</span>
+    <span class="text-sm font-medium text-secondary">FOLLOWING</span>
+  </div>
+</div> -->
+
+<!-- Menu -->
+<!-- <div class="flex items-center mt-8 mb-4 lg:m-0 lg:ml-auto space-x-6">
+<a class="font-medium" [routerLink]="['./']">
+  Home
+</a>
+<a class="text-secondary" [routerLink]="['./']">
+  About
+</a>
+<a class="text-secondary" [routerLink]="['./']">
+  Followers
+</a>
+<a class="text-secondary" [routerLink]="['./']">
+  Gallery
+</a>
+</div> -->
+
+</div>
+
+</div>
+
+<!-- Main -->
+<div class="flex flex-auto justify-center w-full max-w-5xl mx-auto p-6 space-x-8 sm:p-8">
+
+  <!-- Column -->
+  <div class="flex flex-col items-start space-y-4">
+
+    <!-- general info -->
+    <fuse-card class="flex flex-col w-80 p-8">
+      <div class="flex items-center justify-between">
+        <div class="text-2xl font-semibold leading-tight">{{ 'Overview' | translate }}</div>
+        <div class="-mr-3">
+          <button mat-icon-button [matMenuTriggerFor]="overviewMenu">
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+          </button>
+          <mat-menu #overviewMenu="matMenu">
+            <button mat-menu-item (click)="addReduction()">{{ 'CreateIndividualReduction' | translate }}</button>
+            <button mat-menu-item (click)="cancelRegistration()">{{ 'CancelRegistration' | translate }}</button>
+            <button mat-menu-item (click)="changeName()">{{ 'ChangeName' | translate }}</button>
+            <button mat-menu-item (click)="changeEmail()">{{ 'ChangeEmail' | translate }}</button>
+            @if (registration.partnerId===null && registration.partnerOriginal!==null) {
+              <button mat-menu-item (click)="convertToSingleRegistration()">
+              {{ 'TransformToSingle' | translate }}</button>
+            }
+            @if (registration.status===RegistrationState.Received&&registration.paid<registration.price) {
+              <button mat-menu-item (click)="setWillPayAtCheckin(true)">
+              {{ 'SetWillPayAtCheckin' | translate }}</button>
+            }
+            @if (registration.paid<registration.price&&registration.willPayAtCheckin) {
+              <button mat-menu-item (click)="setWillPayAtCheckin(false)">
+              {{ 'SetWillNotPayAtCheckin' | translate }}</button>
+            }
+            @if (registration.partnerId) {
+              <button mat-menu-item (click)="unbindPartnerRegistrations()">{{ 'TransformToSingle' | translate }}</button>
+            }
+            <button mat-menu-item (click)="recalculateReadModel()">{{ 'Recalculate' | translate }}</button>
+          </mat-menu>
+        </div>
+      </div>
+      <hr class="w-full border-t my-6">
+      <div class="flex flex-col">
+        <div class="flex items-center">
+          <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_solid:more_time'"></mat-icon>
+          <span class="leading-none" [matTooltip]="registration.receivedAt | date: 'HH:mm:ss'">{{ registration.receivedAt | date: 'dd.MM.yy' }}</span>
+        </div>
+        @if (!!registration.readableId) {
+          <div class="flex items-center mt-4">
+            <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+            <span class="leading-none">{{ registration.readableId }}</span>
+          </div>
+        }
+        <div class="flex items-center mt-4">
+          <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_solid:mail'"></mat-icon>
+          <span class="leading-none">{{ registration.email }}</span>
+        </div>
+        @if (registration.phoneNormalized) {
+          <div class="flex items-center mt-4">
+            <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:phone'"></mat-icon>
+            <span class="leading-none">{{ registration.phoneNormalized }}</span>
+          </div>
+        }
+        @if (!registration.isWaitingList) {
+          <div class="flex items-center mt-4">
+            <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+            <span class="leading-none">{{ registration.paid | number : '1.2-2' }}</span>
+            @if (registration.price !== registration.paid) {
+              <span>&nbsp;/&nbsp;{{ registration.price | number : '1.2-2' }}</span>
+            }
+            @if (registration.price === registration.paid) {
+              <mat-icon class="icon-size-5 ml-1 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+            }
+          </div>
+        }
+        @if (!registration.isWaitingList && registration.willPayAtCheckin) {
+          <div class="flex items-center mt-1">
+            <span class="leading-none ml-8">{{ 'WillPayAtCheckin' | translate }}</span>
+          </div>
+        }
+        @if (registration.reductions?.length > 0) {
+          <div class="flex flex-col mt-3 ml-8">
+            <span class="leading-none">{{ 'Reductions' | translate }}:</span>
+            @for (reduction of registration.reductions; track reduction) {
+              <div class="flex items-center mt-2">
+                <span class="leading-none">{{ reduction.reason }}:</span>
+                @if (reduction.type===IndividualReductionType.Reduction) {
+                  <span class="leading-none ml-auto">-{{ reduction.amount | number : '1.2-2' }}</span>
+                }
+                @if (reduction.type===IndividualReductionType.OverwritePrice) {
+                  <span class="leading-none ml-auto">-> {{ reduction.amount | number : '1.2-2' }}</span>
+                }
+                @if (reduction.type===IndividualReductionType.Percentage) {
+                  <span class="leading-none ml-auto">{{ (reduction.amount * 100) | number : '1.0-0' }}%</span>
+                }
+                <button mat-icon-button (click)="removeReduction(reduction.id)">
+                  <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        }
+        @if (registration.partnerOriginal) {
+          <div class="flex items-center mt-4">
+            <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
+            <span class="leading-none">
+              @if (registration.partnerId) {
+                <a class="hover:underline" [routerLink]="navigator.getRegistrationUrl(registration.partnerId)">{{ registration.partnerName }}</a>
+              }
+              @if (!registration.partnerId) {
+                <span class="italic">{{ registration.partnerOriginal }}</span>
+              }
+            </span>
+          </div>
+        }
+        @if (registration.language) {
+          <div class="flex items-center mt-4">
+            <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:language'"></mat-icon>
+            <span class="relative w-6 shadow rounded-sm overflow-hidden">
+              <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
+              <img class="w-full" [src]="'assets/images/flags/' + flagCodes[registration.language]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + registration.language">
+            </span>
+          </div>
+        }
+      </div>
+    </fuse-card>
+
+    <!-- Payments -->
+    <fuse-card class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
+      <div class="flex items-center justify-between">
+        <div class="text-2xl font-semibold leading-tight">{{ 'Payments' | translate }}</div>
+        <div class="-mr-3">
+          <button mat-icon-button [matMenuTriggerFor]="paymentsMenu">
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+          </button>
+          <mat-menu #paymentsMenu="matMenu">
+            <button mat-menu-item (click)="addManualPayment()">{{ 'CreateAndAddIncomingPayment' | translate }}</button>
+            <!-- <button mat-menu-item>Clear activities</button> -->
+          </mat-menu>
+        </div>
+      </div>
+      <hr class="w-full border-t my-6">
+      <div class="flex flex-col space-y-4 mb-4">
+        @for (payment of registration.payments; track payment) {
+          <div class="flex flex-col rounded-xl bg-default shadow p-3">
+            <div class="flex items-center">
+              <div class="flex items-baseline">
+                <div>{{ payment.amount | number : '1.2-2' }}</div>
+                <div class="text-sm text-secondary ml-1">{{ payment.bookingDate | date: 'dd.MM.yy' }}</div>
+              </div>
+              <button mat-icon-button [matMenuTriggerFor]="paymentMenu" class="ml-auto">
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+              </button>
+              <mat-menu #paymentMenu="matMenu">
+                <button mat-menu-item (click)="unassignPayment(payment.paymentAssignmentId)">{{ 'UnassignPayment' | translate }}</button>
+              </mat-menu>
             </div>
+            <div class="text-sm text-secondary -mt-1">
+              @if (payment.debitorName) {
+                <div>{{ 'PaymentFrom' | translate : {debitor: payment.debitorName??'?'} }}</div>
+              }
+              @if (payment.debitorAdressLine1) {
+                <div>{{ payment.debitorAdressLine1 }}</div>
+              }
+              @if (payment.debitorAdressLine2) {
+                <div>{{ payment.debitorAdressLine2 }}</div>
+              }
+              @if (payment.debitorIban) {
+                <div>{{ payment.debitorIban }}</div>
+              }
+              @if (payment.creditorName) {
+                <div>{{ 'PaymentTo' | translate : {creditor: payment.creditorName??'?'} }}</div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </fuse-card>
 
-            <mat-icon class="icon-size-5 ml-2" *ngIf="registration.isWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon>
+    <!-- Remarks -->
+    @if (!!registration.remarks) {
+      @for (remark of registration.remarks; track remark) {
+        <fuse-card class="flex flex-col w-80 rounded-2xl">
+          <div class="flex flex-col w-80 px-4 pt-6 pb-4 rounded-2xl">
+            <div class="flex items-center justify-between">
+              <div class="text-2xl font-semibold leading-tight">{{ 'Remarks' | translate }}</div>
+            </div>
+            <hr class="w-full border-t my-2">
+            <div class="max-w-none my-2 prose prose-sm">
+              <b>{{ remark.section }}:</b>&nbsp;{{ remark.text }}
+            </div>
+          </div>
+          <!-- Footer -->
+          <div class="flex flex-col w-full mt-auto border-t">
+            <!-- Processed -->
+            <div class="flex flex-row px-6 py-4 items-center justify-between bg-gray-50 dark:bg-transparent">
+              <div class="flex-auto cursor-pointer" (click)="processedToggle.toggle()">
+                <div class="leading-6 font-medium">{{ 'Processed' | translate }}</div>
+              </div>
+              <mat-slide-toggle class="ml-1" [color]="'primary'" #processedToggle [checked]="remark.processed" (change)="processedChanged(remark.id, processedToggle.checked)">
+              </mat-slide-toggle>
+            </div>
+          </div>
+        </fuse-card>
+      }
+    }
+  </div>
 
-            <!-- Separator -->
-            <div class="hidden lg:flex h-8 mx-8 border-l-2"></div>
+  <!-- Column -->
+  <div class="flex flex-col items-start space-y-4">
 
-            <!-- Stats -->
-            <!-- <div class="flex items-center mt-6 lg:mt-0 space-x-6">
-                <div class="flex flex-col items-center">
-                    <span class="font-bold">200k</span>
-                    <span class="text-sm font-medium text-secondary">FOLLOWERS</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <span class="font-bold">1.2k</span>
-                    <span class="text-sm font-medium text-secondary">FOLLOWING</span>
-                </div>
-            </div> -->
-
-            <!-- Menu -->
-            <!-- <div class="flex items-center mt-8 mb-4 lg:m-0 lg:ml-auto space-x-6">
-                <a class="font-medium" [routerLink]="['./']">
-                    Home
-                </a>
-                <a class="text-secondary" [routerLink]="['./']">
-                    About
-                </a>
-                <a class="text-secondary" [routerLink]="['./']">
-                    Followers
-                </a>
-                <a class="text-secondary" [routerLink]="['./']">
-                    Gallery
-                </a>
-            </div> -->
-
-        </div>
-
+    <!-- Spots -->
+    <fuse-card class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
+      <div class="flex items-center justify-between">
+        <div class="text-2xl font-semibold leading-tight">{{ 'Spots' | translate }}</div>
+        <div class="-mr-3">
+          <button mat-icon-button [matMenuTriggerFor]="spotsMenu" (click)="fetchPossibleFalbackPackages()">
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+          </button>
+          <mat-menu #spotsMenu="matMenu">
+            <button mat-menu-item (click)="changeSpots()">{{ 'Change' | translate }}</button>
+            <button mat-menu-item [matMenuTriggerFor]="fallbackPackagesMenu">{{ 'SetFallbackPackage' | translate }}</button>
+            <button mat-menu-item (click)="downloadIcs()">{{ 'DownloadIcs' | translate }}</button>
+          </mat-menu>
+          <mat-menu #fallbackPackagesMenu>
+            @for (package of possibleFallbackPricePackages; track package) {
+              <button mat-menu-item
+                (click)="toggleManualFallbackPackage(package.id, registration.pricePackageIds_ManualFallback?.includes(package.id)===true)">
+                @if (registration.pricePackageIds_ManualFallback.includes(package.id)) {
+                  <mat-icon [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                }
+                {{ package.name }}
+              </button>
+            }
+            <!-- <button *ngIf="!!registration.pricePackageId_ManualFallback" mat-menu-item (click)="removeFallbackPackage()">
+            {{ 'Remove' | translate }}
+          </button> -->
+        </mat-menu>
+      </div>
     </div>
-
-    <!-- Main -->
-    <div class="flex flex-auto justify-center w-full max-w-5xl mx-auto p-6 space-x-8 sm:p-8">
-
-        <!-- Column -->
-        <div class="flex flex-col items-start space-y-4">
-
-            <!-- general info -->
-            <fuse-card class="flex flex-col w-80 p-8">
-                <div class="flex items-center justify-between">
-                    <div class="text-2xl font-semibold leading-tight">{{ 'Overview' | translate }}</div>
-                    <div class="-mr-3">
-                        <button mat-icon-button [matMenuTriggerFor]="overviewMenu">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                        </button>
-                        <mat-menu #overviewMenu="matMenu">
-                            <button mat-menu-item (click)="addReduction()">{{ 'CreateIndividualReduction' | translate }}</button>
-                            <button mat-menu-item (click)="cancelRegistration()">{{ 'CancelRegistration' | translate }}</button>
-                            <button mat-menu-item (click)="changeName()">{{ 'ChangeName' | translate }}</button>
-                            <button mat-menu-item (click)="changeEmail()">{{ 'ChangeEmail' | translate }}</button>
-                            <button mat-menu-item *ngIf="registration.partnerId===null && registration.partnerOriginal!==null" (click)="convertToSingleRegistration()">
-                                {{ 'TransformToSingle' | translate }}</button>
-                            <button mat-menu-item *ngIf="registration.status===RegistrationState.Received&&registration.paid<registration.price" (click)="setWillPayAtCheckin(true)">
-                                {{ 'SetWillPayAtCheckin' | translate }}</button>
-                            <button mat-menu-item *ngIf="registration.paid<registration.price&&registration.willPayAtCheckin" (click)="setWillPayAtCheckin(false)">
-                                {{ 'SetWillNotPayAtCheckin' | translate }}</button>
-                            <button mat-menu-item *ngIf="registration.partnerId" (click)="unbindPartnerRegistrations()">{{ 'TransformToSingle' | translate }}</button>
-                            <button mat-menu-item (click)="recalculateReadModel()">{{ 'Recalculate' | translate }}</button>
-                        </mat-menu>
-                    </div>
-                </div>
-                <hr class="w-full border-t my-6">
-                <div class="flex flex-col">
-                    <div class="flex items-center">
-                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_solid:more_time'"></mat-icon>
-                        <span class="leading-none" [matTooltip]="registration.receivedAt | date: 'HH:mm:ss'">{{ registration.receivedAt | date: 'dd.MM.yy' }}</span>
-                    </div>
-                    <div *ngIf="!!registration.readableId" class="flex items-center mt-4">
-                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:identification'"></mat-icon>
-                        <span class="leading-none">{{ registration.readableId }}</span>
-                    </div>
-                    <div class="flex items-center mt-4">
-                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_solid:mail'"></mat-icon>
-                        <span class="leading-none">{{ registration.email }}</span>
-                    </div>
-                    <div *ngIf="registration.phoneNormalized" class="flex items-center mt-4">
-                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:phone'"></mat-icon>
-                        <span class="leading-none">{{ registration.phoneNormalized }}</span>
-                    </div>
-                    <div class="flex items-center mt-4" *ngIf="!registration.isWaitingList">
-                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                        <span class="leading-none">{{ registration.paid | number : '1.2-2' }}</span>
-                        <span *ngIf="registration.price !== registration.paid">&nbsp;/&nbsp;{{ registration.price | number : '1.2-2' }}</span>
-                        <mat-icon *ngIf="registration.price === registration.paid" class="icon-size-5 ml-1 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-                    </div>
-                    <div class="flex items-center mt-1" *ngIf="!registration.isWaitingList && registration.willPayAtCheckin">
-                        <span class="leading-none ml-8">{{ 'WillPayAtCheckin' | translate }}</span>
-                    </div>
-                    <div class="flex flex-col mt-3 ml-8" *ngIf="registration.reductions?.length > 0">
-                        <span class="leading-none">{{ 'Reductions' | translate }}:</span>
-                        <div class="flex items-center mt-2" *ngFor="let reduction of registration.reductions">
-                            <span class="leading-none">{{ reduction.reason }}:</span>
-                            <span class="leading-none ml-auto" *ngIf="reduction.type===IndividualReductionType.Reduction">-{{ reduction.amount | number : '1.2-2' }}</span>
-                            <span class="leading-none ml-auto" *ngIf="reduction.type===IndividualReductionType.OverwritePrice">-> {{ reduction.amount | number : '1.2-2' }}</span>
-                            <span class="leading-none ml-auto" *ngIf="reduction.type===IndividualReductionType.Percentage">{{ (reduction.amount * 100) | number : '1.0-0' }}%</span>
-                            <button mat-icon-button (click)="removeReduction(reduction.id)">
-                                <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                            </button>
-
-                        </div>
-                    </div>
-                    <div class="flex items-center mt-4" *ngIf="registration.partnerOriginal">
-                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
-                        <span class="leading-none">
-                            <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="navigator.getRegistrationUrl(registration.partnerId)">{{ registration.partnerName }}</a>
-                            <span *ngIf="!registration.partnerId" class="italic">{{ registration.partnerOriginal }}</span>
-                        </span>
-                    </div>
-                    <div *ngIf="registration.language" class="flex items-center mt-4">
-                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:language'"></mat-icon>
-                        <span class="relative w-6 shadow rounded-sm overflow-hidden">
-                            <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
-                            <img class="w-full" [src]="'assets/images/flags/' + flagCodes[registration.language]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + registration.language">
-                        </span>
-                    </div>
-                </div>
-            </fuse-card>
-
-            <!-- Payments -->
-            <fuse-card class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
-                <div class="flex items-center justify-between">
-                    <div class="text-2xl font-semibold leading-tight">{{ 'Payments' | translate }}</div>
-                    <div class="-mr-3">
-                        <button mat-icon-button [matMenuTriggerFor]="paymentsMenu">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                        </button>
-                        <mat-menu #paymentsMenu="matMenu">
-                            <button mat-menu-item (click)="addManualPayment()">{{ 'CreateAndAddIncomingPayment' | translate }}</button>
-                            <!-- <button mat-menu-item>Clear activities</button> -->
-                        </mat-menu>
-                    </div>
-                </div>
-                <hr class="w-full border-t my-6">
-                <div class="flex flex-col space-y-4 mb-4">
-                    <ng-container *ngFor="let payment of registration.payments">
-                        <div class="flex flex-col rounded-xl bg-default shadow p-3">
-                            <div class="flex items-center">
-                                <div class="flex items-baseline">
-                                    <div>{{ payment.amount | number : '1.2-2' }}</div>
-                                    <div class="text-sm text-secondary ml-1">{{ payment.bookingDate | date: 'dd.MM.yy' }}</div>
-                                </div>
-                                <button mat-icon-button [matMenuTriggerFor]="paymentMenu" class="ml-auto">
-                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                                </button>
-                                <mat-menu #paymentMenu="matMenu">
-                                    <button mat-menu-item (click)="unassignPayment(payment.paymentAssignmentId)">{{ 'UnassignPayment' | translate }}</button>
-                                </mat-menu>
-                            </div>
-                            <div class="text-sm text-secondary -mt-1">
-                                <div *ngIf="payment.debitorName">{{ 'PaymentFrom' | translate : {debitor: payment.debitorName??'?'} }}</div>
-                                <div *ngIf="payment.debitorAdressLine1">{{ payment.debitorAdressLine1 }}</div>
-                                <div *ngIf="payment.debitorAdressLine2">{{ payment.debitorAdressLine2 }}</div>
-                                <div *ngIf="payment.debitorIban">{{ payment.debitorIban }}</div>
-                                <div *ngIf="payment.creditorName">{{ 'PaymentTo' | translate : {creditor: payment.creditorName??'?'} }}</div>
-                            </div>
-                        </div>
-                    </ng-container>
-                </div>
-            </fuse-card>
-
-            <!-- Remarks -->
-            <ng-container *ngIf="!!registration.remarks">
-                <fuse-card *ngFor="let remark of registration.remarks" class="flex flex-col w-80 rounded-2xl">
-                    <div class="flex flex-col w-80 px-4 pt-6 pb-4 rounded-2xl">
-                        <div class="flex items-center justify-between">
-                            <div class="text-2xl font-semibold leading-tight">{{ 'Remarks' | translate }}</div>
-                        </div>
-                        <hr class="w-full border-t my-2">
-                        <div class="max-w-none my-2 prose prose-sm">
-                            <b>{{ remark.section }}:</b>&nbsp;{{ remark.text }}
-                        </div>
-                    </div>
-                    <!-- Footer -->
-                    <div class="flex flex-col w-full mt-auto border-t">
-                        <!-- Processed -->
-                        <div class="flex flex-row px-6 py-4 items-center justify-between bg-gray-50 dark:bg-transparent">
-                            <div class="flex-auto cursor-pointer" (click)="processedToggle.toggle()">
-                                <div class="leading-6 font-medium">{{ 'Processed' | translate }}</div>
-                            </div>
-                            <mat-slide-toggle class="ml-1" [color]="'primary'" #processedToggle [checked]="remark.processed" (change)="processedChanged(remark.id, processedToggle.checked)">
-                            </mat-slide-toggle>
-                        </div>
-                    </div>
-                </fuse-card>
-            </ng-container>
+    <hr class="w-full border-t my-6">
+    <div class="flex flex-col space-y-4 mb-4">
+      @for (spot of registration.spots; track spot) {
+        <div class="flex flex-col rounded-xl bg-default shadow p-3">
+          <div class="flex align-top relative">
+            <a class="leading-tight hover:underline" [routerLink]="getRegistrableUrl(spot)">
+              <div>{{ spot.registrableName }}</div>
+              @if (spot.registrableNameSecondary) {
+                <div class="text-md leading-none text-secondary mt-2">{{ spot.registrableNameSecondary }}</div>
+              }
+            </a>
+            @if (spot.isWaitingList) {
+              <mat-icon class="icon-size-5 absolute right-0" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon>
+            }
+          </div>
+          @if (spot.roleText) {
+            <div class="flex items-center mt-4">
+              <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:user'"></mat-icon>
+              <div>{{ spot.roleText }}</div>
+              @if (!spot.partnerRegistrationId) {
+                <button class="ml-auto -mt-2" mat-icon-button (click)="matchSpotWithPartner(spot)">
+                  <mat-icon [svgIcon]="'mat_outline:add_link'"></mat-icon>
+                </button>
+              }
+            </div>
+          }
+          @if (spot.partnerName) {
+            <div class="flex items-center mt-4">
+              <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
+              <span class="leading-none">
+                @if (spot.partnerRegistrationId) {
+                  <a class="hover:underline" [routerLink]="navigator.getRegistrationUrl(spot.partnerRegistrationId)">{{ spot.partnerName }}</a>
+                }
+                @if (!spot.partnerRegistrationId) {
+                  <span class="italic">{{ spot.partnerName ?? registration.partnerOriginal }}</span>
+                }
+              </span>
+              @if (spot.partnerRegistrationId || !!spot.partnerName) {
+                <button class="ml-auto -mt-2" mat-icon-button (click)="unbindPartnerSpot(spot)">
+                  <mat-icon [svgIcon]="'mat_outline:link_off'"></mat-icon>
+                </button>
+              }
+            </div>
+          }
+          <!-- <div class="text-md leading-none text-secondary mt-2">{{spot.firstPartnerJoined | date: 'dd.MM.yy HH:mm:ss'}}</div> -->
         </div>
-
-        <!-- Column -->
-        <div class="flex flex-col items-start space-y-4">
-
-            <!-- Spots -->
-            <fuse-card class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
-                <div class="flex items-center justify-between">
-                    <div class="text-2xl font-semibold leading-tight">{{ 'Spots' | translate }}</div>
-                    <div class="-mr-3">
-                        <button mat-icon-button [matMenuTriggerFor]="spotsMenu" (click)="fetchPossibleFalbackPackages()">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                        </button>
-                        <mat-menu #spotsMenu="matMenu">
-                            <button mat-menu-item (click)="changeSpots()">{{ 'Change' | translate }}</button>
-                            <button mat-menu-item [matMenuTriggerFor]="fallbackPackagesMenu">{{ 'SetFallbackPackage' | translate }}</button>
-                            <button mat-menu-item (click)="downloadIcs()">{{ 'DownloadIcs' | translate }}</button>
-                        </mat-menu>
-                        <mat-menu #fallbackPackagesMenu>
-                            <button *ngFor="let package of possibleFallbackPricePackages" mat-menu-item
-                                (click)="toggleManualFallbackPackage(package.id, registration.pricePackageIds_ManualFallback?.includes(package.id)===true)">
-                                <mat-icon *ngIf="registration.pricePackageIds_ManualFallback.includes(package.id)" [svgIcon]="'heroicons_outline:check'"></mat-icon>
-                                {{ package.name }}
-                            </button>
-                            <!-- <button *ngIf="!!registration.pricePackageId_ManualFallback" mat-menu-item (click)="removeFallbackPackage()">
-                                {{ 'Remove' | translate }}
-                            </button> -->
-                        </mat-menu>
-                    </div>
-                </div>
-                <hr class="w-full border-t my-6">
-                <div class="flex flex-col space-y-4 mb-4">
-                    <ng-container *ngFor="let spot of registration.spots">
-                        <div class="flex flex-col rounded-xl bg-default shadow p-3">
-                            <div class="flex align-top relative">
-                                <a class="leading-tight hover:underline" [routerLink]="getRegistrableUrl(spot)">
-                                    <div>{{ spot.registrableName }}</div>
-                                    <div class="text-md leading-none text-secondary mt-2" *ngIf="spot.registrableNameSecondary">{{ spot.registrableNameSecondary }}</div>
-                                </a>
-                                <mat-icon class="icon-size-5 absolute right-0" *ngIf="spot.isWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon>
-                            </div>
-                            <div *ngIf="spot.roleText" class="flex items-center mt-4">
-                                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:user'"></mat-icon>
-                                <div>{{ spot.roleText }}</div>
-                                <button *ngIf="!spot.partnerRegistrationId" class="ml-auto -mt-2" mat-icon-button (click)="matchSpotWithPartner(spot)">
-                                    <mat-icon [svgIcon]="'mat_outline:add_link'"></mat-icon>
-                                </button>
-                            </div>
-                            <div *ngIf="spot.partnerName" class="flex items-center mt-4">
-                                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
-                                <span class="leading-none">
-                                    <a *ngIf="spot.partnerRegistrationId" class="hover:underline" [routerLink]="navigator.getRegistrationUrl(spot.partnerRegistrationId)">{{ spot.partnerName }}</a>
-                                    <span *ngIf="!spot.partnerRegistrationId" class="italic">{{ spot.partnerName ?? registration.partnerOriginal }}</span>
-                                </span>
-                                <button *ngIf="spot.partnerRegistrationId || !!spot.partnerName" class="ml-auto -mt-2" mat-icon-button (click)="unbindPartnerSpot(spot)">
-                                    <mat-icon [svgIcon]="'mat_outline:link_off'"></mat-icon>
-                                </button>
-                            </div>
-                            <!-- <div class="text-md leading-none text-secondary mt-2">{{spot.firstPartnerJoined | date: 'dd.MM.yy HH:mm:ss'}}</div> -->
-                        </div>
-                    </ng-container>
-                </div>
-            </fuse-card>
-
-            <!-- Volunteer Shifts -->
-            <fuse-card *ngIf="registration.volunteerShifts && registration.volunteerShifts.length > 0" class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
-                <div class="flex items-center justify-between">
-                    <div class="text-2xl font-semibold leading-tight">{{ 'VolunteerShifts' | translate }}</div>
-                </div>
-                <hr class="w-full border-t my-6">
-                <div class="flex flex-col space-y-4 mb-4">
-                    <ng-container *ngFor="let shift of registration.volunteerShifts">
-                        <div class="flex flex-col rounded-xl bg-default shadow p-3" [ngClass]="{'border-l-4 border-blue-400': !shift.isConfirmed}">
-                            <div class="flex items-center">
-                                <div class="flex flex-col flex-1">
-                                    <div class="flex items-baseline">
-                                        <div class="font-medium" [ngClass]="{'text-blue-600': !shift.isConfirmed}">{{ shift.name }}</div>
-                                        <mat-icon *ngIf="!shift.isConfirmed" class="icon-size-4 ml-2 text-blue-500" [svgIcon]="'heroicons_solid:question-mark-circle'"
-                                            matTooltip="Not confirmed yet"></mat-icon>
-                                        <mat-icon *ngIf="shift.isResponsible" class="icon-size-4 ml-2 text-primary" [svgIcon]="'heroicons_solid:star'" matTooltip="Responsible"></mat-icon>
-                                    </div>
-                                    <div *ngIf="shift.description" class="text-sm text-secondary mt-1">{{ shift.description }}</div>
-                                </div>
-                            </div>
-                            <div class="flex flex-col mt-2 space-y-1">
-                                <div *ngIf="shift.location" class="flex items-center text-sm text-secondary">
-                                    <mat-icon class="icon-size-4 mr-2" [svgIcon]="'heroicons_solid:map-pin'"></mat-icon>
-                                    <span>{{ shift.location }}</span>
-                                </div>
-                                <div *ngIf="shift.startTime || shift.endTime" class="flex items-center text-sm text-secondary">
-                                    <mat-icon class="icon-size-4 mr-2" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
-                                    <span>
-                                        <span *ngIf="shift.startTime">{{ shift.startTime | date: 'dd.MM.yy HH:mm' }}</span>
-                                        <span *ngIf="shift.startTime && shift.endTime"> - </span>
-                                        <span *ngIf="shift.endTime">{{ shift.endTime | date: 'HH:mm' }}</span>
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-container>
-                </div>
-            </fuse-card>
-        </div>
-
-        <!-- Column -->
-        <div class="flex flex-col items-start space-y-4">
-            <!-- Notes -->
-            <fuse-card class="flex flex-col w-80 rounded-2xl">
-                <div class="flex flex-col w-80 px-8 pt-6 pb-8 rounded-2xl">
-                    <div class="flex items-center justify-between">
-                        <div class="text-2xl font-semibold leading-tight">{{ 'InternalNotes' | translate }}</div>
-                    </div>
-                    <hr *ngIf="!lastSentNotes" class="w-full border-t my-6">
-                    <mat-progress-bar *ngIf="!!lastSentNotes" mode="indeterminate" class="w-full h-1 my-6"></mat-progress-bar>
-                    <mat-form-field [subscriptSizing]="'dynamic'">
-                        <textarea class="textarea whitespace-pre-wrap" matInput #notesInput [rows]="4" [ngModel]="notes" (ngModelChange)="notesChanged(notesInput.value)"></textarea>
-                    </mat-form-field>
-                </div>
-            </fuse-card>
-
-            <!-- Mails -->
-            <fuse-card class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
-                <div class="flex items-center justify-between">
-                    <div class="text-2xl font-semibold leading-tight">{{ 'Mails' | translate }}</div>
-                    <div class="-mr-3">
-                        <button mat-icon-button [matMenuTriggerFor]="mailsMenu" (click)="fetchPossibleMailTypes()">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                        </button>
-                        <mat-menu #mailsMenu="matMenu">
-                            <button mat-menu-item [matMenuTriggerFor]="mailTypesMenu">{{ 'CreateMail' | translate }}</button>
-                        </mat-menu>
-                        <mat-menu #mailTypesMenu>
-                            <button *ngFor="let mailType of possibleMailTypes" mat-menu-item (click)="createMail(mailType)">{{ mailType.userText }}</button>
-                        </mat-menu>
-                    </div>
-                </div>
-                <hr class="w-full border-t my-6">
-                <div class="flex flex-col space-y-4 mb-4">
-                    <ng-container *ngFor="let mail of mails">
-                        <div class="flex flex-col rounded-xl bg-default shadow p-3">
-                            <div class="flex flex-col">
-                                <div class="flex flex-row items-center -mt-2">
-                                    <div>{{ mail.subject }}</div>
-                                    <button mat-icon-button (click)="viewMail(mail.mailId)" class="ml-auto">
-                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:eye'"></mat-icon>
-                                    </button>
-                                    <button *ngIf="!mail.sentAt && mail.type!==MailDisplayType.Imported" mat-icon-button [matMenuTriggerFor]="mailMenu" class="-ml-2"
-                                        (click)="fetchPossibleMailTypes()">
-                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                                    </button>
-                                    <mat-menu #mailMenu="matMenu">
-                                        <button *ngIf="!mail.sentAt" mat-menu-item (click)="releaseMail(mail.mailId)">{{ 'Release' | translate }}</button>
-                                        <button *ngIf="!mail.sentAt" mat-menu-item (click)="deleteMail(mail.mailId)">{{ 'Delete' | translate }}</button>
-                                    </mat-menu>
-                                </div>
-                                <div class="flex flex-row items-center space-x-1">
-                                    <mat-icon *ngIf="mail.withhold" class="icon-size-5" [svgIcon]="'heroicons_solid:lock-closed'" [matTooltip]="'NotReleased' | translate"></mat-icon>
-                                    <mat-icon *ngIf="!mail.withhold && mail.state !== MailState.Open && mail.state !== MailState.Click && mail.state !== MailState.Delivered" class="icon-size-5"
-                                        [svgIcon]="'heroicons_solid:question-mark-circle'" [matTooltip]="mail.state | translateEnum: MailState : 'MailState'"></mat-icon>
-                                    <mat-icon *ngIf="mail.state === MailState.Delivered" class="icon-size-5" [svgIcon]="'heroicons_solid:check-circle'"
-                                        [matTooltip]="mail.state | translateEnum: MailState : 'MailState'"></mat-icon>
-                                    <mat-icon *ngIf="mail.state === MailState.Open || mail.state === MailState.Click" class="icon-size-5 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"
-                                        [matTooltip]="mail.state | translateEnum: MailState : 'MailState'"></mat-icon>
-                                    <!-- <mat-icon *ngIf="mail.withhold" class="icon-size-5 absolute right-0" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
-                                    <div class="text-md leading-none text-secondary">{{ mail.sentAt ?? mail.created | date: 'dd.MM.yy HH:mm' }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </ng-container>
-                </div>
-            </fuse-card>
-
-        </div>
+      }
     </div>
+  </fuse-card>
+
+  <!-- Volunteer Shifts -->
+  @if (registration.volunteerShifts && registration.volunteerShifts.length > 0) {
+    <fuse-card class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
+      <div class="flex items-center justify-between">
+        <div class="text-2xl font-semibold leading-tight">{{ 'VolunteerShifts' | translate }}</div>
+      </div>
+      <hr class="w-full border-t my-6">
+      <div class="flex flex-col space-y-4 mb-4">
+        @for (shift of registration.volunteerShifts; track shift) {
+          <div class="flex flex-col rounded-xl bg-default shadow p-3" [ngClass]="{'border-l-4 border-blue-400': !shift.isConfirmed}">
+            <div class="flex items-center">
+              <div class="flex flex-col flex-1">
+                <div class="flex items-baseline">
+                  <div class="font-medium" [ngClass]="{'text-blue-600': !shift.isConfirmed}">{{ shift.name }}</div>
+                  @if (!shift.isConfirmed) {
+                    <mat-icon class="icon-size-4 ml-2 text-blue-500" [svgIcon]="'heroicons_solid:question-mark-circle'"
+                    matTooltip="Not confirmed yet"></mat-icon>
+                  }
+                  @if (shift.isResponsible) {
+                    <mat-icon class="icon-size-4 ml-2 text-primary" [svgIcon]="'heroicons_solid:star'" matTooltip="Responsible"></mat-icon>
+                  }
+                </div>
+                @if (shift.description) {
+                  <div class="text-sm text-secondary mt-1">{{ shift.description }}</div>
+                }
+              </div>
+            </div>
+            <div class="flex flex-col mt-2 space-y-1">
+              @if (shift.location) {
+                <div class="flex items-center text-sm text-secondary">
+                  <mat-icon class="icon-size-4 mr-2" [svgIcon]="'heroicons_solid:map-pin'"></mat-icon>
+                  <span>{{ shift.location }}</span>
+                </div>
+              }
+              @if (shift.startTime || shift.endTime) {
+                <div class="flex items-center text-sm text-secondary">
+                  <mat-icon class="icon-size-4 mr-2" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                  <span>
+                    @if (shift.startTime) {
+                      <span>{{ shift.startTime | date: 'dd.MM.yy HH:mm' }}</span>
+                    }
+                    @if (shift.startTime && shift.endTime) {
+                      <span> - </span>
+                    }
+                    @if (shift.endTime) {
+                      <span>{{ shift.endTime | date: 'HH:mm' }}</span>
+                    }
+                  </span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </fuse-card>
+  }
+</div>
+
+<!-- Column -->
+<div class="flex flex-col items-start space-y-4">
+  <!-- Notes -->
+  <fuse-card class="flex flex-col w-80 rounded-2xl">
+    <div class="flex flex-col w-80 px-8 pt-6 pb-8 rounded-2xl">
+      <div class="flex items-center justify-between">
+        <div class="text-2xl font-semibold leading-tight">{{ 'InternalNotes' | translate }}</div>
+      </div>
+      @if (!lastSentNotes) {
+        <hr class="w-full border-t my-6">
+      }
+      @if (!!lastSentNotes) {
+        <mat-progress-bar mode="indeterminate" class="w-full h-1 my-6"></mat-progress-bar>
+      }
+      <mat-form-field [subscriptSizing]="'dynamic'">
+        <textarea class="textarea whitespace-pre-wrap" matInput #notesInput [rows]="4" [ngModel]="notes" (ngModelChange)="notesChanged(notesInput.value)"></textarea>
+      </mat-form-field>
+    </div>
+  </fuse-card>
+
+  <!-- Mails -->
+  <fuse-card class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
+    <div class="flex items-center justify-between">
+      <div class="text-2xl font-semibold leading-tight">{{ 'Mails' | translate }}</div>
+      <div class="-mr-3">
+        <button mat-icon-button [matMenuTriggerFor]="mailsMenu" (click)="fetchPossibleMailTypes()">
+          <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+        </button>
+        <mat-menu #mailsMenu="matMenu">
+          <button mat-menu-item [matMenuTriggerFor]="mailTypesMenu">{{ 'CreateMail' | translate }}</button>
+        </mat-menu>
+        <mat-menu #mailTypesMenu>
+          @for (mailType of possibleMailTypes; track mailType) {
+            <button mat-menu-item (click)="createMail(mailType)">{{ mailType.userText }}</button>
+          }
+        </mat-menu>
+      </div>
+    </div>
+    <hr class="w-full border-t my-6">
+    <div class="flex flex-col space-y-4 mb-4">
+      @for (mail of mails; track mail) {
+        <div class="flex flex-col rounded-xl bg-default shadow p-3">
+          <div class="flex flex-col">
+            <div class="flex flex-row items-center -mt-2">
+              <div>{{ mail.subject }}</div>
+              <button mat-icon-button (click)="viewMail(mail.mailId)" class="ml-auto">
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:eye'"></mat-icon>
+              </button>
+              @if (!mail.sentAt && mail.type!==MailDisplayType.Imported) {
+                <button mat-icon-button [matMenuTriggerFor]="mailMenu" class="-ml-2"
+                  (click)="fetchPossibleMailTypes()">
+                  <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+                </button>
+              }
+              <mat-menu #mailMenu="matMenu">
+                @if (!mail.sentAt) {
+                  <button mat-menu-item (click)="releaseMail(mail.mailId)">{{ 'Release' | translate }}</button>
+                }
+                @if (!mail.sentAt) {
+                  <button mat-menu-item (click)="deleteMail(mail.mailId)">{{ 'Delete' | translate }}</button>
+                }
+              </mat-menu>
+            </div>
+            <div class="flex flex-row items-center space-x-1">
+              @if (mail.withhold) {
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:lock-closed'" [matTooltip]="'NotReleased' | translate"></mat-icon>
+              }
+              @if (!mail.withhold && mail.state !== MailState.Open && mail.state !== MailState.Click && mail.state !== MailState.Delivered) {
+                <mat-icon class="icon-size-5"
+                [svgIcon]="'heroicons_solid:question-mark-circle'" [matTooltip]="mail.state | translateEnum: MailState : 'MailState'"></mat-icon>
+              }
+              @if (mail.state === MailState.Delivered) {
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:check-circle'"
+                [matTooltip]="mail.state | translateEnum: MailState : 'MailState'"></mat-icon>
+              }
+              @if (mail.state === MailState.Open || mail.state === MailState.Click) {
+                <mat-icon class="icon-size-5 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"
+                [matTooltip]="mail.state | translateEnum: MailState : 'MailState'"></mat-icon>
+              }
+              <!-- <mat-icon *ngIf="mail.withhold" class="icon-size-5 absolute right-0" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
+              <div class="text-md leading-none text-secondary">{{ mail.sentAt ?? mail.created | date: 'dd.MM.yy HH:mm' }}</div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </fuse-card>
+
+</div>
+</div>
 
 </div>

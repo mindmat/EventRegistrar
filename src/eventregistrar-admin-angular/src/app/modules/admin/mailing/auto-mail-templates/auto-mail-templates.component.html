@@ -1,277 +1,291 @@
 <div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
 
-    <mat-drawer-container class="flex-auto h-full" [hasBackdrop]="false">
+  <mat-drawer-container class="flex-auto h-full" [hasBackdrop]="false">
 
-        <!-- Drawer -->
-        <mat-drawer class="w-full sm:w-100 lg:border-r lg:shadow-none dark:bg-gray-900" [autoFocus]="false" #drawer>
+    <!-- Drawer -->
+    <mat-drawer class="w-full sm:w-100 lg:border-r lg:shadow-none dark:bg-gray-900" [autoFocus]="false" #drawer>
 
-            <!-- Profile -->
-            <!-- <ng-container *ngIf="drawerComponent === 'profile'">
-                <chat-profile [drawer]="drawer"></chat-profile>
-            </ng-container> -->
+      <!-- Profile -->
+      <!-- <ng-container *ngIf="drawerComponent === 'profile'">
+      <chat-profile [drawer]="drawer"></chat-profile>
+    </ng-container> -->
 
-        </mat-drawer>
+  </mat-drawer>
 
-        <!-- Drawer content -->
-        <mat-drawer-content class="flex overflow-hidden">
+  <!-- Drawer content -->
+  <mat-drawer-content class="flex overflow-hidden">
 
-            <!-- Bookings list -->
-            <div class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
+    <!-- Bookings list -->
+    <div class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
 
-                <div class="prose prose-sm max-w-3xl">
-                    <h2 class="mt-4 px-4">{{ 'AutoMailTemplates' | translate }}</h2>
-                </div>
+      <div class="prose prose-sm max-w-3xl">
+        <h2 class="mt-4 px-4">{{ 'AutoMailTemplates' | translate }}</h2>
+      </div>
 
-                <!-- Header -->
-                <mat-accordion class="max-w-4xl py-2 px-2 border-b bg-gray-50">
-                    <mat-expansion-panel>
-                        <mat-expansion-panel-header [collapsedHeight]="'56px'">
-                            <mat-panel-title>{{ 'Settings' | translate }}</mat-panel-title>
-                        </mat-expansion-panel-header>
+      <!-- Header -->
+      <mat-accordion class="max-w-4xl py-2 px-2 border-b bg-gray-50">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header [collapsedHeight]="'56px'">
+            <mat-panel-title>{{ 'Settings' | translate }}</mat-panel-title>
+          </mat-expansion-panel-header>
 
-                        <!-- Sender -->
-                        <div class="mt-4 space-y-4" [formGroup]="configForm">
-                            <!-- <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'"> -->
+          <!-- Sender -->
+          <div class="mt-4 space-y-4" [formGroup]="configForm">
+            <!-- <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'"> -->
 
-                            <!-- Name -->
-                            <div class="sm:col-span-4">
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>{{ 'SenderAlias' | translate }}</mat-label>
-                                    <input [formControlName]="'senderName'" matInput>
-                                </mat-form-field>
-                            </div>
-
-                            <!-- Mail -->
-                            <div class="sm:col-span-4">
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>{{ 'SenderMail' | translate }}</mat-label>
-                                    <input [formControlName]="'senderMail'" matInput>
-                                </mat-form-field>
-                            </div>
-
-                            <!-- Single available -->
-                            <button class="pr-4 pl-3.5" mat-button (click)="toggleSingle()">
-
-                                <!-- Mark as complete -->
-                                <ng-container *ngIf="!configForm.get('singleRegistrationPossible').value">
-                                    <div class="flex items-center justify-center">
-                                        <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
-                                        <span class="ml-2 font-semibold">{{ 'SingleNotPossible' | translate }}</span>
-                                    </div>
-                                </ng-container>
-
-                                <!-- Mark as incomplete -->
-                                <ng-container *ngIf="configForm.get('singleRegistrationPossible').value">
-                                    <div class="flex items-center justify-center">
-                                        <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
-                                        <span class="ml-2 font-semibold">{{ 'SinglePossible' | translate }}</span>
-                                    </div>
-                                </ng-container>
-                            </button>
-
-                            <!-- Partner available -->
-                            <button class="pr-4 pl-3.5" mat-button (click)="togglePartner()">
-
-                                <!-- Mark as complete -->
-                                <ng-container *ngIf="!configForm.get('partnerRegistrationPossible').value">
-                                    <div class="flex items-center justify-center">
-                                        <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
-                                        <span class="ml-2 font-semibold">{{ 'PartnerNotPossible' | translate }}</span>
-                                    </div>
-                                </ng-container>
-
-                                <!-- Mark as incomplete -->
-                                <ng-container *ngIf="configForm.get('partnerRegistrationPossible').value">
-                                    <div class="flex items-center justify-center">
-                                        <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
-                                        <span class="ml-2 font-semibold">{{ 'PartnerPossible' | translate }}</span>
-                                    </div>
-                                </ng-container>
-                            </button>
-
-                            <!-- Use received mail -->
-                            <button class="pr-4 pl-3.5" mat-button (click)="toggleReceivedMail()">
-
-                                <!-- Mark as complete -->
-                                <ng-container *ngIf="!configForm.get('sendRegistrationReceivedMail').value">
-                                    <div class="flex items-center justify-center">
-                                        <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
-                                        <span class="ml-2 font-semibold">{{ 'DontSendReceivedMail' | translate }}</span>
-                                    </div>
-                                </ng-container>
-
-                                <!-- Mark as incomplete -->
-                                <ng-container *ngIf="configForm.get('sendRegistrationReceivedMail').value">
-                                    <div class="flex items-center justify-center">
-                                        <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
-                                        <span class="ml-2 font-semibold">{{ 'SendReceivedMail' | translate }}</span>
-                                    </div>
-                                </ng-container>
-                            </button>
-
-                            <!-- Languages -->
-                            <div class="sm:col-span-4">
-                                <mat-label>{{ 'AngeboteneSprachen' | translate }}</mat-label>
-                                <div class="flex flex-row items-start space-x-3">
-                                    <!-- templates (per language) -->
-                                    <ng-container *ngFor="let lang of availableLangs">
-                                        <button (click)="toggleLang(lang.id)">
-                                            <span class="flex items-center relative w-6 shadow rounded-sm overflow-hidden">
-                                                <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
-                                                <img class="w-full" [ngClass]="{'opacity-25': this.configForm.value.availableLanguages.includes(lang.id)===false}"
-                                                    [src]="'assets/images/flags/' + flagCodes[lang.id]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + lang.label">
-                                            </span>
-                                        </button>
-                                        <!-- <button (click)="selectTemplate(template)" [routerLink]="[template.id]"
-                                                [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
-                                                                                                                                                        'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
-                                                <span class="flex items-center">
-                                                    <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template}"></ng-container>
-                                                </span>
-                                            </button> -->
-                                    </ng-container>
-                                </div>
-
-                                <!-- Mail sender -->
-                                <mat-form-field class="w-full  pt-2" [subscriptSizing]="'dynamic'">
-                                    <mat-label>{{ 'MailSender' | translate }}</mat-label>
-                                    <mat-select [formControlName]="'mailSender'">
-                                        <mat-option *ngFor="let mailer of mailers" [value]="mailer">
-                                            {{ mailer | translateEnum: MailSender : 'MailSender' }}</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-
-                                <!-- Mail token key -->
-                                <mat-form-field class="w-full  pt-2" [subscriptSizing]="'dynamic'">
-                                    <mat-label>{{ 'MailSenderTokenKey' | translate }}</mat-label>
-                                    <mat-select [formControlName]="'mailSenderTokenKey'">
-                                        <mat-option *ngFor="let mailTokenKey of mailTokenKeys" [value]="mailTokenKey">
-                                            {{ mailTokenKey | translateEnum: MailSenderTokenKey : 'MailSenderTokenKey'}}
-                                        </mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-
-                                <!-- SMTP: Host -->
-                                <div *ngIf="configForm.value.mailSender === MailSender.Smtp" class="sm:col-span-4 pt-2">
-                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                        <mat-label>{{ 'SmtpHost' | translate }}</mat-label>
-                                        <input [formControlName]="'smtpHost'" matInput>
-                                    </mat-form-field>
-                                </div>
-
-                                <!-- SMTP: Port -->
-                                <div *ngIf="configForm.value.mailSender === MailSender.Smtp" class="sm:col-span-4">
-                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                        <mat-label>{{ 'SmtpPort' | translate }}</mat-label>
-                                        <input [formControlName]="'smtpPort'" matInput type="number">
-                                    </mat-form-field>
-                                </div>
-
-                                <!-- SMTP: Username -->
-                                <div *ngIf="configForm.value.mailSender === MailSender.Smtp" class="sm:col-span-4">
-                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                        <mat-label>{{ 'SmtpUsername' | translate }}</mat-label>
-                                        <input [formControlName]="'smtpUsername'" matInput>
-                                    </mat-form-field>
-                                </div>
-
-                                <!-- SMTP: Password -->
-                                <div *ngIf="configForm.value.mailSender === MailSender.Smtp" class="sm:col-span-4">
-                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                        <mat-label>{{ 'SmtpPassword' | translate }}</mat-label>
-                                        <input [formControlName]="'smtpPassword'" matInput type="password">
-                                    </mat-form-field>
-                                </div>
-                            </div>
-
-                            <!-- <input matInput [autocomplete]="'off'" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" (input)="filterByQuery(searchField.value)" #searchField> -->
-                            <!-- </mat-form-field> -->
-                            <div class="flex items-center justify-end mt-4">
-                                <button (click)="drawer.close()" mat-button>{{ 'Cancel' | translate }}</button>
-                                <button class="ml-2" mat-flat-button [color]="'primary'" (click)="saveSettings()">{{ 'Save' | translate }}</button>
-                            </div>
-
-                        </div>
-                    </mat-expansion-panel>
-                </mat-accordion>
-
-                <!-- topic groups -->
-                <div class="flex-auto overflow-y-auto">
-                    <ng-container *ngIf="templates.groups.length > 0">
-                        <ng-container *ngFor="let group of templates.groups">
-                            <div class="z-20 flex items-center justify-center my-3 -mx-6">
-                                <div class="flex-0 mx-4 text-sm font-medium leading-5 text-secondary">
-                                    {{ group.name }}
-                                </div>
-                            </div>
-
-                            <!-- template types -->
-                            <ng-container *ngFor="let type of group.types">
-                                <div class="z-20 flex flex-col py-5 px-4 cursor-pointer border-t border-b">
-                                    <div class="flex flex-row space-x-2">
-                                        <mat-icon *ngIf="type.hasWarning" class="text-amber-500" svgIcon="heroicons_outline:exclamation-triangle"></mat-icon>
-                                        <div class="font-medium leading-5 truncate items">{{ type.typeText }}</div>
-                                    </div>
-                                    <div class="flex flex-row items-center justify-between space-x-3">
-                                        <!-- templates (per language) -->
-                                        <div class="flex flex-row items-start">
-                                            <ng-container *ngFor="let template of type.templates">
-                                                <button (click)="selectTemplate(template, type)" class="ml-2" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
-                                                'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
-                                                    <span class="flex items-center">
-                                                        <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template}"></ng-container>
-                                                    </span>
-                                                </button>
-                                            </ng-container>
-                                        </div>
-
-                                        <!-- Release immediately? -->
-                                        <button *ngIf="type.releaseImmediately !== null" class="ml-auto" mat-button (click)="toggleRelease(type)">
-                                            <!-- Release immediately -->
-                                            <ng-container *ngIf="type.releaseImmediately">
-                                                <div class="flex items-center justify-center">
-                                                    <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
-                                                    <span class="ml-2 font-semibold">{{ 'ReleaseImmediately' | translate
-                                                        }}</span>
-                                                </div>
-                                            </ng-container>
-                                            <!-- Hold back -->
-                                            <ng-container *ngIf="!type.releaseImmediately">
-                                                <div class="flex items-center justify-center">
-                                                    <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
-                                                    <span class="ml-2 font-semibold">{{ 'HoldMailBack' | translate
-                                                        }}</span>
-                                                </div>
-                                            </ng-container>
-                                        </button>
-                                    </div>
-                                </div>
-                            </ng-container>
-                        </ng-container>
-                    </ng-container>
-                </div>
-
+            <!-- Name -->
+            <div class="sm:col-span-4">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>{{ 'SenderAlias' | translate }}</mat-label>
+                <input [formControlName]="'senderName'" matInput>
+              </mat-form-field>
             </div>
 
-            <!-- Conversation -->
-            <ng-container *ngIf="templates && templates.groups.length > 0">
+            <!-- Mail -->
+            <div class="sm:col-span-4">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>{{ 'SenderMail' | translate }}</mat-label>
+                <input [formControlName]="'senderMail'" matInput>
+              </mat-form-field>
+            </div>
+
+            <!-- Single available -->
+            <button class="pr-4 pl-3.5" mat-button (click)="toggleSingle()">
+
+              <!-- Mark as complete -->
+              @if (!configForm.get('singleRegistrationPossible').value) {
+                <div class="flex items-center justify-center">
+                  <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
+                  <span class="ml-2 font-semibold">{{ 'SingleNotPossible' | translate }}</span>
+                </div>
+              }
+
+              <!-- Mark as incomplete -->
+              @if (configForm.get('singleRegistrationPossible').value) {
+                <div class="flex items-center justify-center">
+                  <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                  <span class="ml-2 font-semibold">{{ 'SinglePossible' | translate }}</span>
+                </div>
+              }
+            </button>
+
+            <!-- Partner available -->
+            <button class="pr-4 pl-3.5" mat-button (click)="togglePartner()">
+
+              <!-- Mark as complete -->
+              @if (!configForm.get('partnerRegistrationPossible').value) {
+                <div class="flex items-center justify-center">
+                  <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
+                  <span class="ml-2 font-semibold">{{ 'PartnerNotPossible' | translate }}</span>
+                </div>
+              }
+
+              <!-- Mark as incomplete -->
+              @if (configForm.get('partnerRegistrationPossible').value) {
+                <div class="flex items-center justify-center">
+                  <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                  <span class="ml-2 font-semibold">{{ 'PartnerPossible' | translate }}</span>
+                </div>
+              }
+            </button>
+
+            <!-- Use received mail -->
+            <button class="pr-4 pl-3.5" mat-button (click)="toggleReceivedMail()">
+
+              <!-- Mark as complete -->
+              @if (!configForm.get('sendRegistrationReceivedMail').value) {
+                <div class="flex items-center justify-center">
+                  <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
+                  <span class="ml-2 font-semibold">{{ 'DontSendReceivedMail' | translate }}</span>
+                </div>
+              }
+
+              <!-- Mark as incomplete -->
+              @if (configForm.get('sendRegistrationReceivedMail').value) {
+                <div class="flex items-center justify-center">
+                  <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                  <span class="ml-2 font-semibold">{{ 'SendReceivedMail' | translate }}</span>
+                </div>
+              }
+            </button>
+
+            <!-- Languages -->
+            <div class="sm:col-span-4">
+              <mat-label>{{ 'AngeboteneSprachen' | translate }}</mat-label>
+              <div class="flex flex-row items-start space-x-3">
+                <!-- templates (per language) -->
+                @for (lang of availableLangs; track lang) {
+                  <button (click)="toggleLang(lang.id)">
+                    <span class="flex items-center relative w-6 shadow rounded-sm overflow-hidden">
+                      <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
+                      <img class="w-full" [ngClass]="{'opacity-25': this.configForm.value.availableLanguages.includes(lang.id)===false}"
+                        [src]="'assets/images/flags/' + flagCodes[lang.id]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + lang.label">
+                      </span>
+                    </button>
+                    <!-- <button (click)="selectTemplate(template)" [routerLink]="[template.id]"
+                                                [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
+                                                                                                                                                        'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
+                    <span class="flex items-center">
+                      <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template}"></ng-container>
+                    </span>
+                  </button> -->
+                }
+              </div>
+
+              <!-- Mail sender -->
+              <mat-form-field class="w-full  pt-2" [subscriptSizing]="'dynamic'">
+                <mat-label>{{ 'MailSender' | translate }}</mat-label>
+                <mat-select [formControlName]="'mailSender'">
+                  @for (mailer of mailers; track mailer) {
+                    <mat-option [value]="mailer">
+                    {{ mailer | translateEnum: MailSender : 'MailSender' }}</mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <!-- Mail token key -->
+              <mat-form-field class="w-full  pt-2" [subscriptSizing]="'dynamic'">
+                <mat-label>{{ 'MailSenderTokenKey' | translate }}</mat-label>
+                <mat-select [formControlName]="'mailSenderTokenKey'">
+                  @for (mailTokenKey of mailTokenKeys; track mailTokenKey) {
+                    <mat-option [value]="mailTokenKey">
+                      {{ mailTokenKey | translateEnum: MailSenderTokenKey : 'MailSenderTokenKey'}}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+
+              <!-- SMTP: Host -->
+              @if (configForm.value.mailSender === MailSender.Smtp) {
+                <div class="sm:col-span-4 pt-2">
+                  <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>{{ 'SmtpHost' | translate }}</mat-label>
+                    <input [formControlName]="'smtpHost'" matInput>
+                  </mat-form-field>
+                </div>
+              }
+
+              <!-- SMTP: Port -->
+              @if (configForm.value.mailSender === MailSender.Smtp) {
+                <div class="sm:col-span-4">
+                  <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>{{ 'SmtpPort' | translate }}</mat-label>
+                    <input [formControlName]="'smtpPort'" matInput type="number">
+                  </mat-form-field>
+                </div>
+              }
+
+              <!-- SMTP: Username -->
+              @if (configForm.value.mailSender === MailSender.Smtp) {
+                <div class="sm:col-span-4">
+                  <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>{{ 'SmtpUsername' | translate }}</mat-label>
+                    <input [formControlName]="'smtpUsername'" matInput>
+                  </mat-form-field>
+                </div>
+              }
+
+              <!-- SMTP: Password -->
+              @if (configForm.value.mailSender === MailSender.Smtp) {
+                <div class="sm:col-span-4">
+                  <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>{{ 'SmtpPassword' | translate }}</mat-label>
+                    <input [formControlName]="'smtpPassword'" matInput type="password">
+                  </mat-form-field>
+                </div>
+              }
+            </div>
+
+            <!-- <input matInput [autocomplete]="'off'" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" (input)="filterByQuery(searchField.value)" #searchField> -->
+          <!-- </mat-form-field> -->
+          <div class="flex items-center justify-end mt-4">
+            <button (click)="drawer.close()" mat-button>{{ 'Cancel' | translate }}</button>
+            <button class="ml-2" mat-flat-button [color]="'primary'" (click)="saveSettings()">{{ 'Save' | translate }}</button>
+          </div>
+
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <!-- topic groups -->
+    <div class="flex-auto overflow-y-auto">
+      @if (templates.groups.length > 0) {
+        @for (group of templates.groups; track group) {
+          <div class="z-20 flex items-center justify-center my-3 -mx-6">
+            <div class="flex-0 mx-4 text-sm font-medium leading-5 text-secondary">
+              {{ group.name }}
+            </div>
+          </div>
+          <!-- template types -->
+          @for (type of group.types; track type) {
+            <div class="z-20 flex flex-col py-5 px-4 cursor-pointer border-t border-b">
+              <div class="flex flex-row space-x-2">
+                @if (type.hasWarning) {
+                  <mat-icon class="text-amber-500" svgIcon="heroicons_outline:exclamation-triangle"></mat-icon>
+                }
+                <div class="font-medium leading-5 truncate items">{{ type.typeText }}</div>
+              </div>
+              <div class="flex flex-row items-center justify-between space-x-3">
+                <!-- templates (per language) -->
+                <div class="flex flex-row items-start">
+                  @for (template of type.templates; track template) {
+                                                <button (click)="selectTemplate(template, type)" class="ml-2" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
+                                                'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
+                      <span class="flex items-center">
+                        <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template}"></ng-container>
+                      </span>
+                    </button>
+                  }
+                </div>
+                <!-- Release immediately? -->
+                @if (type.releaseImmediately !== null) {
+                  <button class="ml-auto" mat-button (click)="toggleRelease(type)">
+                    <!-- Release immediately -->
+                    @if (type.releaseImmediately) {
+                      <div class="flex items-center justify-center">
+                        <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                        <span class="ml-2 font-semibold">{{ 'ReleaseImmediately' | translate
+                        }}</span>
+                      </div>
+                    }
+                    <!-- Hold back -->
+                    @if (!type.releaseImmediately) {
+                      <div class="flex items-center justify-center">
+                        <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
+                        <span class="ml-2 font-semibold">{{ 'HoldMailBack' | translate
+                        }}</span>
+                      </div>
+                    }
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        }
+      }
+    </div>
+
+  </div>
+
+  <!-- Conversation -->
+  @if (templates && templates.groups.length > 0) {
                 <div class="flex-auto border-l" [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedTemplate && selectedTemplate.id,
                                 'hidden lg:flex': !selectedTemplate || !selectedTemplate.id}">
-                    <router-outlet></router-outlet>
-                </div>
-            </ng-container>
+      <router-outlet></router-outlet>
+    </div>
+  }
 
-        </mat-drawer-content>
+</mat-drawer-content>
 
-    </mat-drawer-container>
+</mat-drawer-container>
 
 </div>
 
 <!-- Flag image template -->
 <ng-template let-template #flagImage>
-    <span class="relative w-6 shadow rounded-sm overflow-hidden">
-        <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
-        <img class="w-full" [ngClass]="{'opacity-25': template.id===null}" [src]="'assets/images/flags/' + flagCodes[template.language]?.toUpperCase() + '.svg'"
-            [alt]="'Flag image for ' + template.language">
+  <span class="relative w-6 shadow rounded-sm overflow-hidden">
+    <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
+    <img class="w-full" [ngClass]="{'opacity-25': template.id===null}" [src]="'assets/images/flags/' + flagCodes[template.language]?.toUpperCase() + '.svg'"
+      [alt]="'Flag image for ' + template.language">
     </span>
-</ng-template>
+  </ng-template>

@@ -1,43 +1,49 @@
 <fuse-card class="flex flex-col w-80 p-4 rounded-xl {{ candidate.amountMatch ? 'bg-green-300':'' }}">
-    <div [formGroup]="candidateForm">
-        <div class="flex flex-row items-baseline gap-x-2">
-            <div class="text-xl font-semibold leading-tight">{{ openRegistrationAmount | number:'1.2-2' }}</div>
-            <a class="hover:underline text-secondary leading-tight" [routerLink]="navigator.getRegistrationUrl(candidate.registrationId)">{{ candidate.firstName }} {{ candidate.lastName }}</a>
-        </div>
-
-        <div class="flex flex-row items-baseline gap-x-2">
-            <mat-form-field class="fuse-mat-no-subscript w-24">
-                <input type="number" class="font-large" formControlName="amountAssigned" [placeholder]="'Zuordnen'" matInput #amountToAssign>
-            </mat-form-field>
-
-            <button type="submit" *ngIf="!candidate.locked" [disabled]="!candidateForm.valid" class="ml-auto" mat-icon-button (click)="emitAssign()">
-                <mat-icon [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
-            </button>
-        </div>
-
-        <!-- accept differences? -->
-        <div *ngIf="difference > 0" class="flex flex-col">
-            <div class="flex flex-row items-center justify-between">
-                <div class="flex-auto cursor-pointer" (click)="securityToggle.toggle()">
-                    <div class="leading-6 font-medium">{{ 'AcceptDifferenceAmount' | translate: {difference:difference | number:'1.2-2'} }}</div>
-                    <div class="text-md text-secondary">
-                        {{ 'AcceptDifferenceExplanation' | translate }}
-                    </div>
-                </div>
-                <mat-slide-toggle class="ml-2" [color]="'primary'" #securityToggle formControlName="acceptDifference">
-                </mat-slide-toggle>
-            </div>
-            <mat-form-field class="fuse-mat-no-subscript w-full mt-2" *ngIf="securityToggle.checked">
-                <input type="text" formControlName="acceptDifferenceReason" [placeholder]="'AcceptDifferenceReason' | translate" matInput #amountToAssign>
-            </mat-form-field>
-        </div>
-
-        <!-- <div *ngIf="booking.charges" class="flex flex-row items-baseline gap-x-2">
-                                                <div class="text-xl font-semibold leading-tight">{{ booking.charges | number: '1.2-2' }}</div>
-                                                <div class="text-secondary leading-tight">Fremdspesen</div>
-                                            </div> -->
-        <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
-                                                <span class="leading-none">{{ candidate.message }}</span>
-                                            </div> -->
+  <div [formGroup]="candidateForm">
+    <div class="flex flex-row items-baseline gap-x-2">
+      <div class="text-xl font-semibold leading-tight">{{ openRegistrationAmount | number:'1.2-2' }}</div>
+      <a class="hover:underline text-secondary leading-tight" [routerLink]="navigator.getRegistrationUrl(candidate.registrationId)">{{ candidate.firstName }} {{ candidate.lastName }}</a>
     </div>
+
+    <div class="flex flex-row items-baseline gap-x-2">
+      <mat-form-field class="fuse-mat-no-subscript w-24">
+        <input type="number" class="font-large" formControlName="amountAssigned" [placeholder]="'Zuordnen'" matInput #amountToAssign>
+      </mat-form-field>
+
+      @if (!candidate.locked) {
+        <button type="submit" [disabled]="!candidateForm.valid" class="ml-auto" mat-icon-button (click)="emitAssign()">
+          <mat-icon [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+        </button>
+      }
+    </div>
+
+    <!-- accept differences? -->
+    @if (difference > 0) {
+      <div class="flex flex-col">
+        <div class="flex flex-row items-center justify-between">
+          <div class="flex-auto cursor-pointer" (click)="securityToggle.toggle()">
+            <div class="leading-6 font-medium">{{ 'AcceptDifferenceAmount' | translate: {difference:difference | number:'1.2-2'} }}</div>
+            <div class="text-md text-secondary">
+              {{ 'AcceptDifferenceExplanation' | translate }}
+            </div>
+          </div>
+          <mat-slide-toggle class="ml-2" [color]="'primary'" #securityToggle formControlName="acceptDifference">
+          </mat-slide-toggle>
+        </div>
+        @if (securityToggle.checked) {
+          <mat-form-field class="fuse-mat-no-subscript w-full mt-2">
+            <input type="text" formControlName="acceptDifferenceReason" [placeholder]="'AcceptDifferenceReason' | translate" matInput #amountToAssign>
+          </mat-form-field>
+        }
+      </div>
+    }
+
+    <!-- <div *ngIf="booking.charges" class="flex flex-row items-baseline gap-x-2">
+    <div class="text-xl font-semibold leading-tight">{{ booking.charges | number: '1.2-2' }}</div>
+    <div class="text-secondary leading-tight">Fremdspesen</div>
+  </div> -->
+  <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
+  <span class="leading-none">{{ candidate.message }}</span>
+</div> -->
+</div>
 </fuse-card>

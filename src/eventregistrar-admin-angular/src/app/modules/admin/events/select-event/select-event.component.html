@@ -1,153 +1,163 @@
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-auto">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
-        <!-- Title -->
-        <div class="flex min-w-0 flex-row items-baseline gap-2">
-            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'Events'| translate }}</div>
-            <div *ngIf="filteredEvents?.length > 0" class="mt-1.5 text-lg text-secondary">({{ filteredEvents.length }})</div>
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+    <!-- Title -->
+    <div class="flex min-w-0 flex-row items-baseline gap-2">
+      <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'Events'| translate }}</div>
+      @if (filteredEvents?.length > 0) {
+        <div class="mt-1.5 text-lg text-secondary">({{ filteredEvents.length }})</div>
+      }
+    </div>
+    <!-- Filters -->
+    <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+      <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+      <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameAcronym' | translate" matInput #query [value]="query$.value" autofocus>
+    </mat-form-field>
+  </div>
+
+  <div class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:p-12 w-full max-w-3xl">
+
+    <!-- Events -->
+    <div class="flex flex-col mt-8 divide-y border-t border-b">
+      @for (event of filteredEvents; track trackByFn($index, event)) {
+        <div class="flex flex-col sm:flex-row sm:items-center py-4">
+          <a [routerLink]="['/', event.eventAcronym]">
+            <div class="flex items-center">
+              <div class="flex flex-0 items-center justify-center w-24 h-10 rounded-full overflow-hidden">
+                <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                  {{ event.eventAcronym }}
+                </div>
+              </div>
+              <div class="ml-4">
+                <div class="font-medium">{{ event.eventName }}</div>
+                <div class="text-secondary">{{ event.eventStateText }}</div>
+              </div>
+            </div>
+          </a>
+          <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
+            <div class="order-2 sm:order-1 ml-4 sm:ml-0">
+              <div class="font-medium">{{ event.roleText }}</div>
+            </div>
+          </div>
+          <button class="ml-1 -mr-4" mat-icon-button [matMenuTriggerFor]="chatsHeaderMenu">
+            <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+            <mat-menu #chatsHeaderMenu>
+              <button mat-menu-item (click)="createSuccessorEvent(event)">
+                <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                {{ 'CreateSuccessorEvent' | translate }}
+              </button>
+            </mat-menu>
+          </button>
         </div>
-        <!-- Filters -->
-        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
-            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameAcronym' | translate" matInput #query [value]="query$.value" autofocus>
+      }
+
+      <!-- show/hide closed events -->
+      @if (finishedEventsInList && (showFinishedEvents$ | async)) {
+        <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
+          (click)="hideFinishedEvents()">
+          <span class="text-sm font-medium text-secondary">{{ 'HideFinished' | translate }}</span>
+          <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-up'"></mat-icon>
+        </button>
+      }
+      @if (finishedEventsInList && !(showFinishedEvents$ | async)) {
+        <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
+          (click)="showFinishedEvents()">
+          <span class="text-sm font-medium text-secondary">{{ 'ShowFinished' | translate }}</span>
+          <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-down'"></mat-icon>
+        </button>
+      }
+    </div>
+
+    <!-- Create new event -->
+    <form class="grid grid-cols-4 gap-6 w-full mt-8 items-baseline" [formGroup]="createNewEventForm" (ngSubmit)="onSubmit()">
+      <!-- Name -->
+      <div class="col-span-4 sm:col-span-2">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+          <mat-label>{{ 'NewEvent' | translate }}</mat-label>
+          <input [formControlName]="'name'" [placeholder]="'EventName' | translate" matInput>
         </mat-form-field>
-    </div>
+      </div>
+      <!-- Acronym -->
+      <div class="col-span-2 sm:col-span-1">
+        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+          <input [formControlName]="'acronym'" [placeholder]="'Acronym' | translate" matInput>
+        </mat-form-field>
+      </div>
+      <button class="ml-4" mat-flat-button type="submit" [color]="'primary'">{{ 'Create' | translate }}
+      </button>
+    </form>
 
-    <div class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:p-12 w-full max-w-3xl">
 
-        <!-- Events -->
-        <div class="flex flex-col mt-8 divide-y border-t border-b">
-            <ng-container *ngFor="let event of filteredEvents; trackBy: trackByFn;">
-                <div class="flex flex-col sm:flex-row sm:items-center py-4">
-                    <a [routerLink]="['/', event.eventAcronym]">
-                        <div class="flex items-center">
-                            <div class="flex flex-0 items-center justify-center w-24 h-10 rounded-full overflow-hidden">
-                                <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                                    {{ event.eventAcronym }}
-                                </div>
-                            </div>
-                            <div class="ml-4">
-                                <div class="font-medium">{{ event.eventName }}</div>
-                                <div class="text-secondary">{{ event.eventStateText }}</div>
-                            </div>
-                        </div>
-                    </a>
-                    <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
-                        <div class="order-2 sm:order-1 ml-4 sm:ml-0">
-                            <div class="font-medium">{{ event.roleText }}</div>
-                        </div>
-                    </div>
-                    <button class="ml-1 -mr-4" mat-icon-button [matMenuTriggerFor]="chatsHeaderMenu">
-                        <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                        <mat-menu #chatsHeaderMenu>
-                            <button mat-menu-item (click)="createSuccessorEvent(event)">
-                                <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
-                                {{ 'CreateSuccessorEvent' | translate }}
-                            </button>
-                        </mat-menu>
-                    </button>
-                </div>
-            </ng-container>
-
-            <!-- show/hide closed events -->
-            <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
-                *ngIf="finishedEventsInList && (showFinishedEvents$ | async)" (click)="hideFinishedEvents()">
-                <span class="text-sm font-medium text-secondary">{{ 'HideFinished' | translate }}</span>
-                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-up'"></mat-icon>
-            </button>
-            <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
-                *ngIf="finishedEventsInList && !(showFinishedEvents$ | async)" (click)="showFinishedEvents()">
-                <span class="text-sm font-medium text-secondary">{{ 'ShowFinished' | translate }}</span>
-                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-down'"></mat-icon>
-            </button>
+    <!-- Access requests -->
+    @if (requests?.length > 0) {
+      <div class="flex flex-col mt-8 divide-y border-t border-b">
+        <!-- Titel -->
+        <div class="ml-2 mt-8 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
+          {{ 'Zugriffsanfragen'| translate }}
         </div>
-
-        <!-- Create new event -->
-        <form class="grid grid-cols-4 gap-6 w-full mt-8 items-baseline" [formGroup]="createNewEventForm" (ngSubmit)="onSubmit()">
-            <!-- Name -->
-            <div class="col-span-4 sm:col-span-2">
-                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                    <mat-label>{{ 'NewEvent' | translate }}</mat-label>
-                    <input [formControlName]="'name'" [placeholder]="'EventName' | translate" matInput>
-                </mat-form-field>
-            </div>
-            <!-- Acronym -->
-            <div class="col-span-2 sm:col-span-1">
-                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                    <input [formControlName]="'acronym'" [placeholder]="'Acronym' | translate" matInput>
-                </mat-form-field>
-            </div>
-            <button class="ml-4" mat-flat-button type="submit" [color]="'primary'">{{ 'Create' | translate }}
-            </button>
-        </form>
-
-
-        <!-- Access requests -->
-        <div class="flex flex-col mt-8 divide-y border-t border-b" *ngIf="requests?.length > 0">
-            <!-- Titel -->
-            <div class="ml-2 mt-8 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
-                {{ 'Zugriffsanfragen'| translate }}
-            </div>
-
-            <ng-container *ngFor="let request of filteredRequests; trackBy: trackByFn;">
-                <div class="flex flex-col sm:flex-row sm:items-center py-4">
-                    <div class="flex items-center">
-                        <div class="flex flex-0 items-center justify-center w-24 h-10 rounded-full overflow-hidden">
-                            <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                                {{ request.eventAcronym }}
-                            </div>
-                        </div>
-                        <div class="ml-4">
-                            <div class="font-medium">{{ request.eventName }}</div>
-                            <div class="text-secondary">{{ request.eventStateText }}</div>
-                        </div>
-                    </div>
+        @for (request of filteredRequests; track trackByFn($index, request)) {
+          <div class="flex flex-col sm:flex-row sm:items-center py-4">
+            <div class="flex items-center">
+              <div class="flex flex-0 items-center justify-center w-24 h-10 rounded-full overflow-hidden">
+                <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                  {{ request.eventAcronym }}
                 </div>
-            </ng-container>
-        </div>
-
-        <!-- Other events -->
-        <div class="flex flex-col mt-8 divide-y border-t border-b" *ngIf="filteredOtherEvents?.length > 0">
-            <!-- Titel -->
-            <div class="ml-2 mt-8 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
-                {{ 'OtherEvents'| translate }}
+              </div>
+              <div class="ml-4">
+                <div class="font-medium">{{ request.eventName }}</div>
+                <div class="text-secondary">{{ request.eventStateText }}</div>
+              </div>
             </div>
+          </div>
+        }
+      </div>
+    }
 
-            <ng-container *ngFor="let otherEvent of filteredOtherEvents; trackBy: trackByFn;">
-                <div class="flex flex-col sm:flex-row sm:items-center py-4">
-                    <div class="flex items-center">
-                        <div class="flex flex-0 items-center justify-center w-24 h-10 rounded-full overflow-hidden">
-                            <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                                {{ otherEvent.acronym }}
-                            </div>
-                        </div>
-                        <div class="ml-4">
-                            <div class="font-medium">{{ otherEvent.name }}</div>
-                            <div class="text-secondary">{{ otherEvent.stateText }}</div>
-                        </div>
-                    </div>
-
-                    <!-- request access -->
-                    <div class="px-6 text-right ml-auto dark:bg-transparent">
-                        <button mat-stroked-button (click)="requestAccess(otherEvent.id)">
-                            <span class="inline-flex items-center"> {{ 'RequestAccess' | translate }} </span>
-                        </button>
-                    </div>
-                </div>
-            </ng-container>
-
-            <!-- show/hide closed events -->
-            <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
-                *ngIf="finishedOtherEventsInList && (showOtherFinishedEvents$ | async)" (click)="hideOtherFinishedEvents()">
-                <span class="text-sm font-medium text-secondary">{{ 'HideFinished' | translate }}</span>
-                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-up'"></mat-icon>
-            </button>
-            <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
-                *ngIf="finishedOtherEventsInList && !(showOtherFinishedEvents$ | async)" (click)="showOtherFinishedEvents()">
-                <span class="text-sm font-medium text-secondary">{{ 'ShowFinished' | translate }}</span>
-                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-down'"></mat-icon>
-            </button>
+    <!-- Other events -->
+    @if (filteredOtherEvents?.length > 0) {
+      <div class="flex flex-col mt-8 divide-y border-t border-b">
+        <!-- Titel -->
+        <div class="ml-2 mt-8 lg:ml-0 text-3xl font-bold tracking-tight leading-none">
+          {{ 'OtherEvents'| translate }}
         </div>
-    </div>
+        @for (otherEvent of filteredOtherEvents; track trackByFn($index, otherEvent)) {
+          <div class="flex flex-col sm:flex-row sm:items-center py-4">
+            <div class="flex items-center">
+              <div class="flex flex-0 items-center justify-center w-24 h-10 rounded-full overflow-hidden">
+                <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                  {{ otherEvent.acronym }}
+                </div>
+              </div>
+              <div class="ml-4">
+                <div class="font-medium">{{ otherEvent.name }}</div>
+                <div class="text-secondary">{{ otherEvent.stateText }}</div>
+              </div>
+            </div>
+            <!-- request access -->
+            <div class="px-6 text-right ml-auto dark:bg-transparent">
+              <button mat-stroked-button (click)="requestAccess(otherEvent.id)">
+                <span class="inline-flex items-center"> {{ 'RequestAccess' | translate }} </span>
+              </button>
+            </div>
+          </div>
+        }
+        <!-- show/hide closed events -->
+        @if (finishedOtherEventsInList && (showOtherFinishedEvents$ | async)) {
+          <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
+            (click)="hideOtherFinishedEvents()">
+            <span class="text-sm font-medium text-secondary">{{ 'HideFinished' | translate }}</span>
+            <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-up'"></mat-icon>
+          </button>
+        }
+        @if (finishedOtherEventsInList && !(showOtherFinishedEvents$ | async)) {
+          <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
+            (click)="showOtherFinishedEvents()">
+            <span class="text-sm font-medium text-secondary">{{ 'ShowFinished' | translate }}</span>
+            <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-down'"></mat-icon>
+          </button>
+        }
+      </div>
+    }
+  </div>
 </div>

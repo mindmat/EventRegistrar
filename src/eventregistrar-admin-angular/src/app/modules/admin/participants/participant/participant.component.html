@@ -1,45 +1,53 @@
-<div *ngIf="registration" class="flex flex-row w-72 h-16 items-stretch mb-3 p-5 shadow rounded-lg overflow-hidden bg-card" [ngClass]="{'bg-amber-200': registration.switched,
+@if (registration) {
+<div class="flex flex-row w-72 h-16 items-stretch mb-3 p-5 shadow rounded-lg overflow-hidden bg-card" [ngClass]="{'bg-amber-200': registration.switched,
                  'border-amber-200 border-4': registration.canSwitch}">
-
     <!-- Cover image -->
     <!-- <ng-container *ngIf="card.coverImage">
-                                            <div class="-mx-5 -mt-5 mb-2">
-                                                <img class="w-full object-cover" [src]="card.coverImage">
-                                            </div>
-                                        </ng-container> -->
-
-    <!-- Name -->
-    <a class="text-lg font-medium hover:underline" [routerLink]="navigator.getRegistrationUrl(registration.id)">{{
-        registration.firstName }} {{ registration.lastName }}</a>
-
-    <!-- context menu -->
-    <div *ngIf="registration.canSwitch && !!role && !isPartnerSpot" class="flex items-center ml-auto">
-        <button mat-icon-button [matMenuTriggerFor]="participantMenu">
-            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-        </button>
-        <mat-menu #participantMenu="matMenu">
-            <button *ngIf="role===Role.Leader" mat-menu-item (click)="emitSwitchRole(registration.id, Role.Follower)">
-                <span class="flex items-center">
-                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_outline:switch_left'"></mat-icon>
-                    <span>{{ 'SwitchToFollower' | translate }}</span>
-                </span>
-            </button>
-            <button *ngIf="role===Role.Follower" mat-menu-item (click)="emitSwitchRole(registration.id, Role.Leader)">
-                <span class="flex items-center">
-                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_outline:switch_right'"></mat-icon>
-                    <span>{{ 'SwitchToLeader' | translate }}</span>
-                </span>
-            </button>
-        </mat-menu>
+    <div class="-mx-5 -mt-5 mb-2">
+      <img class="w-full object-cover" [src]="card.coverImage">
     </div>
-
+  </ng-container> -->
+  <!-- Name -->
+  <a class="text-lg font-medium hover:underline" [routerLink]="navigator.getRegistrationUrl(registration.id)">{{
+  registration.firstName }} {{ registration.lastName }}</a>
+  <!-- context menu -->
+  @if (registration.canSwitch && !!role && !isPartnerSpot) {
+    <div class="flex items-center ml-auto">
+      <button mat-icon-button [matMenuTriggerFor]="participantMenu">
+        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+      </button>
+      <mat-menu #participantMenu="matMenu">
+        @if (role===Role.Leader) {
+          <button mat-menu-item (click)="emitSwitchRole(registration.id, Role.Follower)">
+            <span class="flex items-center">
+              <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_outline:switch_left'"></mat-icon>
+              <span>{{ 'SwitchToFollower' | translate }}</span>
+            </span>
+          </button>
+        }
+        @if (role===Role.Follower) {
+          <button mat-menu-item (click)="emitSwitchRole(registration.id, Role.Leader)">
+            <span class="flex items-center">
+              <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_outline:switch_right'"></mat-icon>
+              <span>{{ 'SwitchToLeader' | translate }}</span>
+            </span>
+          </button>
+        }
+      </mat-menu>
+    </div>
+  }
 </div>
+}
 
 <!-- waiting for partner -->
-<div *ngIf="!registration && placeholderPartner" class="flex flex-col w-72 h-16 items-start mb-3 p-5 space-y-3 border border-warn-400 shadow rounded-lg overflow-hidden bg-warn-200">
+@if (!registration && placeholderPartner) {
+  <div class="flex flex-col w-72 h-16 items-start mb-3 p-5 space-y-3 border border-warn-400 shadow rounded-lg overflow-hidden bg-warn-200">
     <div class="text-lg font-medium leading-5 ">{{ placeholderPartner }}</div>
-</div>
+  </div>
+}
 <!-- available -->
-<div *ngIf="!registration && !placeholderPartner" class="flex flex-col w-72 h-16 items-start mb-3 p-5 space-y-3 border border-gray-400 shadow rounded-lg overflow-hidden bg-gray-200">
+@if (!registration && !placeholderPartner) {
+  <div class="flex flex-col w-72 h-16 items-start mb-3 p-5 space-y-3 border border-gray-400 shadow rounded-lg overflow-hidden bg-gray-200">
     <mat-icon class="self-center" svgIcon="heroicons_solid:question-mark-circle"></mat-icon>
-</div>
+  </div>
+}

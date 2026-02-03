@@ -1,5 +1,7 @@
 <search [appearance]="'basic'" (selected)="registrationSelected($event)" [navigate]="false"></search>
 
-<div *ngIf="preview?.contentHtml" class="grid h-screen w-screen place-items-center">
+@if (preview?.contentHtml) {
+  <div class="grid h-screen w-screen place-items-center">
     <div [froalaView]="preview.contentHtml"></div>
-</div>
+  </div>
+}

@@ -1,104 +1,120 @@
 <div class="flex flex-col w-full">
 
-    <!-- Header -->
-    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
-        <div class="text-lg font-medium">{{ 'EditShift' | translate }}</div>
-        <button mat-icon-button (click)="closeDialog()" [tabIndex]="-1">
-            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
-        </button>
+  <!-- Header -->
+  <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+    <div class="text-lg font-medium">{{ 'EditShift' | translate }}</div>
+    <button mat-icon-button (click)="closeDialog()" [tabIndex]="-1">
+      <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+    </button>
+  </div>
+
+  <!-- Compose form -->
+  <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="shiftForm">
+
+    <!-- Name/Title -->
+    <mat-form-field class="w-full">
+      <mat-label>Name/Title</mat-label>
+      <input matInput [formControlName]="'name'" [spellcheck]="false">
+      @if (shiftForm.get('name').hasError('required')) {
+        <mat-error>
+          Name is required
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Description -->
+    <mat-form-field class="w-full mt-4">
+      <mat-label>Description</mat-label>
+      <textarea matInput [formControlName]="'description'" [spellcheck]="false" rows="3"></textarea>
+    </mat-form-field>
+
+    <!-- Location -->
+    <mat-form-field class="w-full mt-4">
+      <mat-label>Location</mat-label>
+      <input matInput [formControlName]="'location'" [spellcheck]="false">
+      @if (shiftForm.get('location').hasError('required')) {
+        <mat-error>
+          Location is required
+        </mat-error>
+      }
+    </mat-form-field>
+
+    <!-- Date and time fields -->
+    <div class="mt-4 space-y-4">
+      <!-- Start Date and Time -->
+      <div class="flex space-x-4">
+        <mat-form-field class="flex-auto">
+          <mat-label>Start Date</mat-label>
+          <input matInput [matDatepicker]="startDatePicker" [formControlName]="'startDate'">
+          <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #startDatePicker></mat-datepicker>
+          @if (shiftForm.get('startDate').hasError('required')) {
+            <mat-error>
+              Start date is required
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="flex-auto">
+          <mat-label>Start Time</mat-label>
+          <input matInput type="time" [formControlName]="'startTime'">
+          @if (shiftForm.get('startTime').hasError('required')) {
+            <mat-error>
+              Start time is required
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <!-- End Date and Time -->
+      <div class="flex space-x-4">
+        <mat-form-field class="flex-auto">
+          <mat-label>End Date</mat-label>
+          <input matInput [matDatepicker]="endDatePicker" [formControlName]="'endDate'">
+          <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #endDatePicker></mat-datepicker>
+          @if (shiftForm.get('endDate').hasError('required')) {
+            <mat-error>
+              End date is required
+            </mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field class="flex-auto">
+          <mat-label>End Time</mat-label>
+          <input matInput type="time" [formControlName]="'endTime'">
+          @if (shiftForm.get('endTime').hasError('required')) {
+            <mat-error>
+              End time is required
+            </mat-error>
+          }
+        </mat-form-field>
+      </div>
     </div>
 
-    <!-- Compose form -->
-    <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="shiftForm">
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 sm:mt-6">
+      <div class="flex items-center">
+        <!-- Save button -->
+        <button mat-flat-button [color]="'primary'" [disabled]="shiftForm.invalid || isLoading" (click)="save()">
+          @if (!isLoading) {
+            <span>
+              {{ 'Save' | translate }}
+            </span>
+          }
+          @if (isLoading) {
+            <mat-progress-spinner [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
+          }
+        </button>
+      </div>
+      <div class="flex items-center mt-4 sm:mt-0">
+        <!-- Cancel -->
+        <button mat-button [color]="'accent'" (click)="closeDialog()">
+          Cancel
+        </button>
+      </div>
+    </div>
 
-        <!-- Name/Title -->
-        <mat-form-field class="w-full">
-            <mat-label>Name/Title</mat-label>
-            <input matInput [formControlName]="'name'" [spellcheck]="false">
-            <mat-error *ngIf="shiftForm.get('name').hasError('required')">
-                Name is required
-            </mat-error>
-        </mat-form-field>
-
-        <!-- Description -->
-        <mat-form-field class="w-full mt-4">
-            <mat-label>Description</mat-label>
-            <textarea matInput [formControlName]="'description'" [spellcheck]="false" rows="3"></textarea>
-        </mat-form-field>
-
-        <!-- Location -->
-        <mat-form-field class="w-full mt-4">
-            <mat-label>Location</mat-label>
-            <input matInput [formControlName]="'location'" [spellcheck]="false">
-            <mat-error *ngIf="shiftForm.get('location').hasError('required')">
-                Location is required
-            </mat-error>
-        </mat-form-field>
-
-        <!-- Date and time fields -->
-        <div class="mt-4 space-y-4">
-            <!-- Start Date and Time -->
-            <div class="flex space-x-4">
-                <mat-form-field class="flex-auto">
-                    <mat-label>Start Date</mat-label>
-                    <input matInput [matDatepicker]="startDatePicker" [formControlName]="'startDate'">
-                    <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
-                    <mat-datepicker #startDatePicker></mat-datepicker>
-                    <mat-error *ngIf="shiftForm.get('startDate').hasError('required')">
-                        Start date is required
-                    </mat-error>
-                </mat-form-field>
-
-                <mat-form-field class="flex-auto">
-                    <mat-label>Start Time</mat-label>
-                    <input matInput type="time" [formControlName]="'startTime'">
-                    <mat-error *ngIf="shiftForm.get('startTime').hasError('required')">
-                        Start time is required
-                    </mat-error>
-                </mat-form-field>
-            </div>
-
-            <!-- End Date and Time -->
-            <div class="flex space-x-4">
-                <mat-form-field class="flex-auto">
-                    <mat-label>End Date</mat-label>
-                    <input matInput [matDatepicker]="endDatePicker" [formControlName]="'endDate'">
-                    <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
-                    <mat-datepicker #endDatePicker></mat-datepicker>
-                    <mat-error *ngIf="shiftForm.get('endDate').hasError('required')">
-                        End date is required
-                    </mat-error>
-                </mat-form-field>
-
-                <mat-form-field class="flex-auto">
-                    <mat-label>End Time</mat-label>
-                    <input matInput type="time" [formControlName]="'endTime'">
-                    <mat-error *ngIf="shiftForm.get('endTime').hasError('required')">
-                        End time is required
-                    </mat-error>
-                </mat-form-field>
-            </div>
-        </div>
-
-        <!-- Actions -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 sm:mt-6">
-            <div class="flex items-center">
-                <!-- Save button -->
-                <button mat-flat-button [color]="'primary'" [disabled]="shiftForm.invalid || isLoading" (click)="save()">
-                    <span *ngIf="!isLoading">
-                        {{ 'Save' | translate }}
-                    </span>
-                    <mat-progress-spinner *ngIf="isLoading" [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
-                </button>
-            </div>
-            <div class="flex items-center mt-4 sm:mt-0">
-                <!-- Cancel -->
-                <button mat-button [color]="'accent'" (click)="closeDialog()">
-                    Cancel
-                </button>
-            </div>
-        </div>
-
-    </form>
+  </form>
 
 </div>

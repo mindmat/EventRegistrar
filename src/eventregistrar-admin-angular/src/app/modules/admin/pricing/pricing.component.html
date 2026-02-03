@@ -1,164 +1,151 @@
 <!-- Main -->
 <div class="flex flex-col items-center p-6 sm:p-10 w-full">
-    <div class="flex flex-col w-full max-w-6xl space-y-3">
+  <div class="flex flex-col w-full max-w-6xl space-y-3">
 
-        <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">{{ 'Pricing' | translate }}</div>
+    <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">{{ 'Pricing' | translate }}</div>
 
-        <!-- Packages  -->
-        <div *ngFor="let packageForm of packagesForms; let indexPackage = index" class="flex flex-col">
-            <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border p-6 space-y-3" [formGroup]="packageForm">
-                <!-- Package header -->
-                <div class="flex flex-row items-baseline justify-start space-x-3">
-
-                    <!-- Name -->
-                    <div class="sm:col-span-4 basis-3/4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>{{ 'Name' | translate }}</mat-label>
-                            <input formControlName="name" matInput>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- Price -->
-                    <div class="sm:col-span-4 basis-1/4">
-                        <mat-form-field class="fuse-mat-no-subscript w-full">
-                            <mat-label>{{ 'Price' | translate }}</mat-label>
-                            <input type="number" formControlName="price" matInput>
-                        </mat-form-field>
-                    </div>
-
-                    <!-- Other actions button & menu -->
-                    <button class="ml-2" mat-icon-button [matMenuTriggerFor]="packageMenu">
-                        <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                    </button>
-                    <mat-menu #packageMenu="matMenu">
-                        <!-- Delete -->
-                        <button mat-menu-item (click)="removePackage(indexPackage)">
-                            <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                            <span>{{ 'Delete' | translate }}</span>
-                        </button>
-                    </mat-menu>
-
-                </div>
-
-                <div class="flex flex-row items-start justify-start">
-                    <div class="flex-auto cursor-pointer" (click)="allowAsAutomaticFallbackToggle.toggle()">
-                        <div class="leading-6 font-medium">{{ 'AllowAsAutomaticFallback' | translate }}</div>
-                        <div class="text-md text-secondary">
-                            {{ 'AllowAsAutomaticFallbackExplanation' | translate }}
-                        </div>
-                    </div>
-                    <mat-slide-toggle class="ml-2" [color]="'primary'" #allowAsAutomaticFallbackToggle formControlName="allowAsAutomaticFallback">
-                    </mat-slide-toggle>
-                </div>
-
-                <div class="flex flex-row items-start justify-start">
-                    <div class="flex-auto cursor-pointer" (click)="allowAsManualFallbackToggle.toggle()">
-                        <div class="leading-6 font-medium">{{ 'AllowAsManualFallback' | translate }}</div>
-                        <div class="text-md text-secondary">
-                            {{ 'AllowAsManualFallbackExplanation' | translate }}
-                        </div>
-                    </div>
-                    <mat-slide-toggle class="ml-2" [color]="'primary'" #allowAsManualFallbackToggle formControlName="allowAsManualFallback">
-                    </mat-slide-toggle>
-                </div>
-
-                <div class="flex flex-row items-start justify-start">
-                    <div class="flex-auto cursor-pointer" (click)="isCorePackageToggle.toggle()">
-                        <div class="leading-6 font-medium">{{ 'IsCorePackage' | translate }}</div>
-                        <div class="text-md text-secondary">
-                            {{ 'IsCorePackageExplanation' | translate }}
-                        </div>
-                    </div>
-                    <mat-slide-toggle class="ml-2" [color]="'primary'" #isCorePackageToggle formControlName="isCorePackage">
-                    </mat-slide-toggle>
-                </div>
-
-                <div class="flex flex-row items-start justify-start">
-                    <div class="flex-auto cursor-pointer" (click)="showInOverviewToggle.toggle()">
-                        <div class="leading-6 font-medium">{{ 'ShowInOverview' | translate }}</div>
-                        <div class="text-md text-secondary">
-                            {{ 'ShowInOverviewExplanation' | translate }}
-                        </div>
-                    </div>
-                    <mat-slide-toggle class="ml-2" [color]="'primary'" #showInOverviewToggle formControlName="showInOverview">
-                    </mat-slide-toggle>
-                </div>
-
-
-                <!-- Parts -->
-                <div formArrayName="parts">
-                    <ng-container *ngFor="let partForm of getParts(packageForm).controls; let indexPart = index">
-                        <div class="mt-3 flex flex-col items-start enter justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150"
-                            [formGroupName]="indexPart">
-                            <!-- Package part header -->
-                            <div class="flex flex-row items-start justify-start space-x-3 w-full">
-
-                                <!-- String mapping -->
-                                <mat-form-field class=" basis-3/4">
-                                    <mat-label>{{ 'SelectionType' | translate }}</mat-label>
-                                    <mat-select [placeholder]="'SelectionType' | translate" formControlName="selectionType">
-                                        <mat-option *ngFor="let selectionType of selectionTypes" [value]="selectionType.type">{{ selectionType.text }}</mat-option>
-                                    </mat-select>
-                                </mat-form-field>
-
-                                <!-- Price adjustment -->
-                                <div class="sm:col-span-4 basis-1/4" *ngIf="partForm?.value?.selectionType === 11">
-                                    <mat-form-field class="fuse-mat-no-subscript w-full">
-                                        <mat-label>{{ 'PriceAdjustment' | translate }}</mat-label>
-                                        <input type="number" formControlName="priceAdjustment" matInput>
-                                    </mat-form-field>
-                                </div>
-
-                                <!-- Other actions button & menu -->
-                                <button class="ml-auto" mat-icon-button [matMenuTriggerFor]="packageMenu">
-                                    <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                                </button>
-                                <mat-menu #packageMenu="matMenu">
-                                    <!-- Delete -->
-                                    <button mat-menu-item (click)="removePackagePart(packageForm, indexPart)">
-                                        <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                                        <span>{{ 'Delete' | translate }}</span>
-                                    </button>
-                                </mat-menu>
-
-                            </div>
-
-                            <!-- <div class="text-xl font-semibold">{{ part.reduction }}</div> -->
-
-                            <!-- Registrables -->
-                            <ng-container *ngIf="registrables && partForm?.value?.registrableIds">
-                                <app-tags-picker [allTags]="registrables" [formControlName]="'registrableIds'" idProperty="id" textProperty="displayName" class="w-full">
-                                </app-tags-picker>
-                            </ng-container>
-
-                            <div class="flex flex-row items-stretch justify-start mt-2">
-                                <div class="flex-auto cursor-pointer" (click)="showInMailSpotList.toggle()">
-                                    <div class="leading-6 font-medium">{{ 'ShowInMailSpotList' | translate }}</div>
-                                    <div class="text-md text-secondary">
-                                        {{ 'ShowInMailSpotListExplanation' | translate }}
-                                    </div>
-                                </div>
-                                <mat-slide-toggle class="ml-auto" [color]="'primary'" #showInMailSpotList formControlName="showInMailSpotList">
-                                </mat-slide-toggle>
-                            </div>
-
-                            <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
-                        </div>
-                    </ng-container>
-
-                    <button mat-flat-button class="mt-3" [color]="'primary'" (click)="addPart(packageForm)">
-                        {{ 'AddPricePart' | translate }}
-                    </button>
-                </div>
+    <!-- Packages  -->
+    @for (packageForm of packagesForms; track packageForm; let indexPackage = $index) {
+      <div class="flex flex-col">
+        <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border p-6 space-y-3" [formGroup]="packageForm">
+          <!-- Package header -->
+          <div class="flex flex-row items-baseline justify-start space-x-3">
+            <!-- Name -->
+            <div class="sm:col-span-4 basis-3/4">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>{{ 'Name' | translate }}</mat-label>
+                <input formControlName="name" matInput>
+              </mat-form-field>
             </div>
-        </div>
-        <div class="flex flex-row">
-            <button mat-flat-button [color]="'primary'" (click)="addPackage()">
-                {{ 'AddPricePackage' | translate }}
+            <!-- Price -->
+            <div class="sm:col-span-4 basis-1/4">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>{{ 'Price' | translate }}</mat-label>
+                <input type="number" formControlName="price" matInput>
+              </mat-form-field>
+            </div>
+            <!-- Other actions button & menu -->
+            <button class="ml-2" mat-icon-button [matMenuTriggerFor]="packageMenu">
+              <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
             </button>
-            <button class="ml-auto" mat-flat-button [color]="'primary'" (click)="save()">
-                {{ 'Save' | translate }}
+            <mat-menu #packageMenu="matMenu">
+              <!-- Delete -->
+              <button mat-menu-item (click)="removePackage(indexPackage)">
+                <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                <span>{{ 'Delete' | translate }}</span>
+              </button>
+            </mat-menu>
+          </div>
+          <div class="flex flex-row items-start justify-start">
+            <div class="flex-auto cursor-pointer" (click)="allowAsAutomaticFallbackToggle.toggle()">
+              <div class="leading-6 font-medium">{{ 'AllowAsAutomaticFallback' | translate }}</div>
+              <div class="text-md text-secondary">
+                {{ 'AllowAsAutomaticFallbackExplanation' | translate }}
+              </div>
+            </div>
+            <mat-slide-toggle class="ml-2" [color]="'primary'" #allowAsAutomaticFallbackToggle formControlName="allowAsAutomaticFallback">
+            </mat-slide-toggle>
+          </div>
+          <div class="flex flex-row items-start justify-start">
+            <div class="flex-auto cursor-pointer" (click)="allowAsManualFallbackToggle.toggle()">
+              <div class="leading-6 font-medium">{{ 'AllowAsManualFallback' | translate }}</div>
+              <div class="text-md text-secondary">
+                {{ 'AllowAsManualFallbackExplanation' | translate }}
+              </div>
+            </div>
+            <mat-slide-toggle class="ml-2" [color]="'primary'" #allowAsManualFallbackToggle formControlName="allowAsManualFallback">
+            </mat-slide-toggle>
+          </div>
+          <div class="flex flex-row items-start justify-start">
+            <div class="flex-auto cursor-pointer" (click)="isCorePackageToggle.toggle()">
+              <div class="leading-6 font-medium">{{ 'IsCorePackage' | translate }}</div>
+              <div class="text-md text-secondary">
+                {{ 'IsCorePackageExplanation' | translate }}
+              </div>
+            </div>
+            <mat-slide-toggle class="ml-2" [color]="'primary'" #isCorePackageToggle formControlName="isCorePackage">
+            </mat-slide-toggle>
+          </div>
+          <div class="flex flex-row items-start justify-start">
+            <div class="flex-auto cursor-pointer" (click)="showInOverviewToggle.toggle()">
+              <div class="leading-6 font-medium">{{ 'ShowInOverview' | translate }}</div>
+              <div class="text-md text-secondary">
+                {{ 'ShowInOverviewExplanation' | translate }}
+              </div>
+            </div>
+            <mat-slide-toggle class="ml-2" [color]="'primary'" #showInOverviewToggle formControlName="showInOverview">
+            </mat-slide-toggle>
+          </div>
+          <!-- Parts -->
+          <div formArrayName="parts">
+            @for (partForm of getParts(packageForm).controls; track partForm; let indexPart = $index) {
+              <div class="mt-3 flex flex-col items-start enter justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150"
+                [formGroupName]="indexPart">
+                <!-- Package part header -->
+                <div class="flex flex-row items-start justify-start space-x-3 w-full">
+                  <!-- String mapping -->
+                  <mat-form-field class=" basis-3/4">
+                    <mat-label>{{ 'SelectionType' | translate }}</mat-label>
+                    <mat-select [placeholder]="'SelectionType' | translate" formControlName="selectionType">
+                      @for (selectionType of selectionTypes; track selectionType) {
+                        <mat-option [value]="selectionType.type">{{ selectionType.text }}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
+                  <!-- Price adjustment -->
+                  @if (partForm?.value?.selectionType === 11) {
+                    <div class="sm:col-span-4 basis-1/4">
+                      <mat-form-field class="fuse-mat-no-subscript w-full">
+                        <mat-label>{{ 'PriceAdjustment' | translate }}</mat-label>
+                        <input type="number" formControlName="priceAdjustment" matInput>
+                      </mat-form-field>
+                    </div>
+                  }
+                  <!-- Other actions button & menu -->
+                  <button class="ml-auto" mat-icon-button [matMenuTriggerFor]="packageMenu">
+                    <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+                  </button>
+                  <mat-menu #packageMenu="matMenu">
+                    <!-- Delete -->
+                    <button mat-menu-item (click)="removePackagePart(packageForm, indexPart)">
+                      <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                      <span>{{ 'Delete' | translate }}</span>
+                    </button>
+                  </mat-menu>
+                </div>
+                <!-- <div class="text-xl font-semibold">{{ part.reduction }}</div> -->
+                <!-- Registrables -->
+                @if (registrables && partForm?.value?.registrableIds) {
+                  <app-tags-picker [allTags]="registrables" [formControlName]="'registrableIds'" idProperty="id" textProperty="displayName" class="w-full">
+                  </app-tags-picker>
+                }
+                <div class="flex flex-row items-stretch justify-start mt-2">
+                  <div class="flex-auto cursor-pointer" (click)="showInMailSpotList.toggle()">
+                    <div class="leading-6 font-medium">{{ 'ShowInMailSpotList' | translate }}</div>
+                    <div class="text-md text-secondary">
+                      {{ 'ShowInMailSpotListExplanation' | translate }}
+                    </div>
+                  </div>
+                  <mat-slide-toggle class="ml-auto" [color]="'primary'" #showInMailSpotList formControlName="showInMailSpotList">
+                  </mat-slide-toggle>
+                </div>
+                <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
+              </div>
+            }
+            <button mat-flat-button class="mt-3" [color]="'primary'" (click)="addPart(packageForm)">
+              {{ 'AddPricePart' | translate }}
             </button>
+          </div>
         </div>
+      </div>
+    }
+    <div class="flex flex-row">
+      <button mat-flat-button [color]="'primary'" (click)="addPackage()">
+        {{ 'AddPricePackage' | translate }}
+      </button>
+      <button class="ml-auto" mat-flat-button [color]="'primary'" (click)="save()">
+        {{ 'Save' | translate }}
+      </button>
     </div>
+  </div>
 </div>

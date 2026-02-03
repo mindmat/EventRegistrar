@@ -1,82 +1,75 @@
-<div
+@if (!dismissible || dismissible && !dismissed) {
+  <div
     class="fuse-alert-container"
-    *ngIf="!dismissible || dismissible && !dismissed"
     [@fadeIn]="!dismissed"
     [@fadeOut]="!dismissed">
-
     <!-- Border -->
-    <div
+    @if (appearance === 'border') {
+      <div
         class="fuse-alert-border"
-        *ngIf="appearance === 'border'"></div>
-
+      ></div>
+    }
     <!-- Icon -->
-    <div
+    @if (showIcon) {
+      <div
         class="fuse-alert-icon"
-        *ngIf="showIcon">
-
+        >
         <!-- Custom icon -->
         <div class="fuse-alert-custom-icon">
-            <ng-content select="[fuseAlertIcon]"></ng-content>
+          <ng-content select="[fuseAlertIcon]"></ng-content>
         </div>
-
         <!-- Default icons -->
         <div class="fuse-alert-default-icon">
-
+          @if (type === 'primary') {
             <mat-icon
-                *ngIf="type === 'primary'"
-                [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-
+            [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+          }
+          @if (type === 'accent') {
             <mat-icon
-                *ngIf="type === 'accent'"
-                [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-
+            [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+          }
+          @if (type === 'warn') {
             <mat-icon
-                *ngIf="type === 'warn'"
-                [svgIcon]="'heroicons_solid:x-circle'"></mat-icon>
-
+            [svgIcon]="'heroicons_solid:x-circle'"></mat-icon>
+          }
+          @if (type === 'basic') {
             <mat-icon
-                *ngIf="type === 'basic'"
-                [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-
+            [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+          }
+          @if (type === 'info') {
             <mat-icon
-                *ngIf="type === 'info'"
-                [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
-
+            [svgIcon]="'heroicons_solid:information-circle'"></mat-icon>
+          }
+          @if (type === 'success') {
             <mat-icon
-                *ngIf="type === 'success'"
-                [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-
+            [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+          }
+          @if (type === 'warning') {
             <mat-icon
-                *ngIf="type === 'warning'"
-                [svgIcon]="'heroicons_solid:exclamation'"></mat-icon>
-
+            [svgIcon]="'heroicons_solid:exclamation'"></mat-icon>
+          }
+          @if (type === 'error') {
             <mat-icon
-                *ngIf="type === 'error'"
-                [svgIcon]="'heroicons_solid:x-circle'"></mat-icon>
-
+            [svgIcon]="'heroicons_solid:x-circle'"></mat-icon>
+          }
         </div>
-
-    </div>
-
+      </div>
+    }
     <!-- Content -->
     <div class="fuse-alert-content">
-
-        <div class="fuse-alert-title">
-            <ng-content select="[fuseAlertTitle]"></ng-content>
-        </div>
-
-        <div class="fuse-alert-message">
-            <ng-content></ng-content>
-        </div>
-
+      <div class="fuse-alert-title">
+        <ng-content select="[fuseAlertTitle]"></ng-content>
+      </div>
+      <div class="fuse-alert-message">
+        <ng-content></ng-content>
+      </div>
     </div>
-
     <!-- Dismiss button -->
     <button
-        class="fuse-alert-dismiss-button"
-        mat-icon-button
-        (click)="dismiss()">
-        <mat-icon [svgIcon]="'heroicons_solid:x'"></mat-icon>
+      class="fuse-alert-dismiss-button"
+      mat-icon-button
+      (click)="dismiss()">
+      <mat-icon [svgIcon]="'heroicons_solid:x'"></mat-icon>
     </button>
-
-</div>
+  </div>
+}

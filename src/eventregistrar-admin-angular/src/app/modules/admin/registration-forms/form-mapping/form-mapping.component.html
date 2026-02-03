@@ -1,179 +1,189 @@
 <!-- Main -->
 <div class="flex flex-col items-center p-6 sm:p-10 w-full">
-    <div class="flex flex-col w-full max-w-6xl">
+  <div class="flex flex-col w-full max-w-6xl">
 
-        <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">{{ 'Anmeldeformulare' | translate }}</div>
+    <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">{{ 'Anmeldeformulare' | translate }}</div>
 
-        <!-- form->registrables or registrables->form -->
-        <!-- <div class="flex items-center w-fit mt-4 p-0.5 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+    <!-- form->registrables or registrables->form -->
+    <!-- <div class="flex items-center w-fit mt-4 p-0.5 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
             <button class="px-6" [ngClass]="{'bg-card pointer-events-none shadow': mappingDirection$.value===MappingDirection.FormToTrack,
                                                             'bg-transparent': mappingDirection$.value===MappingDirection.TrackToForm}" mat-flat-button
-                (click)="setMappingDirection(MappingDirection.FormToTrack)" disableRipple>
-                {{ 'MappingDirection_FormToTrack' | translate }}
-            </button>
+      (click)="setMappingDirection(MappingDirection.FormToTrack)" disableRipple>
+      {{ 'MappingDirection_FormToTrack' | translate }}
+    </button>
             <button class="px-6" [ngClass]="{'bg-card pointer-events-none shadow': mappingDirection$.value===MappingDirection.TrackToForm,
                                                             'bg-transparent': mappingDirection$.value===MappingDirection.FormToTrack}" mat-flat-button
-                (click)="setMappingDirection(MappingDirection.TrackToForm)" disableRipple>
-                {{ 'MappingDirection_TrackToForm' | translate }}
+      (click)="setMappingDirection(MappingDirection.TrackToForm)" disableRipple>
+      {{ 'MappingDirection_TrackToForm' | translate }}
+    </button>
+  </div> -->
+
+  <!-- Forms  -->
+  <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+
+    @for (form of forms; track form) {
+      <div class="flex flex-col p-6">
+        @if (form.sections) {
+          <div class="fixed top-1/2 right-4 transform -translate-y-1/2 z-50 flex flex-col space-y-2">
+            <button mat-fab [color]="'primary'" class="shadow-lg" (click)="saveMappings(form)" [matTooltip]="'Save' | translate" matTooltipPosition="left">
+              <mat-icon [svgIcon]="'heroicons_outline:check'"></mat-icon>
             </button>
-        </div> -->
-
-        <!-- Forms  -->
-        <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-
-            <div *ngFor="let form of forms" class="flex flex-col p-6">
-                <div class="fixed top-1/2 right-4 transform -translate-y-1/2 z-50 flex flex-col space-y-2" *ngIf="form.sections">
-                    <button mat-fab [color]="'primary'" class="shadow-lg" (click)="saveMappings(form)" [matTooltip]="'Save' | translate" matTooltipPosition="left">
-                        <mat-icon [svgIcon]="'heroicons_outline:check'"></mat-icon>
-                    </button>
-                </div>
-
-                <!-- Form header -->
-                <div class="flex items-center justify-between space-y-3">
-                    <div>
-                        <div class=" text-xl font-semibold">{{ form.title }}</div>
-                        <div *ngIf="form.lastImport" class="text-secondary">{{ 'LastImport' | translate }}: {{ form.lastImport | date:'dd.MM.yyyy HH:mm' }}</div>
-                    </div>
-                    <button *ngIf="form.pendingRawFormId" mat-flat-button [color]="'primary'" (click)="importFormUpdate(form)">
-                        {{ 'ImportNewVersion' | translate }} ({{ form.pendingRawFormCreated | ago }})
-                    </button>
-                </div>
-
-                <!-- Sections Form -> Tracks -->
-                <!-- <ng-container *ngIf="mappingDirection$.value===MappingDirection.FormToTrack"> -->
-                <div *ngFor="let section of form.sections" class="mt-8 flex flex-col items-center justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150">
-                    <div class="text-xl font-semibold">{{ section.name }}</div>
-                    <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
-                    <div *ngFor="let question of section.questions; last as lastQuestion" class="flex flex-col w-full py-2 px-2">
-                        <ng-container *ngIf="!isPotentialPartnerQuestion(section, question)">
-
-                            <!-- Question -->
-                            <div class="text-lg font-semibold">{{ question.question }}</div>
-
-                            <!-- Question options -->
-                            <ng-container *ngIf="question.options?.length > 0">
-                                <div class="space-y-1.5">
-                                    <ng-container *ngFor="let option of question.options">
-
-                                        <!-- Option -->
-                                        <div class="flex flex-auto items-center justify-center">
-                                            <div class="ml-1.5 leading-5">
-                                                - {{option.answer}}
-                                            </div>
-                                            <app-tags-picker class="ml-auto" [allTags]="allOptionMappings" [selectedTagIds]="option.mappedRegistrableCombinedIds" idProperty="combinedId"
-                                                [showBorder]="false">
-                                            </app-tags-picker>
-
-                                            <!-- context menu -->
-                                            <div class="flex items-center ml-1">
-                                                <button mat-icon-button [matMenuTriggerFor]="questionOptionMenu">
-                                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-                                                </button>
-                                                <mat-menu #questionOptionMenu="matMenu">
-                                                    <button mat-menu-item (click)="reprocessQuestionOption(option.id)">
-                                                        <span class="flex items-center">
-                                                            <mat-icon class="icon-size-5 mr-3" svgIcon="heroicons_outline:cog-6-tooth"></mat-icon>
-                                                            <span>{{ 'ReprocessQuestionOption' | translate }}</span>
-                                                        </span>
-                                                    </button>
-                                                </mat-menu>
-                                            </div>
-                                        </div>
-                                    </ng-container>
-                                </div>
-
-                                <!-- Question: Partner for this spot -->
-                                <ng-container *ngIf="question.isMappedToPartnerTrack && section.potentialPartnerQuestionIds?.length > 0">
-                                    <div class="text-lg font-semibold">{{ 'AlternativePartnerForThisSpot' | translate }}</div>
-                                    <mat-form-field class="flex-auto gt-xs:pl-3">
-                                        <mat-select [placeholder]="'Question' | translate" [(value)]="question.questionId_Partner">
-                                            <mat-option [value]="null"> - </mat-option>
-                                            <mat-option *ngFor="let mapping of getPotentialPartnerQuestions(section.potentialPartnerQuestionIds)" [value]="mapping.id">{{ mapping.label }}</mat-option>
-                                        </mat-select>
-                                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:link'"></mat-icon>
-                                    </mat-form-field>
-                                </ng-container>
-                            </ng-container>
-
-                            <!-- String mapping -->
-                            <ng-container *ngIf="question.mappable">
-                                <mat-form-field class="flex-auto gt-xs:pl-3">
-                                    <mat-select [placeholder]="'Mapping' | translate" [(value)]="question.mapping">
-                                        <mat-option [value]="null"> - </mat-option>
-                                        <mat-option *ngFor="let mapping of allQuestionMappings" [value]="mapping.type">{{ mapping.text }}</mat-option>
-                                    </mat-select>
-                                    <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:link'"></mat-icon>
-                                </mat-form-field>
-                            </ng-container>
-
-                            <!-- Use as placeholder in mail template -->
-                            <div class="flex flex-col mt-2 space-y-2" *ngIf="question.allowMailTemplateKey">
-                                <div class="flex items-center justify-center mt-3 max-w-32">
-                                    <div class="flex-auto border-b border-dashed"></div>
-                                </div>
-                                <div class="flex flex-row space-x-2 items-baseline">
-                                    <mat-label>{{ 'MailPlaceholder' | translate }}</mat-label>
-                                    <mat-slide-toggle class="ml-auto" [color]="'primary'" [(ngModel)]="question.showMailTemplateKey" #placeholder>
-                                    </mat-slide-toggle>
-                                    <mat-form-field *ngIf="placeholder.checked" class="fuse-mat-no-subscript w-60">
-                                        <input [(ngModel)]="question.mailTemplateKey" matInput>
-                                    </mat-form-field>
-                                </div>
-                            </div>
-
-                            <!-- Line -->
-                            <div *ngIf="!lastQuestion" class="flex items-center justify-center mt-3 -mx-6">
-                                <div class="flex-auto border-b"></div>
-                            </div>
-                        </ng-container>
-                    </div>
-                </div>
-                <div class="mt-8 flex flex-col items-center justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150">
-                    <div class="text-xl font-semibold">{{ 'MultiMappings' | translate }}</div>
-                    <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
-                    <div *ngFor="let multiMapping of form.multiMappings; let indexMultiMapping = index; last as lastMapping" class="flex flex-col w-full py-2 px-2">
-
-                        <!-- Question -->
-                        <!-- <div class="text-lg font-semibold">{{ question.question }}</div> -->
-                        <div class="flex flex-auto items-center justify-center">
-                            <div class="ml-1.5 leading-5">
-                                {{ 'FormQuestionOptions' | translate }}
-                            </div>
-                            <app-tags-picker class="ml-auto" [allTags]="allQuestionOptions" [selectedTagIds]="multiMapping.questionOptionIds" idProperty="id" textProperty="answer"
-                                [showBorder]="false">
-                            </app-tags-picker>
-                        </div>
-                        <!-- arrow down -->
-                        <button class="ml-auto mr-2" mat-icon-button [matMenuTriggerFor]="packageMenu">
-                            <mat-icon [svgIcon]="'heroicons_outline:arrow-sm-down'"></mat-icon>
-                        </button>
-                        <mat-menu #packageMenu="matMenu">
-                            <!-- Delete -->
-                            <button mat-menu-item (click)="removeMultiMapping(form, indexMultiMapping)">
-                                <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                                <span>{{ 'Delete' | translate }}</span>
-                            </button>
-                        </mat-menu>
-                        <div class="flex flex-auto items-center justify-center">
-                            <div class="ml-1.5 leading-5">
-                                {{ 'Tracks' | translate }}
-                            </div>
-                            <app-tags-picker class="ml-auto" [allTags]="availableTracks" [selectedTagIds]="multiMapping.registrableCombinedIds" idProperty="combinedId" [showBorder]="false">
-                            </app-tags-picker>
-                        </div>
-
-                        <!-- Line -->
-                        <div class="flex items-center justify-center mt-3 -mx-6">
-                            <div class="flex-auto border-b"></div>
-                        </div>
-                    </div>
-
-                    <button mat-flat-button class="mt-3" [color]="'primary'" (click)="addMultiMapping(form)">
-                        {{ 'AddPricePart' | translate }}
-                    </button>
-
-                </div>
-            </div>
+          </div>
+        }
+        <!-- Form header -->
+        <div class="flex items-center justify-between space-y-3">
+          <div>
+            <div class=" text-xl font-semibold">{{ form.title }}</div>
+            @if (form.lastImport) {
+              <div class="text-secondary">{{ 'LastImport' | translate }}: {{ form.lastImport | date:'dd.MM.yyyy HH:mm' }}</div>
+            }
+          </div>
+          @if (form.pendingRawFormId) {
+            <button mat-flat-button [color]="'primary'" (click)="importFormUpdate(form)">
+              {{ 'ImportNewVersion' | translate }} ({{ form.pendingRawFormCreated | ago }})
+            </button>
+          }
         </div>
-    </div>
+        <!-- Sections Form -> Tracks -->
+        <!-- <ng-container *ngIf="mappingDirection$.value===MappingDirection.FormToTrack"> -->
+        @for (section of form.sections; track section) {
+          <div class="mt-8 flex flex-col items-center justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150">
+            <div class="text-xl font-semibold">{{ section.name }}</div>
+            <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
+            @for (question of section.questions; track question; let lastQuestion = $last) {
+              <div class="flex flex-col w-full py-2 px-2">
+                @if (!isPotentialPartnerQuestion(section, question)) {
+                  <!-- Question -->
+                  <div class="text-lg font-semibold">{{ question.question }}</div>
+                  <!-- Question options -->
+                  @if (question.options?.length > 0) {
+                    <div class="space-y-1.5">
+                      @for (option of question.options; track option) {
+                        <!-- Option -->
+                        <div class="flex flex-auto items-center justify-center">
+                          <div class="ml-1.5 leading-5">
+                            - {{option.answer}}
+                          </div>
+                          <app-tags-picker class="ml-auto" [allTags]="allOptionMappings" [selectedTagIds]="option.mappedRegistrableCombinedIds" idProperty="combinedId"
+                            [showBorder]="false">
+                          </app-tags-picker>
+                          <!-- context menu -->
+                          <div class="flex items-center ml-1">
+                            <button mat-icon-button [matMenuTriggerFor]="questionOptionMenu">
+                              <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+                            </button>
+                            <mat-menu #questionOptionMenu="matMenu">
+                              <button mat-menu-item (click)="reprocessQuestionOption(option.id)">
+                                <span class="flex items-center">
+                                  <mat-icon class="icon-size-5 mr-3" svgIcon="heroicons_outline:cog-6-tooth"></mat-icon>
+                                  <span>{{ 'ReprocessQuestionOption' | translate }}</span>
+                                </span>
+                              </button>
+                            </mat-menu>
+                          </div>
+                        </div>
+                      }
+                    </div>
+                    <!-- Question: Partner for this spot -->
+                    @if (question.isMappedToPartnerTrack && section.potentialPartnerQuestionIds?.length > 0) {
+                      <div class="text-lg font-semibold">{{ 'AlternativePartnerForThisSpot' | translate }}</div>
+                      <mat-form-field class="flex-auto gt-xs:pl-3">
+                        <mat-select [placeholder]="'Question' | translate" [(value)]="question.questionId_Partner">
+                          <mat-option [value]="null"> - </mat-option>
+                          @for (mapping of getPotentialPartnerQuestions(section.potentialPartnerQuestionIds); track mapping) {
+                            <mat-option [value]="mapping.id">{{ mapping.label }}</mat-option>
+                          }
+                        </mat-select>
+                        <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:link'"></mat-icon>
+                      </mat-form-field>
+                    }
+                  }
+                  <!-- String mapping -->
+                  @if (question.mappable) {
+                    <mat-form-field class="flex-auto gt-xs:pl-3">
+                      <mat-select [placeholder]="'Mapping' | translate" [(value)]="question.mapping">
+                        <mat-option [value]="null"> - </mat-option>
+                        @for (mapping of allQuestionMappings; track mapping) {
+                          <mat-option [value]="mapping.type">{{ mapping.text }}</mat-option>
+                        }
+                      </mat-select>
+                      <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:link'"></mat-icon>
+                    </mat-form-field>
+                  }
+                  <!-- Use as placeholder in mail template -->
+                  @if (question.allowMailTemplateKey) {
+                    <div class="flex flex-col mt-2 space-y-2">
+                      <div class="flex items-center justify-center mt-3 max-w-32">
+                        <div class="flex-auto border-b border-dashed"></div>
+                      </div>
+                      <div class="flex flex-row space-x-2 items-baseline">
+                        <mat-label>{{ 'MailPlaceholder' | translate }}</mat-label>
+                        <mat-slide-toggle class="ml-auto" [color]="'primary'" [(ngModel)]="question.showMailTemplateKey" #placeholder>
+                        </mat-slide-toggle>
+                        @if (placeholder.checked) {
+                          <mat-form-field class="fuse-mat-no-subscript w-60">
+                            <input [(ngModel)]="question.mailTemplateKey" matInput>
+                          </mat-form-field>
+                        }
+                      </div>
+                    </div>
+                  }
+                  <!-- Line -->
+                  @if (!lastQuestion) {
+                    <div class="flex items-center justify-center mt-3 -mx-6">
+                      <div class="flex-auto border-b"></div>
+                    </div>
+                  }
+                }
+              </div>
+            }
+          </div>
+        }
+        <div class="mt-8 flex flex-col items-center justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150">
+          <div class="text-xl font-semibold">{{ 'MultiMappings' | translate }}</div>
+          <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
+          @for (multiMapping of form.multiMappings; track multiMapping; let indexMultiMapping = $index; let lastMapping = $last) {
+            <div class="flex flex-col w-full py-2 px-2">
+              <!-- Question -->
+              <!-- <div class="text-lg font-semibold">{{ question.question }}</div> -->
+              <div class="flex flex-auto items-center justify-center">
+                <div class="ml-1.5 leading-5">
+                  {{ 'FormQuestionOptions' | translate }}
+                </div>
+                <app-tags-picker class="ml-auto" [allTags]="allQuestionOptions" [selectedTagIds]="multiMapping.questionOptionIds" idProperty="id" textProperty="answer"
+                  [showBorder]="false">
+                </app-tags-picker>
+              </div>
+              <!-- arrow down -->
+              <button class="ml-auto mr-2" mat-icon-button [matMenuTriggerFor]="packageMenu">
+                <mat-icon [svgIcon]="'heroicons_outline:arrow-sm-down'"></mat-icon>
+              </button>
+              <mat-menu #packageMenu="matMenu">
+                <!-- Delete -->
+                <button mat-menu-item (click)="removeMultiMapping(form, indexMultiMapping)">
+                  <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                  <span>{{ 'Delete' | translate }}</span>
+                </button>
+              </mat-menu>
+              <div class="flex flex-auto items-center justify-center">
+                <div class="ml-1.5 leading-5">
+                  {{ 'Tracks' | translate }}
+                </div>
+                <app-tags-picker class="ml-auto" [allTags]="availableTracks" [selectedTagIds]="multiMapping.registrableCombinedIds" idProperty="combinedId" [showBorder]="false">
+                </app-tags-picker>
+              </div>
+              <!-- Line -->
+              <div class="flex items-center justify-center mt-3 -mx-6">
+                <div class="flex-auto border-b"></div>
+              </div>
+            </div>
+          }
+          <button mat-flat-button class="mt-3" [color]="'primary'" (click)="addMultiMapping(form)">
+            {{ 'AddPricePart' | translate }}
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
 </div>

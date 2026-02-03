@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
@@ -44,10 +44,9 @@ interface CalendarEventItem extends CalendarIcsItem
     selector: 'calendar-view',
     standalone: true,
     imports: [
-        CommonModule,
-        MatIconModule,
-        TranslateModule
-    ],
+    MatIconModule,
+    TranslateModule
+],
     templateUrl: './calendar-view.component.html',
     styleUrls: ['./calendar-view.component.scss']
 })

@@ -1,149 +1,166 @@
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
 
-    <!-- Header -->
-    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
-        <div class="flex-1 min-w-0">
-            <!-- Back to registration overview -->
-            <a class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['../../..']">
-                <span class="inline-flex items-center">
-                    <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-small-left'"></mat-icon>
-                    <span class="ml-1.5 font-medium leading-5">{{ 'BackToRegistrationOverview' | translate }}</span>
-                </span>
-            </a>
-            <!-- Title -->
-            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ registrable.name }}</div>
-            <div class="mt-1.5 text-lg text-secondary">{{ registrable.nameSecondary }}</div>
-        </div>
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+    <div class="flex-1 min-w-0">
+      <!-- Back to registration overview -->
+      <a class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['../../..']">
+        <span class="inline-flex items-center">
+          <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-small-left'"></mat-icon>
+          <span class="ml-1.5 font-medium leading-5">{{ 'BackToRegistrationOverview' | translate }}</span>
+        </span>
+      </a>
+      <!-- Title -->
+      <div class="text-4xl font-extrabold tracking-tight leading-none">{{ registrable.name }}</div>
+      <div class="mt-1.5 text-lg text-secondary">{{ registrable.nameSecondary }}</div>
     </div>
+  </div>
 
-    <!-- Main -->
-    <div class="flex-auto p-6 sm:p-8 sm:pt-4 overflow-y-auto" cdkScrollable>
+  <!-- Main -->
+  <div class="flex-auto p-6 sm:p-8 sm:pt-4 overflow-y-auto" cdkScrollable>
 
-        <!-- Lists -->
-        <div class="flex">
+    <!-- Lists -->
+    <div class="flex">
 
-            <!-- Group all cdkDropList's after this point together so that the cards can be transferred between lists -->
-            <div class="flex flex-wrap">
+      <!-- Group all cdkDropList's after this point together so that the cards can be transferred between lists -->
+      <div class="flex flex-wrap">
 
-                <!-- Participants -->
-                <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
+        <!-- Participants -->
+        <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
 
-                    <div class="flex flex-row">
-                        <div class="font-medium">{{ 'Participants' | translate }}</div>
+          <div class="flex flex-row">
+            <div class="font-medium">{{ 'Participants' | translate }}</div>
 
-                        <!-- context menu -->
-                        <div *ngIf="canDefrag || registrable.waitingList.length > 0" class="flex items-center ml-auto">
-                            <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
-                                <mat-icon class="icon-size-5" svgIcon="heroicons_solid:ellipsis-vertical"></mat-icon>
-                            </button>
-                            <mat-menu #registrableMenu="matMenu">
-                                <button *ngIf="canDefrag" mat-menu-item (click)="defrag()">
-                                    <span class="flex items-center">
-                                        <mat-icon class="icon-size-5 mr-3" svgIcon="mat_outline:cleaning_services"></mat-icon>
-                                        <span>{{ 'DefragRegistrableCommand' | translate }}</span>
-                                    </span>
-                                </button>
-                                <button *ngIf="registrable.waitingList.length > 0" mat-menu-item (click)="triggerMoveUp()">
-                                    <span class="flex items-center">
-                                        <mat-icon class="icon-size-5 mr-3" svgIcon="heroicons_solid:bars-arrow-up"></mat-icon>
-                                        <span>{{ 'TriggerMoveUp' | translate }}</span>
-                                    </span>
-                                </button>
-                            </mat-menu>
-                        </div>
-                    </div>
+            <!-- context menu -->
+            @if (canDefrag || registrable.waitingList.length > 0) {
+              <div class="flex items-center ml-auto">
+                <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:ellipsis-vertical"></mat-icon>
+                </button>
+                <mat-menu #registrableMenu="matMenu">
+                  @if (canDefrag) {
+                    <button mat-menu-item (click)="defrag()">
+                      <span class="flex items-center">
+                        <mat-icon class="icon-size-5 mr-3" svgIcon="mat_outline:cleaning_services"></mat-icon>
+                        <span>{{ 'DefragRegistrableCommand' | translate }}</span>
+                      </span>
+                    </button>
+                  }
+                  @if (registrable.waitingList.length > 0) {
+                    <button mat-menu-item (click)="triggerMoveUp()">
+                      <span class="flex items-center">
+                        <mat-icon class="icon-size-5 mr-3" svgIcon="heroicons_solid:bars-arrow-up"></mat-icon>
+                        <span>{{ 'TriggerMoveUp' | translate }}</span>
+                      </span>
+                    </button>
+                  }
+                </mat-menu>
+              </div>
+            }
+          </div>
 
-                    <!-- Spots -->
-                    <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border" [ngClass]="{'bg-primary-600': dragOverParticipants}">
-                        <div id="participants" class="p-3 pb-0" cdkDropList (cdkDropListDropped)="dragOverParticipants=false;drop($event.item.data)" cdkDropListConnectedTo="waitingList"
-                            [cdkDropListData]="registrable.participants" (cdkDropListEntered)="dragOverParticipants=true" (cdkDropListExited)="dragOverParticipants=false">
-                            <!-- Header -->
-                            <div class="flex flex-row items-center m-3 space-x-4">
-                                <div class="flex flex-row w-72">
-                                    <div class="font-normal">{{ 'Leader' | translate }}</div>
-                                    <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
-                                        {{ registrable.acceptedLeaders }}
-                                    </div>
-                                </div>
-                                <div class="flex flex-row w-72">
-                                    <div class="font-normal">{{ 'Follower' | translate }}</div>
-                                    <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
-                                        {{ registrable.acceptedFollowers }}
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Spot -->
-                            <ng-container *ngFor="let spot of registrable.participants; let i = index; trackBy: trackByFn">
-                                <div class="flex flex-row items-center">
-                                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Leader" [isPartnerSpot]="spot.isPartnerRegistration"
-                                        (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
-                                    <div *ngIf="spot.isPartnerRegistration" class="w-4 h-6 mb-2 z-10 overflow-hidden bg-card"></div>
-                                    <div *ngIf="!spot.isPartnerRegistration" class="w-4"></div>
-                                    <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Follower" [isPartnerSpot]="spot.isPartnerRegistration"
-                                        (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
-                                </div>
-                                <!-- Maximum double seats indicator -->
-                                <div *ngIf="registrable.maximumDoubleSeats && registrable.maximumDoubleSeats === i + 1" class="mb-3 mx-1 h-0.5 bg-gray-600 rounded overflow-hidden"
-                                    [matTooltip]="'max: ' + registrable.maximumDoubleSeats" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
+          <!-- Spots -->
+          <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border" [ngClass]="{'bg-primary-600': dragOverParticipants}">
+            <div id="participants" class="p-3 pb-0" cdkDropList (cdkDropListDropped)="dragOverParticipants=false;drop($event.item.data)" cdkDropListConnectedTo="waitingList"
+              [cdkDropListData]="registrable.participants" (cdkDropListEntered)="dragOverParticipants=true" (cdkDropListExited)="dragOverParticipants=false">
+              <!-- Header -->
+              <div class="flex flex-row items-center m-3 space-x-4">
+                <div class="flex flex-row w-72">
+                  <div class="font-normal">{{ 'Leader' | translate }}</div>
+                  <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                    {{ registrable.acceptedLeaders }}
+                  </div>
                 </div>
-
-                <!-- Waiting list -->
-                <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
-
-                    <div class="flex flex-row">
-                        <div class="font-medium">{{ 'WaitingList' | translate }}</div>
-                    </div>
-
-                    <!-- Spots -->
-                    <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border" *ngIf="registrable.waitingList.length > 0">
-                        <div id="waitingList" class="p-3 pb-0" cdkDropList cdkDropListSortingDisabled [cdkDropListData]="registrable.waitingList" cdkDropListConnectedTo="participants">
-                            <!-- header -->
-                            <div class="flex flex-row items-center m-3 space-x-4">
-                                <div class="flex flex-row w-72">
-                                    <div class="font-normal">{{ 'Leader' | translate }}</div>
-                                    <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
-                                        {{ registrable.leadersOnWaitingList }}
-                                    </div>
-                                </div>
-                                <div class="flex flex-row w-72">
-                                    <div class="font-normal">{{ 'Follower' | translate }}</div>
-                                    <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
-                                        {{ registrable.followersOnWaitingList }}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Spot -->
-                            <ng-container *ngFor="let spot of registrable.waitingList; trackBy: trackByFn">
-                                <!-- Single registrations -->
-                                <div class="flex flex-row items-center" *ngIf="!spot.isPartnerRegistration">
-                                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Leader" cdkDrag [cdkDragData]="spot.leader"
-                                        (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
-                                    <div class="w-4 h-6 mb-2"></div>
-                                    <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Follower" cdkDrag [cdkDragData]="spot.follower"
-                                        (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
-                                </div>
-                                <!-- Partner registration -->
-                                <div class="flex flex-row items-center" *ngIf="spot.isPartnerRegistration" cdkDrag [cdkDragData]="spot">
-                                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner"></app-participant>
-                                    <div class="w-4 h-6 mb-2 z-10 overflow-hidden bg-card"></div>
-                                    <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner"></app-participant>
-                                </div>
-                            </ng-container>
-                        </div>
-                    </div>
+                <div class="flex flex-row w-72">
+                  <div class="font-normal">{{ 'Follower' | translate }}</div>
+                  <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                    {{ registrable.acceptedFollowers }}
+                  </div>
                 </div>
-
+              </div>
+              <!-- Spot -->
+              @for (spot of registrable.participants; track trackByFn(i, spot); let i = $index) {
+                <div class="flex flex-row items-center">
+                  <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Leader" [isPartnerSpot]="spot.isPartnerRegistration"
+                  (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
+                  @if (spot.isPartnerRegistration) {
+                    <div class="w-4 h-6 mb-2 z-10 overflow-hidden bg-card"></div>
+                  }
+                  @if (!spot.isPartnerRegistration) {
+                    <div class="w-4"></div>
+                  }
+                  <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Follower" [isPartnerSpot]="spot.isPartnerRegistration"
+                  (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
+                </div>
+                <!-- Maximum double seats indicator -->
+                @if (registrable.maximumDoubleSeats && registrable.maximumDoubleSeats === i + 1) {
+                  <div class="mb-3 mx-1 h-0.5 bg-gray-600 rounded overflow-hidden"
+                    [matTooltip]="'max: ' + registrable.maximumDoubleSeats" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
+                  </div>
+                }
+              }
             </div>
+          </div>
         </div>
+
+        <!-- Waiting list -->
+        <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
+
+          <div class="flex flex-row">
+            <div class="font-medium">{{ 'WaitingList' | translate }}</div>
+          </div>
+
+          <!-- Spots -->
+          @if (registrable.waitingList.length > 0) {
+            <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+              <div id="waitingList" class="p-3 pb-0" cdkDropList cdkDropListSortingDisabled [cdkDropListData]="registrable.waitingList" cdkDropListConnectedTo="participants">
+                <!-- header -->
+                <div class="flex flex-row items-center m-3 space-x-4">
+                  <div class="flex flex-row w-72">
+                    <div class="font-normal">{{ 'Leader' | translate }}</div>
+                    <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                      {{ registrable.leadersOnWaitingList }}
+                    </div>
+                  </div>
+                  <div class="flex flex-row w-72">
+                    <div class="font-normal">{{ 'Follower' | translate }}</div>
+                    <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                      {{ registrable.followersOnWaitingList }}
+                    </div>
+                  </div>
+                </div>
+                <!-- Spot -->
+                @for (spot of registrable.waitingList; track trackByFn($index, spot)) {
+                  <!-- Single registrations -->
+                  @if (!spot.isPartnerRegistration) {
+                    <div class="flex flex-row items-center">
+                      <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Leader" cdkDrag [cdkDragData]="spot.leader"
+                      (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
+                      <div class="w-4 h-6 mb-2"></div>
+                      <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Follower" cdkDrag [cdkDragData]="spot.follower"
+                      (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
+                    </div>
+                  }
+                  <!-- Partner registration -->
+                  @if (spot.isPartnerRegistration) {
+                    <div class="flex flex-row items-center" cdkDrag [cdkDragData]="spot">
+                      <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner"></app-participant>
+                      <div class="w-4 h-6 mb-2 z-10 overflow-hidden bg-card"></div>
+                      <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner"></app-participant>
+                    </div>
+                  }
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Invisible router-outlet for ScrumboardCard component -->
 <div class="absolute invisible w-0 h-0 opacity-0 pointer-events-none">
-    <router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </div>
