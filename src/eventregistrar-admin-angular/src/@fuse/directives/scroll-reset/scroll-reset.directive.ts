@@ -34,7 +34,8 @@ export class FuseScrollResetDirective implements OnInit, OnDestroy
         this._router.events.pipe(
             filter(event => event instanceof NavigationEnd),
             takeUntil(this._unsubscribeAll)
-        ).subscribe(() => {
+        ).subscribe(() =>
+        {
 
             // Reset the element's scroll position to the top
             this._elementRef.nativeElement.scrollTop = 0;

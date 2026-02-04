@@ -41,7 +41,9 @@
                             }
                         ],
                         "stylePreprocessorOptions": {
-                            "includePaths": ["src/@fuse/styles"]
+                            "includePaths": [
+                                "src/@fuse/styles"
+                            ]
                         },
                         "styles": [
                             "src/@fuse/styles/tailwind.scss",
@@ -121,14 +123,19 @@
                             "src/favicon-32x32.png",
                             "src/assets"
                         ],
-                        "styles": ["src/styles/styles.scss"],
+                        "styles": [
+                            "src/styles/styles.scss"
+                        ],
                         "scripts": []
                     }
                 },
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",
                     "options": {
-                        "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
+                        "lintFilePatterns": [
+                            "src/**/*.ts",
+                            "src/**/*.html"
+                        ]
                     }
                 }
             }
@@ -136,7 +143,7 @@
     },
     "cli": {
         "schematicCollections": [
-          "@angular-eslint/schematics"
+            "@angular-eslint/schematics"
         ],
         "analytics": false
     }

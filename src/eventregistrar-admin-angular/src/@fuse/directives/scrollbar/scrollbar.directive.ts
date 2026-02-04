@@ -72,13 +72,13 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
     ngOnChanges(changes: SimpleChanges): void
     {
         // Enabled
-        if ( 'fuseScrollbar' in changes )
+        if ('fuseScrollbar' in changes)
         {
             // Interpret empty string as 'true'
             this.fuseScrollbar = coerceBooleanProperty(changes.fuseScrollbar.currentValue);
 
             // If enabled, init the directive
-            if ( this.fuseScrollbar )
+            if (this.fuseScrollbar)
             {
                 this._init();
             }
@@ -90,23 +90,25 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
         }
 
         // Scrollbar options
-        if ( 'fuseScrollbarOptions' in changes )
+        if ('fuseScrollbarOptions' in changes)
         {
             // Merge the options
             this._options = merge({}, this._options, changes.fuseScrollbarOptions.currentValue);
 
             // Return if not initialized
-            if ( !this._ps )
+            if (!this._ps)
             {
                 return;
             }
 
             // Destroy and re-init the PerfectScrollbar to update its options
-            setTimeout(() => {
+            setTimeout(() =>
+            {
                 this._destroy();
             });
 
-            setTimeout(() => {
+            setTimeout(() =>
+            {
                 this._init();
             });
         }
@@ -123,7 +125,8 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
                 takeUntil(this._unsubscribeAll),
                 debounceTime(150)
             )
-            .subscribe(() => {
+            .subscribe(() =>
+            {
 
                 // Update the PerfectScrollbar
                 this.update();
@@ -160,7 +163,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
     update(): void
     {
         // Return if not initialized
-        if ( !this._ps )
+        if (!this._ps)
         {
             return;
         }
@@ -200,7 +203,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
     {
         let scrollbarPosition;
 
-        if ( !absolute && this._ps )
+        if (!absolute && this._ps)
         {
             scrollbarPosition = new ScrollbarPosition(
                 this._ps.reach.x || 0,
@@ -227,18 +230,18 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
      */
     scrollTo(x: number, y?: number, speed?: number): void
     {
-        if ( y == null && speed == null )
+        if (y == null && speed == null)
         {
             this.animateScrolling('scrollTop', x, speed);
         }
         else
         {
-            if ( x != null )
+            if (x != null)
             {
                 this.animateScrolling('scrollLeft', x, speed);
             }
 
-            if ( y != null )
+            if (y != null)
             {
                 this.animateScrolling('scrollTop', y, speed);
             }
@@ -325,7 +328,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
     {
         const element = this._elementRef.nativeElement.querySelector(qs);
 
-        if ( !element )
+        if (!element)
         {
             return;
         }
@@ -333,9 +336,9 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
         const elementPos = element.getBoundingClientRect();
         const scrollerPos = this._elementRef.nativeElement.getBoundingClientRect();
 
-        if ( this._elementRef.nativeElement.classList.contains('ps--active-x') )
+        if (this._elementRef.nativeElement.classList.contains('ps--active-x'))
         {
-            if ( ignoreVisible && elementPos.right <= (scrollerPos.right - Math.abs(offset)) )
+            if (ignoreVisible && elementPos.right <= (scrollerPos.right - Math.abs(offset)))
             {
                 return;
             }
@@ -346,9 +349,9 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
             this.animateScrolling('scrollLeft', position + offset, speed);
         }
 
-        if ( this._elementRef.nativeElement.classList.contains('ps--active-y') )
+        if (this._elementRef.nativeElement.classList.contains('ps--active-y'))
         {
-            if ( ignoreVisible && elementPos.bottom <= (scrollerPos.bottom - Math.abs(offset)) )
+            if (ignoreVisible && elementPos.bottom <= (scrollerPos.bottom - Math.abs(offset)))
             {
                 return;
             }
@@ -369,17 +372,17 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
      */
     animateScrolling(target: string, value: number, speed?: number): void
     {
-        if ( this._animation )
+        if (this._animation)
         {
             window.cancelAnimationFrame(this._animation);
             this._animation = null;
         }
 
-        if ( !speed || typeof window === 'undefined' )
+        if (!speed || typeof window === 'undefined')
         {
             this._elementRef.nativeElement[target] = value;
         }
-        else if ( value !== this._elementRef.nativeElement[target] )
+        else if (value !== this._elementRef.nativeElement[target])
         {
             let newValue = 0;
             let scrollCount = 0;
@@ -389,14 +392,15 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
 
             const cosParameter = (oldValue - value) / 2;
 
-            const step = (newTimestamp: number): void => {
+            const step = (newTimestamp: number): void =>
+            {
                 scrollCount += Math.PI / (speed / (newTimestamp - oldTimestamp));
                 newValue = Math.round(value + cosParameter + cosParameter * Math.cos(scrollCount));
 
                 // Only continue animation if scroll position has not changed
-                if ( this._elementRef.nativeElement[target] === oldValue )
+                if (this._elementRef.nativeElement[target] === oldValue)
                 {
-                    if ( scrollCount >= Math.PI )
+                    if (scrollCount >= Math.PI)
                     {
                         this.animateScrolling(target, value, 0);
                     }
@@ -429,20 +433,20 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
     private _init(): void
     {
         // Return if already initialized
-        if ( this._ps )
+        if (this._ps)
         {
             return;
         }
 
         // Return if on mobile or not on browser
-        if ( this._platform.ANDROID || this._platform.IOS || !this._platform.isBrowser )
+        if (this._platform.ANDROID || this._platform.IOS || !this._platform.isBrowser)
         {
             this.fuseScrollbar = false;
             return;
         }
 
         // Initialize the PerfectScrollbar
-        this._ps = new PerfectScrollbar(this._elementRef.nativeElement, {...this._options});
+        this._ps = new PerfectScrollbar(this._elementRef.nativeElement, { ...this._options });
     }
 
     /**
@@ -453,7 +457,7 @@ export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
     private _destroy(): void
     {
         // Return if not initialized
-        if ( !this._ps )
+        if (!this._ps)
         {
             return;
         }

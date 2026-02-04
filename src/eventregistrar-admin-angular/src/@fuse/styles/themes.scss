@@ -209,13 +209,13 @@ $dark-base: (
     /* Define a light & dark Angular Material theme with the generated palettes */
     $light-theme: mat.m2-define-light-theme(
         (
-            color: $palettes
+            color: $palettes,
         )
     );
 
     $dark-theme: mat.m2-define-dark-theme(
         (
-            color: $palettes
+            color: $palettes,
         )
     );
 
