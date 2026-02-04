@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Inject, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Inject, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation, DOCUMENT } from '@angular/core';
+
 import { ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { Subject, takeUntil } from 'rxjs';
 import { QuickChatService } from 'app/layout/common/quick-chat/quick-chat.service';

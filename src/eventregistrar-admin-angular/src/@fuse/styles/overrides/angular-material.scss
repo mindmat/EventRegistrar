@@ -1,3 +1,11 @@
+// Fix for Angular Material MDC tooltip transparency (Angular 15+ / 20+)
+.mat-mdc-tooltip, .mat-tooltip, .mdc-tooltip__surface {
+    background: #1e293b !important;
+    color: #fff !important;
+    opacity: 1 !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+}
 /* -------------------------------------------------------------------------- */
 /*  @ Overlay
 /* -------------------------------------------------------------------------- */
