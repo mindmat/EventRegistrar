@@ -6,6 +6,7 @@ import { NavigatorService } from '../navigator.service';
 import { UnprocessedRawRegistrationsService } from '../registrations/unprocessed-raw-registrations.service';
 
 @Component({
+    standalone: false,
   selector: 'app-setup-event',
   templateUrl: './setup-event.component.html'
 })

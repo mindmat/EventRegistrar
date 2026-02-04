@@ -3,6 +3,7 @@ import { DOCUMENT } from '@angular/common';
 import { FSDocument, FSDocumentElement } from '@fuse/components/fullscreen/fullscreen.types';
 
 @Component({
+    standalone: false,
     selector       : 'fuse-fullscreen',
     templateUrl    : './fullscreen.component.html',
     encapsulation  : ViewEncapsulation.None,

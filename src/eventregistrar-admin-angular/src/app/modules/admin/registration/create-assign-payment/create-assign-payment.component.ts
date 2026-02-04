@@ -7,6 +7,7 @@ import { v4 as createUuid } from 'uuid';
 import { CreateAssignPaymentService } from './create-assign-payment.service';
 
 @Component({
+    standalone: false,
   selector: 'app-create-assign-payment',
   templateUrl: './create-assign-payment.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

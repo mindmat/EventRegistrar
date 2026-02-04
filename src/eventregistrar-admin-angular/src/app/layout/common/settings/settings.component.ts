@@ -6,6 +6,7 @@ import { AppConfig, Scheme, Theme, Themes } from 'app/core/config/app.config';
 import { Layout } from 'app/layout/layout.types';
 
 @Component({
+    standalone: false,
     selector     : 'settings',
     templateUrl  : './settings.component.html',
     styles       : [

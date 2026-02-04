@@ -19,6 +19,7 @@ import { RegistrationsPerDayService } from './registrations-per-day.service';
 import { RegistrableIcsComponent } from '../registrables/registrable-ics/registrable-ics.component';
 
 @Component({
+    standalone: false,
     selector: 'app-overview',
     templateUrl: './overview.component.html',
     encapsulation: ViewEncapsulation.None,

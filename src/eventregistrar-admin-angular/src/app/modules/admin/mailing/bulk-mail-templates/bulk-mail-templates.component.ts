@@ -5,6 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { BulkMailTemplatesService } from './bulk-mail-templates.service';
 
 @Component({
+    standalone: false,
   selector: 'app-bulk-mail-templates',
   templateUrl: './bulk-mail-templates.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

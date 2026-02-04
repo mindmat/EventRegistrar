@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { HtmlMailEditorComponent } from 'app/shared/html-mail-editor/html-mail-editor.component';
 
 @Component({
+    standalone: false,
   selector: 'app-registrable-ics',
   templateUrl: './registrable-ics.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

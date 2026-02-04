@@ -4,6 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { ProcessingError, Role } from 'app/api/api';
 
 @Component({
+    standalone: false,
   selector: 'app-fix-raw-processing',
   templateUrl: './fix-raw-processing.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

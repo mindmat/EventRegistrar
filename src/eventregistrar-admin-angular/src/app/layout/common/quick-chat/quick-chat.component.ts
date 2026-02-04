@@ -6,6 +6,7 @@ import { QuickChatService } from 'app/layout/common/quick-chat/quick-chat.servic
 import { Chat } from 'app/layout/common/quick-chat/quick-chat.types';
 
 @Component({
+    standalone: false,
     selector     : 'quick-chat',
     templateUrl  : './quick-chat.component.html',
     styleUrls    : ['./quick-chat.component.scss'],

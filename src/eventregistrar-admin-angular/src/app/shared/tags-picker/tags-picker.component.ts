@@ -5,6 +5,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
+    standalone: false,
   selector: 'app-tags-picker',
   templateUrl: './tags-picker.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

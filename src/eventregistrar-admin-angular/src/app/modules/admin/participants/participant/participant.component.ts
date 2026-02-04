@@ -4,6 +4,7 @@ import { NavigatorService } from '../../navigator.service';
 import { ParticipantsService } from '../participants.service';
 
 @Component({
+    standalone: false,
   selector: 'app-participant',
   templateUrl: './participant.component.html'
 })

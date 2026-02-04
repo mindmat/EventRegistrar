@@ -7,6 +7,7 @@ import { UserService } from 'app/core/user/user.service';
 import { FuseAlertType } from '@fuse/components/alert';
 
 @Component({
+    standalone: false,
     selector     : 'auth-unlock-session',
     templateUrl  : './unlock-session.component.html',
     encapsulation: ViewEncapsulation.None,

@@ -7,6 +7,7 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 
 @Component({
+    standalone: false,
     selector       : 'fuse-vertical-navigation-aside-item',
     templateUrl    : './aside.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush

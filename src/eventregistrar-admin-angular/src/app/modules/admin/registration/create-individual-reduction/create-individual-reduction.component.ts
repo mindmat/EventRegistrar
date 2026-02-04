@@ -8,6 +8,7 @@ import { v4 as createUuid } from 'uuid';
 import { IndividualReductionService } from './individual-reduction.service';
 
 @Component({
+    standalone: false,
   selector: 'app-create-individual-reduction',
   templateUrl: './create-individual-reduction.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

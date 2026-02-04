@@ -7,6 +7,7 @@ import { AssignmentRequest, Payment, SettlementCandidate } from './assignment-ca
 import { SettlePaymentService } from './settle-payment.service';
 
 @Component({
+    standalone: false,
   selector: 'app-settle-payment',
   templateUrl: './settle-payment.component.html'
 })

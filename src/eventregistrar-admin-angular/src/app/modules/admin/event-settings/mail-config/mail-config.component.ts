@@ -22,6 +22,7 @@ export const DE_FORMATS = {
 };
 
 @Component({
+    standalone: false,
   selector: 'app-mail-config',
   templateUrl: './mail-config.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

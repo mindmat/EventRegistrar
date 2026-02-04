@@ -8,6 +8,7 @@ import { Shortcut } from 'app/layout/common/shortcuts/shortcuts.types';
 import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
 
 @Component({
+    standalone: false,
     selector       : 'shortcuts',
     templateUrl    : './shortcuts.component.html',
     encapsulation  : ViewEncapsulation.None,

@@ -5,6 +5,7 @@ import { EventService } from '../../events/event.service';
 import { ParticipantsService } from '../participants.service';
 
 @Component({
+    standalone: false,
   selector: 'app-participants-single',
   templateUrl: './participants-single.component.html'
 })

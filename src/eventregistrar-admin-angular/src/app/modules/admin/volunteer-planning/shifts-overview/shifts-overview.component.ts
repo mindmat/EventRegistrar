@@ -10,6 +10,7 @@ import { RegistrablesService } from '../../pricing/registrables.service';
 import { ShiftEditComponent } from '../shift-edit/shift-edit.component';
 
 @Component({
+    standalone: false,
     selector: 'app-shifts-overview',
     templateUrl: './shifts-overview.component.html',
     encapsulation: ViewEncapsulation.None,

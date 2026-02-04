@@ -3,6 +3,7 @@ import { AuthService } from '@auth0/auth0-angular';
 import { Subject } from 'rxjs';
 
 @Component({
+    standalone: false,
     selector: 'auth-sign-out',
     templateUrl: './sign-out.component.html',
     encapsulation: ViewEncapsulation.None

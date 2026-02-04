@@ -10,6 +10,7 @@ import { v4 as createUuid } from 'uuid';
 import { CreateEventService } from './create-event/create-event.service';
 
 @Component({
+    standalone: false,
   selector: 'app-select-event',
   templateUrl: './select-event.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -5,6 +5,7 @@ import { EventService } from '../../events/event.service';
 import { BankStatementsService } from './bankStatements.service';
 
 @Component({
+    standalone: false,
   selector: 'app-bankStatements',
   templateUrl: './bankStatements.component.html'
 })

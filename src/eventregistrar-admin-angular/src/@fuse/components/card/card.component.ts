@@ -4,6 +4,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseCardFace } from '@fuse/components/card/card.types';
 
 @Component({
+    standalone: false,
     selector     : 'fuse-card',
     templateUrl  : './card.component.html',
     styleUrls    : ['./card.component.scss'],

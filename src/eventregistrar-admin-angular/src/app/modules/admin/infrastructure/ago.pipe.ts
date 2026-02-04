@@ -6,6 +6,7 @@ import { filter, combineLatest, distinctUntilChanged, map, Observable, ReplaySub
 import { de, enUS } from 'date-fns/locale';
 
 @Pipe({
+  standalone: false,
   name: 'ago',
   pure: false
 })

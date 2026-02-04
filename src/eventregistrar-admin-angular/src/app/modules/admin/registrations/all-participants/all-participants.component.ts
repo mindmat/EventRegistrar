@@ -6,6 +6,7 @@ import { NavigatorService } from '../../navigator.service';
 import { AllParticipantsService } from './all-participants.service';
 
 @Component({
+    standalone: false,
   selector: 'app-all-participants',
   templateUrl: './all-participants.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

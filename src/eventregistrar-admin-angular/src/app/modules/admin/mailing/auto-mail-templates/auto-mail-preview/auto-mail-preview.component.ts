@@ -5,6 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { AutoMailPreviewService } from './auto-mail-preview.service';
 
 @Component({
+    standalone: false,
   selector: 'app-auto-mail-preview',
   templateUrl: './auto-mail-preview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

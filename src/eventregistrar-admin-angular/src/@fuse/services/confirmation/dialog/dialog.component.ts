@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FuseConfirmationConfig } from '@fuse/services/confirmation/confirmation.types';
 
 @Component({
+    standalone: false,
     selector     : 'fuse-confirmation-dialog',
     templateUrl  : './dialog.component.html',
     styles       : [

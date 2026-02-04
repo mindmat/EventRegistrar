@@ -8,6 +8,7 @@ import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { PricePackagePartSelectionTypeService } from './pricing-selection-type.service';
 
 @Component({
+    standalone: false,
   selector: 'app-pricing',
   templateUrl: './pricing.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

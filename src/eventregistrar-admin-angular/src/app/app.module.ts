@@ -120,8 +120,6 @@ import { FixRawProcessingComponent } from './modules/admin/registration/fix-raw-
 import { MatchSingleSpotsComponent } from './modules/admin/registration/match-single-spots/match-single-spots.component';
 import { RegistrableIcsComponent } from './modules/admin/registrables/registrable-ics/registrable-ics.component';
 import { VolunteerPlanningModule } from './modules/admin/volunteer-planning/volunteer-planning.module';
-import { NGX_MAT_DATE_FORMATS, NgxMatDateAdapter, NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
-import { NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS, NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import localeDe from '@angular/common/locales/de-CH';
 import localeDeExtra from '@angular/common/locales/extra/de-CH';
@@ -230,8 +228,6 @@ export const DE_FORMATS_TIME = {
         { provide: LOCALE_ID, useValue: 'de-CH' },
         { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS] },
         { provide: MAT_DATE_FORMATS, useValue: DE_FORMATS },
-        { provide: NgxMatDateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS] },
-        { provide: NGX_MAT_DATE_FORMATS, useValue: DE_FORMATS_TIME },
         {
             provide: ErrorHandler,
             useValue: Sentry.createErrorHandler()
@@ -244,8 +240,7 @@ export const DE_FORMATS_TIME = {
             multi: true
         },
         { provide: MAT_DATE_LOCALE, useValue: 'de-CH' },
-        { provide: NGX_MAT_DATE_FORMATS, useValue: DE_FORMATS_TIME },
-        { provide: NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { strict: true } }
+        { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { strict: true } }
     ],
     imports: [
         BrowserModule,
@@ -303,10 +298,6 @@ export const DE_FORMATS_TIME = {
         MatDatepickerModule,
         MatExpansionModule,
         MatSnackBarModule,
-
-        NgxMatDatetimePickerModule,
-        NgxMatTimepickerModule,
-        NgxMatMomentModule,
 
         FroalaEditorModule.forRoot(),
         FroalaViewModule.forRoot(),

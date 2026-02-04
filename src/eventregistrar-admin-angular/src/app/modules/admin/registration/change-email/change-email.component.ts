@@ -4,6 +4,7 @@ import { EventService } from '../../events/event.service';
 import { ChangeEmailService } from './change-email.service';
 
 @Component({
+    standalone: false,
   selector: 'app-change-email',
   templateUrl: './change-email.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

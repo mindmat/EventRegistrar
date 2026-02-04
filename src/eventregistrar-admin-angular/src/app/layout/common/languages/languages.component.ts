@@ -4,6 +4,7 @@ import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/co
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
+    standalone: false,
     selector: 'languages',
     templateUrl: './languages.component.html',
     encapsulation: ViewEncapsulation.None,

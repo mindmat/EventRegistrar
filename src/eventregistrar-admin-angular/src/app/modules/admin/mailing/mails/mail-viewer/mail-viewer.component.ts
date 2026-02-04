@@ -3,6 +3,7 @@ import { MailView } from 'app/api/api';
 import { MailViewerService } from './mail-viewer.service';
 
 @Component({
+    standalone: false,
   selector: 'app-mail-viewer',
   templateUrl: './mail-viewer.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

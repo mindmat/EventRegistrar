@@ -6,6 +6,7 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 
 @Component({
+    standalone: false,
     selector       : 'fuse-horizontal-navigation',
     templateUrl    : './horizontal.component.html',
     styleUrls      : ['./horizontal.component.scss'],

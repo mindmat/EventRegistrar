@@ -5,6 +5,7 @@ import { RegistrablesService } from '../../pricing/registrables.service';
 import { SpotsService } from '../spots/spots.service';
 
 @Component({
+    standalone: false,
   selector: 'app-change-spots',
   templateUrl: './change-spots.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -7,6 +7,7 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 
 @Component({
+    standalone: false,
     selector       : 'fuse-horizontal-navigation-basic-item',
     templateUrl    : './basic.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush

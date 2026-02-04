@@ -5,6 +5,7 @@ import { DifferencesDisplayItem } from 'app/api/api';
 import { NavigatorService } from '../../navigator.service';
 
 @Component({
+    standalone: false,
   selector: 'app-payment-differences',
   templateUrl: './payment-differences.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

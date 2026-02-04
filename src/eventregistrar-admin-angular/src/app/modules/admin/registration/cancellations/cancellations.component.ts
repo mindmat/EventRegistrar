@@ -5,6 +5,7 @@ import { CancellationsService } from './cancellations.service';
 import { NavigatorService } from '../../navigator.service';
 
 @Component({
+    standalone: false,
   selector: 'app-cancellations',
   templateUrl: './cancellations.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

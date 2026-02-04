@@ -11,6 +11,7 @@ import { ScrollbarGeometry, ScrollbarPosition } from '@fuse/directives/scrollbar
  * Wrapper directive for the Perfect Scrollbar: https://github.com/mdbootstrap/perfect-scrollbar
  */
 @Directive({
+    standalone: false,
     selector: '[fuseScrollbar]',
     exportAs: 'fuseScrollbar'
 })

@@ -5,6 +5,7 @@ import { NavigatorService } from '../../navigator.service';
 import { HostingOverviewService } from './hosting-overview.service';
 
 @Component({
+    standalone: false,
   selector: 'app-hosting-overview',
   templateUrl: './hosting-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

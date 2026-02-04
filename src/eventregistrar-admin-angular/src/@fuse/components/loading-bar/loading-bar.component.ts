@@ -4,6 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { FuseLoadingService } from '@fuse/services/loading';
 
 @Component({
+    standalone: false,
     selector     : 'fuse-loading-bar',
     templateUrl  : './loading-bar.component.html',
     styleUrls    : ['./loading-bar.component.scss'],

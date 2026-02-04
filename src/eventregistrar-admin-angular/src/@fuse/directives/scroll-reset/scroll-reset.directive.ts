@@ -3,6 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter, Subject, takeUntil } from 'rxjs';
 
 @Directive({
+    standalone: false,
     selector: '[fuseScrollReset]',
     exportAs: 'fuseScrollReset'
 })

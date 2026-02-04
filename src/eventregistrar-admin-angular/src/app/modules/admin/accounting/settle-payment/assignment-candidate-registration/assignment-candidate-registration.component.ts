@@ -5,6 +5,7 @@ import { NavigatorService } from 'app/modules/admin/navigator.service';
 import { AssignmentCandidateRegistrationEditItem } from '../settle-payment.component';
 
 @Component({
+    standalone: false,
   selector: 'app-assignment-candidate-registration',
   templateUrl: './assignment-candidate-registration.component.html'
 })

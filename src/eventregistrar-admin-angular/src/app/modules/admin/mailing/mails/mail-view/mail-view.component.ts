@@ -8,6 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MailService } from './mail.service';
 
 @Component({
+    standalone: false,
   selector: 'app-mail-view',
   templateUrl: './mail-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

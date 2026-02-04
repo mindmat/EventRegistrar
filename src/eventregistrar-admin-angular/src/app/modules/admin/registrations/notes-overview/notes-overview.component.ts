@@ -5,6 +5,7 @@ import { NavigatorService } from '../../navigator.service';
 import { NotesOverviewService } from './notes-overview.service';
 
 @Component({
+    standalone: false,
   selector: 'app-notes-overview',
   templateUrl: './notes-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

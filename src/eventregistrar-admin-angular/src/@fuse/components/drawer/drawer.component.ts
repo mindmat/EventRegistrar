@@ -6,6 +6,7 @@ import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Component({
+    standalone: false,
     selector     : 'fuse-drawer',
     templateUrl  : './drawer.component.html',
     styleUrls    : ['./drawer.component.scss'],

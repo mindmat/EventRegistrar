@@ -3,6 +3,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 
 @Component({
+    standalone: false,
     selector     : 'fuse-masonry',
     templateUrl  : './masonry.component.html',
     encapsulation: ViewEncapsulation.None,

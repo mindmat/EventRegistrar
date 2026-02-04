@@ -7,6 +7,7 @@ import { RegistrableDetailComponent } from '../../overview/registrable-detail/re
 import { CancelRegistrationService } from './cancel-registration.service';
 
 @Component({
+    standalone: false,
   selector: 'app-cancel-registration',
   templateUrl: './cancel-registration.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -7,6 +7,7 @@ import { UnprocessedRawRegistrationsService } from '../unprocessed-raw-registrat
 import { SearchRegistrationService } from './search-registration.service';
 
 @Component({
+    standalone: false,
   selector: 'app-search-registration',
   templateUrl: './search-registration.component.html'
 })

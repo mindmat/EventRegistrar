@@ -7,6 +7,7 @@ import { ShiftDisplayItem } from 'app/api/api';
 import moment from 'moment';
 
 @Component({
+    standalone: false,
     selector: 'app-shift-edit',
     templateUrl: './shift-edit.component.html',
     styleUrls: ['./shift-edit.component.scss'],

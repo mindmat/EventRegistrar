@@ -5,6 +5,7 @@ import { NavigatorService } from '../../navigator.service';
 import { PayoutsService } from './payouts.service';
 
 @Component({
+    standalone: false,
   selector: 'app-payouts',
   templateUrl: './payouts.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

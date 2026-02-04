@@ -7,6 +7,7 @@ import { EventService } from '../../events/event.service';
 import { CreateEventComponent } from '../../events/select-event/create-event/create-event.component';
 
 @Component({
+    standalone: false,
   selector: 'app-match-single-spots',
   templateUrl: './match-single-spots.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

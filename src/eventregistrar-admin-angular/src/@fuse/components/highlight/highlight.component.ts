@@ -3,6 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { FuseHighlightService } from '@fuse/components/highlight/highlight.service';
 
 @Component({
+    standalone: false,
     selector       : 'textarea[fuse-highlight]',
     templateUrl    : './highlight.component.html',
     styleUrls      : ['./highlight.component.scss'],

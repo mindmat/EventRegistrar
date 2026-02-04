@@ -6,6 +6,7 @@ import { NavigatorService } from '../../navigator.service';
 import { RemarksOverviewService } from './remarks-overview.service';
 
 @Component({
+    standalone: false,
   selector: 'app-remarks-overview',
   templateUrl: './remarks-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -7,6 +7,7 @@ import { Message } from 'app/layout/common/messages/messages.types';
 import { MessagesService } from 'app/layout/common/messages/messages.service';
 
 @Component({
+    standalone: false,
     selector       : 'messages',
     templateUrl    : './messages.component.html',
     encapsulation  : ViewEncapsulation.None,

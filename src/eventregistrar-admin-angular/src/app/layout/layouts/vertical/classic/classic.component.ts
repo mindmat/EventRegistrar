@@ -11,6 +11,7 @@ import { UserService } from 'app/core/user/user.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
+    standalone: false,
     selector: 'classic-layout',
     templateUrl: './classic.component.html',
     encapsulation: ViewEncapsulation.None,

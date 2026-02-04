@@ -23,6 +23,7 @@ export interface PlaceholderItem
 }
 
 @Component({
+    standalone: false,
     selector: 'app-html-mail-editor',
     templateUrl: './html-mail-editor.component.html',
     styleUrls: ['./html-mail-editor.component.scss'],

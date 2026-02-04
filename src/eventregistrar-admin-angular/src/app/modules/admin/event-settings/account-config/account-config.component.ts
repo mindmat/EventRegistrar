@@ -5,6 +5,7 @@ import { Subject, takeUntil, merge } from 'rxjs';
 import { AccountConfigService } from './account-config.service';
 
 @Component({
+    standalone: false,
   selector: 'app-account-config',
   templateUrl: './account-config.component.html'
 })

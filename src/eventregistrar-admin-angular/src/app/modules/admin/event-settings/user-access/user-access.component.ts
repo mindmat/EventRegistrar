@@ -7,6 +7,7 @@ import { UserAccessService } from './user-access.service';
 import { UserRolesService } from './user-roles.service';
 
 @Component({
+    standalone: false,
   selector: 'app-user-access',
   templateUrl: './user-access.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

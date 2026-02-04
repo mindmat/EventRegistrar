@@ -7,6 +7,7 @@ import { Notification } from 'app/layout/common/notifications/notifications.type
 import { NotificationsService } from 'app/layout/common/notifications/notifications.service';
 
 @Component({
+    standalone: false,
     selector       : 'notifications',
     templateUrl    : './notifications.component.html',
     encapsulation  : ViewEncapsulation.None,

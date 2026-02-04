@@ -19,6 +19,7 @@ import { MatchPartnerService } from '../registrations/match-partner/match-partne
 import { MatchSingleSpotsComponent } from './match-single-spots/match-single-spots.component';
 
 @Component({
+    standalone: false,
   selector: 'app-registration',
   templateUrl: './registration.component.html'
 })

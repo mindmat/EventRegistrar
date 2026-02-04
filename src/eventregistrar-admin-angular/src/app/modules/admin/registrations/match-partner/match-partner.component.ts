@@ -6,6 +6,7 @@ import { NavigatorService } from '../../navigator.service';
 import { MatchPartnerService } from './match-partner.service';
 
 @Component({
+    standalone: false,
   selector: 'app-match-partner',
   templateUrl: './match-partner.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

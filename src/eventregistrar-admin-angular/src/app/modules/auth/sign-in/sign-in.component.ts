@@ -6,6 +6,7 @@ import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
+    standalone: false,
     selector: 'auth-sign-in',
     templateUrl: './sign-in.component.html',
     encapsulation: ViewEncapsulation.None,

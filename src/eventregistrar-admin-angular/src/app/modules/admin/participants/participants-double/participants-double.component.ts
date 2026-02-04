@@ -5,6 +5,7 @@ import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { RegistrableDisplayInfo, RegistrationDisplayInfo, Role, SpotDisplayInfo } from 'app/api/api';
 
 @Component({
+    standalone: false,
   selector: 'app-participants-double',
   templateUrl: './participants-double.component.html'
 })

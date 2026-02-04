@@ -4,6 +4,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 
 @Component({
+    standalone: false,
     selector: 'event-settings',
     templateUrl: './event-settings.component.html',
     // encapsulation: ViewEncapsulation.None,

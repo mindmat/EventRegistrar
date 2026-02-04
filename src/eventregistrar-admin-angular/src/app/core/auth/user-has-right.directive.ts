@@ -3,6 +3,7 @@ import { BehaviorSubject, Subscription, combineLatest, map, tap } from 'rxjs';
 import { RightsService } from './rights.service';
 
 @Directive({
+  standalone: false,
   selector: '[appUserHasRight]',
   exportAs: 'authorization'
 })

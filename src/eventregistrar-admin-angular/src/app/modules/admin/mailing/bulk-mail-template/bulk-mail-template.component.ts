@@ -9,6 +9,7 @@ import { GeneratedBulkMailsService } from './generated-bulk-mails.service';
 import { HtmlMailEditorComponent, PlaceholderItem } from 'app/shared/html-mail-editor/html-mail-editor.component';
 
 @Component({
+    standalone: false,
   selector: 'app-bulk-mail-template',
   templateUrl: './bulk-mail-template.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

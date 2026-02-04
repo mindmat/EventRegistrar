@@ -7,6 +7,7 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 
 @Component({
+    standalone: false,
     selector     : 'material-layout',
     templateUrl  : './material.component.html',
     encapsulation: ViewEncapsulation.None

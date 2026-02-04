@@ -8,6 +8,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { HtmlMailEditorComponent, PlaceholderItem } from 'app/shared/html-mail-editor/html-mail-editor.component';
 
 @Component({
+    standalone: false,
   selector: 'app-auto-mail-template',
   templateUrl: './auto-mail-template.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

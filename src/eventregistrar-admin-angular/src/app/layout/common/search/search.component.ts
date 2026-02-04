@@ -9,6 +9,7 @@ import { NavigatorService } from 'app/modules/admin/navigator.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
+    standalone: false,
     selector: 'search',
     templateUrl: './search.component.html',
     encapsulation: ViewEncapsulation.None,

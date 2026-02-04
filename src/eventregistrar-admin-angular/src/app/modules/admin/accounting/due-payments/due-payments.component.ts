@@ -5,6 +5,7 @@ import { NavigatorService } from '../../navigator.service';
 import { DuePaymentsService } from './due-payments.service';
 
 @Component({
+    standalone: false,
   selector: 'app-due-payments',
   templateUrl: './due-payments.component.html'
 })
