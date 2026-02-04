@@ -30,7 +30,8 @@ on:
     branches: ["cqsapi"]
     paths:
       - 'src/EventRegistrar.Backend/**'
-
+  workflow_dispatch:
+  
 permissions:
   contents: read
 
