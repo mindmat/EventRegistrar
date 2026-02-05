@@ -13,13 +13,13 @@ import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Component({
     standalone: false,
-    selector       : 'fuse-vertical-navigation',
-    templateUrl    : './vertical.component.html',
-    styleUrls      : ['./vertical.component.scss'],
-    animations     : fuseAnimations,
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'fuse-vertical-navigation',
+    templateUrl: './vertical.component.html',
+    styleUrls: ['./vertical.component.scss'],
+    animations: fuseAnimations,
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'fuseVerticalNavigation'
+    exportAs: 'fuseVerticalNavigation'
 })
 export class FuseVerticalNavigationComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy
 {
@@ -97,15 +97,15 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
     {
         /* eslint-disable @typescript-eslint/naming-convention */
         return {
-            'fuse-vertical-navigation-animations-enabled'             : this._animationsEnabled,
+            'fuse-vertical-navigation-animations-enabled': this._animationsEnabled,
             [`fuse-vertical-navigation-appearance-${this.appearance}`]: true,
-            'fuse-vertical-navigation-hover'                          : this._hovered,
-            'fuse-vertical-navigation-inner'                          : this.inner,
-            'fuse-vertical-navigation-mode-over'                      : this.mode === 'over',
-            'fuse-vertical-navigation-mode-side'                      : this.mode === 'side',
-            'fuse-vertical-navigation-opened'                         : this.opened,
-            'fuse-vertical-navigation-position-left'                  : this.position === 'left',
-            'fuse-vertical-navigation-position-right'                 : this.position === 'right'
+            'fuse-vertical-navigation-hover': this._hovered,
+            'fuse-vertical-navigation-inner': this.inner,
+            'fuse-vertical-navigation-mode-over': this.mode === 'over',
+            'fuse-vertical-navigation-mode-side': this.mode === 'side',
+            'fuse-vertical-navigation-opened': this.opened,
+            'fuse-vertical-navigation-position-left': this.position === 'left',
+            'fuse-vertical-navigation-position-right': this.position === 'right'
         };
         /* eslint-enable @typescript-eslint/naming-convention */
     }
@@ -172,7 +172,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      * @private
      */
     @HostListener('mouseenter')
-    private _onMouseenter(): void
+    public _onMouseenter(): void
     {
         // Enable the animations
         this._enableAnimations();
@@ -187,7 +187,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      * @private
      */
     @HostListener('mouseleave')
-    private _onMouseleave(): void
+    public _onMouseleave(): void
     {
         // Enable the animations
         this._enableAnimations();
