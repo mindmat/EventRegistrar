@@ -1,9 +1,3 @@
-// Fix for Angular Material tooltip transparency after Angular 20 upgrade
-.mat-tooltip {
-    background: #1e293b !important; // fallback to your theme's intended tooltip color
-    color: #fff !important;
-    opacity: 1 !important;
-}
 /* ----------------------------------------------------------------------------------------------------- */
 /*  @ Import/write your custom styles here.
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.

@@ -8,6 +8,60 @@
     border-radius: 4px !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
 }
+
+// Fix for Angular Material MDC overlay panels losing background after Angular 21 upgrade.
+// The MDC surface layer no longer inherits the theme background automatically.
+// The CDK overlay container is a direct child of <body>, which has the .dark/.light class.
+.mat-mdc-menu-panel,
+.mat-mdc-select-panel,
+.mat-mdc-autocomplete-panel,
+.mat-mdc-dialog-container .mdc-dialog__surface,
+.mat-mdc-snack-bar-container,
+.mat-mdc-datepicker-content {
+    opacity: 1 !important;
+}
+
+body.light {
+    .mat-mdc-menu-panel,
+    .mat-mdc-select-panel,
+    .mat-mdc-autocomplete-panel,
+    .mat-mdc-snack-bar-container,
+    .mat-mdc-datepicker-content {
+        background-color: #ffffff !important;
+        color: #1e293b !important;
+    }
+
+    .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+    .mat-mdc-option.mat-mdc-option-active:not(.mdc-list-item--disabled),
+    .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+        background-color: rgba(0, 0, 0, 0.04) !important;
+    }
+}
+
+body.dark {
+    .mat-mdc-menu-panel,
+    .mat-mdc-select-panel,
+    .mat-mdc-autocomplete-panel,
+    .mat-mdc-snack-bar-container,
+    .mat-mdc-datepicker-content {
+        background-color: #1e293b !important;
+        color: #ffffff !important;
+    }
+
+    .mat-mdc-menu-item:hover:not([disabled]),
+    .mat-mdc-menu-item.cdk-keyboard-focused:not([disabled]),
+    .mat-mdc-menu-item.cdk-program-focused:not([disabled]),
+    .mat-mdc-menu-item-highlighted:not([disabled]) {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+    }
+
+    .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+    .mat-mdc-option.mat-mdc-option-active:not(.mdc-list-item--disabled),
+    .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+    }
+}
+
 /* -------------------------------------------------------------------------- */
 /*  @ Overlay
 /* -------------------------------------------------------------------------- */
@@ -1011,6 +1065,14 @@
         .mat-mdc-menu-item {
             display: flex;
             align-items: center;
+
+            /* Restore hover/focus highlight lost after Angular 21 upgrade */
+            &:hover:not([disabled]),
+            &.cdk-keyboard-focused:not([disabled]),
+            &.cdk-program-focused:not([disabled]),
+            &-highlighted:not([disabled]) {
+                background-color: rgba(0, 0, 0, 0.04);
+            }
 
             > span {
                 display: inline-flex;
