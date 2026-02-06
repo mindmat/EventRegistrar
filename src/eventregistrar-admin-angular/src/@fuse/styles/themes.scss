@@ -222,20 +222,12 @@ $dark-base: (
 
     /* Merge the custom base colors with the generated themes */
     $light-theme-colors: map.merge(map.get($light-theme, color), $light-base);
-    $light-theme: map.merge(
-        (
-            color: $light-theme-colors,
-        ),
-        $light-theme-colors
-    );
+    $light-theme: map.merge($light-theme, (color: $light-theme-colors));
+    $light-theme: map.merge($light-theme, $light-theme-colors);
 
     $dark-theme-colors: map.merge(map.get($dark-theme, color), $dark-base);
-    $dark-theme: map.merge(
-        (
-            color: $dark-theme-colors,
-        ),
-        $dark-theme-colors
-    );
+    $dark-theme: map.merge($dark-theme, (color: $dark-theme-colors));
+    $dark-theme: map.merge($dark-theme, $dark-theme-colors);
 
     /* Generate and encapsulate Angular Material themes */
     #{map.get($theme, selector)} .light,
