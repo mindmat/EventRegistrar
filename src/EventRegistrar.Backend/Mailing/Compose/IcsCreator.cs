@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrables.Calendar;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
+using EventRegistrar.Backend.VolunteerPlanning;
 
 using Ical.Net;
 using Ical.Net.CalendarComponents;
@@ -16,6 +17,7 @@ namespace EventRegistrar.Backend.Mailing.Compose;
 
 public class IcsCreator(IQueryable<Seat> spots,
                         IQueryable<Registration> registrations,
+                        IQueryable<ShiftAssignment> shiftAssignments,
                         CalendarConfiguration calendarConfiguration,
                         IDateTimeProvider dateTimeProvider)
 {
@@ -29,7 +31,12 @@ public class IcsCreator(IQueryable<Seat> spots,
                                 .Include(ics => ics.Registrable)
                                 .ToListAsync(cancellationToken);
 
-        if (!tracks.Any())
+        var shifts = await shiftAssignments.Where(sas => sas.RegistrationId == registrationId
+                                                      && sas.IsConfirmed)
+                                           .Select(sas => sas.Shift!)
+                                           .ToListAsync(cancellationToken);
+
+        if (!tracks.Any() && !shifts.Any())
         {
             return null;
         }
@@ -45,7 +52,7 @@ public class IcsCreator(IQueryable<Seat> spots,
         var calendarName = $"{registration.EventName} - {registration.RespondentFirstName} {registration.RespondentLastName}";
 
         //var serialized = ComposeWithLibrary(registration.EventName, calendarName, tracks);
-        var serialized = ComposeManually(registration.EventName, calendarName, tracks);
+        var serialized = ComposeManually(registration.EventName, calendarName, tracks, shifts);
         var attachment = new MailAttachment
                          {
                              Id = Guid.NewGuid(),
@@ -56,7 +63,10 @@ public class IcsCreator(IQueryable<Seat> spots,
         return attachment;
     }
 
-    private byte[] ComposeManually(string eventName, string calendarName, List<RegistrableIcs> tracks)
+    private byte[] ComposeManually(string eventName,
+                                   string calendarName,
+                                   List<RegistrableIcs> tracks,
+                                   List<Shift> shifts)
     {
         var now = dateTimeProvider.Now;
         var sb = new StringBuilder(1000);
@@ -68,30 +78,62 @@ public class IcsCreator(IQueryable<Seat> spots,
         sb.AppendLine($"NAME:{calendarName}");
         sb.AppendLine($"X-WR-CALNAME:{calendarName}");
 
-        for (var i = 0; i < tracks.Count; i++)
-        {
-            var track = tracks[i];
-            sb.AppendLine("BEGIN:VEVENT");
-            sb.AppendLine($"UID:{track.Id}");
-            sb.AppendLine($"SEQUENCE:{i}");
-            sb.AppendLine($"DTSTART:{FormatDateTime(track.Start)}");
-            sb.AppendLine($"DTEND:{FormatDateTime(track.End)}");
-            sb.AppendLine($"DTSTAMP:{FormatDateTime(now)}");
-            sb.AppendLine($"SUMMARY:{GetName(track)}");
-            sb.AppendLine($"LOCATION:{track.Location}");
-            if (!string.IsNullOrWhiteSpace(track.ContentHtml))
-            {
-                sb.AppendLine($"DESCRIPTION:{HtmlUtilities.ConvertToPlainText(track.ContentHtml)}");
-                sb.AppendLine($"X-ALT-DESC;FMTTYPE=text/html:<!doctype html><html><body>{track.ContentHtml}</body></html>");
-            }
+        var entries = Enumerable.Concat(tracks.Select(track => new IcsEntry(track.Id,
+                                                                            GetName(track),
+                                                                            track.Start,
+                                                                            track.End,
+                                                                            track.Location,
+                                                                            track.ContentHtml)),
+                                        shifts.Select(shift => new IcsEntry(shift.Id,
+                                                                            shift.Name,
+                                                                            shift.StartTime,
+                                                                            shift.EndTime,
+                                                                            shift.Location,
+                                                                            shift.Description)))
+                                .ToList();
 
-            sb.AppendLine("END:VEVENT");
+        for (var i = 0; i < entries.Count; i++)
+        {
+            AppendEvent(sb, entries[i], i, now);
         }
 
         sb.AppendLine("END:VCALENDAR");
 
         return Encoding.UTF8.GetBytes(sb.ToString());
     }
+
+    private void AppendEvent(StringBuilder sb,
+                             IcsEntry entry,
+                             int sequence,
+                             DateTimeOffset now)
+    {
+        sb.AppendLine("BEGIN:VEVENT");
+        sb.AppendLine($"UID:{entry.Id}");
+        sb.AppendLine($"SEQUENCE:{sequence}");
+        sb.AppendLine($"DTSTART:{FormatDateTime(entry.Start)}");
+        sb.AppendLine($"DTEND:{FormatDateTime(entry.End)}");
+        sb.AppendLine($"DTSTAMP:{FormatDateTime(now)}");
+        sb.AppendLine($"SUMMARY:{entry.Summary}");
+        if (!string.IsNullOrWhiteSpace(entry.Location))
+        {
+            sb.AppendLine($"LOCATION:{entry.Location}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(entry.Description))
+        {
+            sb.AppendLine($"DESCRIPTION:{HtmlUtilities.ConvertToPlainText(entry.Description)}");
+            sb.AppendLine($"X-ALT-DESC;FMTTYPE=text/html:<!doctype html><html><body>{entry.Description}</body></html>");
+        }
+
+        sb.AppendLine("END:VEVENT");
+    }
+
+    private record IcsEntry(Guid Id,
+                            string? Summary,
+                            DateTimeOffset Start,
+                            DateTimeOffset End,
+                            string? Location,
+                            string? Description);
 
     private string GetName(RegistrableIcs track)
     {
