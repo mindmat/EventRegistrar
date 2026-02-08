@@ -538,6 +538,9 @@
   <data name="FilterBySection" xml:space="preserve">
     <value>Nach Bereich filtern</value>
   </data>
+  <data name="FilterByTag" xml:space="preserve">
+    <value>Filtern nach Tags</value>
+  </data>
   <data name="FindPartnerOf" xml:space="preserve">
     <value>Partner für {{name}} finden</value>
   </data>

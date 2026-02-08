@@ -92,16 +92,16 @@
 
       <!-- Filters & actions -->
       <div class="grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),320px))] justify-center gap-8 mt-8 sm:mt-10">
-        <div class="col-span-full flex flex-row flex-wrap items-center gap-4">
-          <!-- Search -->
-          <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72" [floatLabel]="'always'">
-            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByName' | translate" matInput #query>
-          </mat-form-field>
+        <!-- Search -->
+        <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
+          <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+          <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByName' | translate" matInput #query>
+        </mat-form-field>
 
-          <!-- Filter by tag -->
-          <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72">
-            <mat-select [value]="filters.categoryTags$.value" (selectionChange)="filterByCategory($event)" multiple>
+        <!-- Filter by tag + Context menu -->
+        <div class="flex items-center gap-1">
+          <mat-form-field class="fuse-mat-no-subscript flex-auto">
+            <mat-select [value]="filters.categoryTags$.value" (selectionChange)="filterByCategory($event)" multiple [placeholder]="'FilterByTag' | translate">
               @for (tag of tags; track trackByFn($index, tag)) {
               <mat-option [value]="tag.tag">
                 <div class="py-0.5 px-3 rounded-full text-sm font-semibold"
@@ -112,44 +112,44 @@
               }
             </mat-select>
           </mat-form-field>
-
-          <!-- Context menu -->
-          <div class="flex items-center mb-4">
-            <button mat-icon-button [matMenuTriggerFor]="overviewMenu">
-              <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+          <button mat-icon-button [matMenuTriggerFor]="overviewMenu" class="flex-none mb-5">
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
+          </button>
+          <mat-menu #overviewMenu="matMenu">
+            <button mat-menu-item (click)="addRegistrable()">
+              <span class="flex items-center">
+                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                <span>{{ 'AddTrack' | translate }}</span>
+              </span>
             </button>
-            <mat-menu #overviewMenu="matMenu">
-              <button mat-menu-item (click)="addRegistrable()">
-                <span class="flex items-center">
-                  <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
-                  <span>{{ 'AddTrack' | translate }}</span>
-                </span>
-              </button>
-              @if ((eventService.selected$ | async).state === EventState.Setup) {
-              <button mat-menu-item (click)="openRegistration()">
-                <span class="flex items-center">
-                  <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_outline:play_arrow'"></mat-icon>
-                  <span>{{ 'OpenRegistrationDeleteTestData' | translate }}</span>
-                </span>
-              </button>
-              }
-              @if ((eventService.selected$ | async).state === EventState.Setup) {
-              <button mat-menu-item (click)="deleteTestData()">
-                <span class="flex items-center">
-                  <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                  <span>{{ 'DeleteTestData' | translate }}</span>
-                </span>
-              </button>
-              }
-              <button mat-menu-item (click)="updateView()">
-                <span class="flex items-center">
-                  <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
-                  <span>{{ 'Recalculate' | translate }}</span>
-                </span>
-              </button>
-            </mat-menu>
-          </div>
+            @if ((eventService.selected$ | async).state === EventState.Setup) {
+            <button mat-menu-item (click)="openRegistration()">
+              <span class="flex items-center">
+                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_outline:play_arrow'"></mat-icon>
+                <span>{{ 'OpenRegistrationDeleteTestData' | translate }}</span>
+              </span>
+            </button>
+            }
+            @if ((eventService.selected$ | async).state === EventState.Setup) {
+            <button mat-menu-item (click)="deleteTestData()">
+              <span class="flex items-center">
+                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                <span>{{ 'DeleteTestData' | translate }}</span>
+              </span>
+            </button>
+            }
+            <button mat-menu-item (click)="updateView()">
+              <span class="flex items-center">
+                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                <span>{{ 'Recalculate' | translate }}</span>
+              </span>
+            </button>
+          </mat-menu>
         </div>
+      </div>
+
+      <!-- Registrables -->
+      <div class="grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),320px))] justify-center gap-8 mt-8">
 
         <!-- Double Registrables -->
         @if (this.filteredDoubleRegistrables?.length) {

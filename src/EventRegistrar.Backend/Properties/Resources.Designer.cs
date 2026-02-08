@@ -1326,6 +1326,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filtern nach Tags.
+        /// </summary>
+        internal static string FilterByTag {
+            get {
+                return ResourceManager.GetString("FilterByTag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Partner für {{name}} finden.
         /// </summary>
         internal static string FindPartnerOf {
