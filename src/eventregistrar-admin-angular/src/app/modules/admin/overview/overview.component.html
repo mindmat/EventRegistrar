@@ -3,7 +3,7 @@
   <!-- Main -->
   <div class="flex flex-auto p-6 sm:p-10">
 
-    <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-7xl mx-auto">
+    <div class="flex flex-col flex-auto w-full mx-auto">
       <!-- Filters -->
       <div class="flex flex-col sm:flex-row items-start justify-between w-full max-w-xs sm:max-w-none">
         <!-- Account balance -->
@@ -151,7 +151,7 @@
       </div>
 
       <!-- Registrables -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-8 sm:mt-10">
+      <div class="grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),320px))] justify-center gap-8 mt-8 sm:mt-10">
 
         <!-- Double Registrables -->
         @if (this.filteredDoubleRegistrables?.length) {
