@@ -413,38 +413,33 @@
             </a>
             <div class="w-12 h-1 my-2 border-t-2"></div>
             <!-- Class -->
+            @let totalSpots = (singleRegistrable.spotsAvailable ?? singleRegistrable.accepted) + singleRegistrable.onWaitingList;
+            @let superdense = totalSpots > 400;
+            @let dense = totalSpots > 200;
             <div class="flex items-center mt-2 leading-5 text-md text-secondary">
               <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:check-circle'" [matTooltip]="'Accepted: ' + singleRegistrable.accepted" [matTooltipPosition]="'above'"
                 [matTooltipClass]="'mb-1'">
                 >
               </mat-icon>
-              <div class="flex flex-wrap gap-y-1" [ngClass]="(singleRegistrable.spotsAvailable ?? singleRegistrable.accepted) > 100 ? 'gap-x-0' : 'gap-x-0.5'">
+              <div class="flex flex-wrap" [ngClass]="superdense ? 'gap-x-0 gap-y-0' : dense ? 'gap-x-0 gap-y-0.5' : 'gap-x-0.5 gap-y-1'">
                 @for (spotState of singleRegistrable.class; track trackByFn(i, spotState); let i = $index) {
-                <div class="flex flex-col w-1" [ngClass]="{'w-0.5' : (singleRegistrable.spotsAvailable ?? singleRegistrable.accepted) > 200}">
-                  <!-- Leader: available -->
+                <div class="flex flex-col" [ngClass]="superdense ? 'w-0.5' : 'w-1'">
                   @if (spotState === 1) {
-                  <div class="h-4 bg-gray-200 rounded overflow-hidden">
-                  </div>
+                  <div class="bg-gray-200 rounded overflow-hidden" [ngClass]="dense ? 'h-2' : 'h-4'"></div>
                   }
-                  <!-- Leader: reserved -->
                   @if (spotState === 2) {
-                  <div class="h-4 bg-warn-400 rounded overflow-hidden">
-                  </div>
+                  <div class="bg-warn-400 rounded overflow-hidden" [ngClass]="dense ? 'h-2' : 'h-4'"></div>
                   }
-                  <!-- Leader: registered -->
                   @if (spotState === 3) {
-                  <div class="h-4 bg-primary-400 rounded overflow-hidden">
-                  </div>
+                  <div class="bg-primary-400 rounded overflow-hidden" [ngClass]="dense ? 'h-2' : 'h-4'"></div>
                   }
-                  <!-- Leader: paid -->
                   @if (spotState === 4) {
-                  <div class="h-4 bg-primary-600 rounded overflow-hidden">
-                  </div>
+                  <div class="bg-primary-600 rounded overflow-hidden" [ngClass]="dense ? 'h-2' : 'h-4'"></div>
                   }
                 </div>
                 @if (singleRegistrable.spotsAvailable === i + 1) {
-                <div class="flex ml-1 mr-0.5 mb-1 w-0.5 h-5 -mt-0.5 bg-gray-600 rounded overflow-hidden" [matTooltip]="'max: ' + singleRegistrable.spotsAvailable" [matTooltipPosition]="'above'"
-                  [matTooltipClass]="'mb-1'">
+                <div class="flex ml-1 mr-0.5 mb-1 w-0.5 bg-gray-600 rounded overflow-hidden" [ngClass]="superdense ? 'h-2 mt-0' : dense ? 'h-3 -mt-0.5' : 'h-5 -mt-0.5'"
+                  [matTooltip]="'max: ' + singleRegistrable.spotsAvailable" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                 </div>
                 }
                 }
