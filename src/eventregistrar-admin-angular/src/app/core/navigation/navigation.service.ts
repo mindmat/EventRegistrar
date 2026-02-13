@@ -253,7 +253,7 @@ export class NavigationService
             .subscribe();
     }
 
-    private getBadge(contents: MenuNodeContent[] | null, key: MenuNodeKey): { title: string; classes: string; } | null
+    private getBadge(contents: MenuNodeContent[] | null, key: MenuNodeKey): { title: string; classes: string; tooltip?: string; } | null
     {
         const content = contents?.find(nct => nct.key === key);
         if (!content)
@@ -262,7 +262,8 @@ export class NavigationService
         }
         return {
             title: content.content,
-            classes: this.getBadgeStyle(content)
+            classes: this.getBadgeStyle(content),
+            tooltip: content.contentToolTip
         };
     }
 

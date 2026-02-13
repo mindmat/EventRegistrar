@@ -39,10 +39,16 @@ public class RemarksOverviewCalculator(IQueryable<RegistrationRemark> registrati
         {
             node.Content = $"{unprocessedCount}";
             node.Style = MenuNodeStyle.ToDo;
+            node.ToolTipData = new RemarksToolTipData { UnprocessedCount = unprocessedCount };
         }
 
         return node;
     }
+}
+
+public class RemarksToolTipData
+{
+    public int UnprocessedCount { get; set; }
 }
 
 public class RemarksDisplayItem

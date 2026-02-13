@@ -13,6 +13,8 @@ public class MenuNodeReadModel : Entity
     public string? Content { get; set; }
     public bool Hidden { get; set; }
     public MenuNodeStyle? Style { get; set; }
+    public string? ToolTipData { get; set; }
+    public string? ToolTipDataType { get; set; }
 }
 
 public enum MenuNodeKey
@@ -66,6 +68,12 @@ public class MenuNodeReadModelMap : EntityMap<MenuNodeReadModel>
 
         builder.Property(mnd => mnd.Content)
                .HasMaxLength(20);
+
+        builder.Property(mnd => mnd.ToolTipData)
+               .HasMaxLength(1000);
+
+        builder.Property(mnd => mnd.ToolTipDataType)
+               .HasMaxLength(200);
 
         builder.HasIndex(mnd => new
                                 {

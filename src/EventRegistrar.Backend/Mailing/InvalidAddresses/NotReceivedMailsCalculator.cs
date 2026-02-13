@@ -121,7 +121,12 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
                        Key = MenuNodeKey.MailTracking,
                        Style = MenuNodeStyle.None,
                        Content = $"{noneSucceededCount} | {someSucceededCount}",
-                       Hidden = !hasFeedback
+                       Hidden = !hasFeedback,
+                       ToolTipData = new MailTrackingToolTipData
+                                     {
+                                         NoneSucceeded = noneSucceededCount,
+                                         SomeSucceeded = someSucceededCount
+                                     }
                    };
         if (noneSucceededCount > 0)
         {
@@ -134,6 +139,12 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
 
         return node;
     }
+}
+
+public class MailTrackingToolTipData
+{
+    public int NoneSucceeded { get; set; }
+    public int SomeSucceeded { get; set; }
 }
 
 public class ProblematicEmail

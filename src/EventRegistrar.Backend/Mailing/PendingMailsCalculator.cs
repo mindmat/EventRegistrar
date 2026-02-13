@@ -44,6 +44,7 @@ public class PendingMailsCalculator(IQueryable<Mail> _mails) : ReadModelCalculat
         {
             node.Content = $"{mails.Count}";
             node.Style = MenuNodeStyle.ToDo;
+            node.ToolTipData = new PendingMailsToolTipData { Count = mails.Count };
         }
 
         return (mails, node);
@@ -89,4 +90,9 @@ public class PendingMailListItem
     public string? ContentStart { get; set; }
     public DateTimeOffset Created { get; set; }
     public MailType? Type { get; set; }
+}
+
+public class PendingMailsToolTipData
+{
+    public int Count { get; set; }
 }

@@ -10644,6 +10644,7 @@ export interface MenuNodeContent {
     content?: string | null;
     style?: MenuNodeStyle | null;
     hidden?: boolean;
+    contentToolTip?: string | null;
 }
 
 export enum MenuNodeKey {

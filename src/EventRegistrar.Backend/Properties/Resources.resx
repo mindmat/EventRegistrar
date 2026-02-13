@@ -232,6 +232,9 @@
   <data name="AssignOutgoing" xml:space="preserve">
     <value>Zahlungsausgang zuordnen</value>
   </data>
+  <data name="AssignPartners_Tooltip" xml:space="preserve">
+    <value>{{UnmatchedCount}} Anmeldungen ohne zugewiesenen Partner</value>
+  </data>
   <data name="AssignResponsible" xml:space="preserve">
     <value>Verantwortliche:n zuordnen</value>
   </data>
@@ -865,6 +868,9 @@
   <data name="MailTemplate" xml:space="preserve">
     <value>Vorlage</value>
   </data>
+  <data name="MailTracking_Tooltip" xml:space="preserve">
+    <value>{{NoneSucceeded}} E-Mails konnten nicht zugestellt werden, {{SomeSucceeded}} E-Mails hatten teilweise Probleme</value>
+  </data>
   <data name="MailType" xml:space="preserve">
     <value>Typ</value>
   </data>
@@ -1132,6 +1138,9 @@
   <data name="PendingMails" xml:space="preserve">
     <value>Freizugebende Mails</value>
   </data>
+  <data name="PendingMails_Tooltip" xml:space="preserve">
+    <value>{{Count}} E-Mails warten auf Freigabe</value>
+  </data>
   <data name="PendingPayouts" xml:space="preserve">
     <value>Ausstehende Rückzahlungen</value>
   </data>
@@ -1333,6 +1342,9 @@
   </data>
   <data name="RemarksUnprocessed" xml:space="preserve">
     <value>Bemerkungen noch nicht verarbeitet</value>
+  </data>
+  <data name="Remarks_Tooltip" xml:space="preserve">
+    <value>{{UnprocessedCount}} Bemerkungen noch nicht bearbeitet</value>
   </data>
   <data name="ReminderMail1" xml:space="preserve">
     <value>Mail Zahlungserinnerung 1</value>

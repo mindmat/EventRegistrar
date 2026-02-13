@@ -1,4 +1,6 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+﻿using System.Text.Json;
+
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 
 namespace EventRegistrar.Backend.Infrastructure.MenuNodes;
 
@@ -22,6 +24,11 @@ public class UpdateMenuNodeCommandHandler(IRepository<MenuNodeReadModel> nodes,
         }
 
         var calculation = await calculator.Calculate(command.EventId, cancellationToken);
+        var toolTipData = calculation.ToolTipData != null
+                              ? JsonSerializer.Serialize(calculation.ToolTipData)
+                              : null;
+        var toolTipDataType = calculation.ToolTipData?.GetType().FullName;
+
         var node = await nodes.AsTracking()
                               .FirstOrDefaultAsync(mnr => mnr.EventId == command.EventId
                                                        && mnr.Key == calculator.Key,
@@ -36,17 +43,23 @@ public class UpdateMenuNodeCommandHandler(IRepository<MenuNodeReadModel> nodes,
                 EventId = command.EventId,
                 Key = command.Key,
                 Content = calculation.Content,
-                Hidden = calculation.Hidden
+                Hidden = calculation.Hidden,
+                ToolTipData = toolTipData,
+                ToolTipDataType = toolTipDataType
             });
         }
         else if (node.Content != calculation.Content
               || node.Style != calculation.Style
-              || node.Hidden != calculation.Hidden)
+              || node.Hidden != calculation.Hidden
+              || node.ToolTipData != toolTipData
+              || node.ToolTipDataType != toolTipDataType)
         {
             anythingChanged = true;
             node.Content = calculation.Content;
             node.Style = calculation.Style;
             node.Hidden = calculation.Hidden;
+            node.ToolTipData = toolTipData;
+            node.ToolTipDataType = toolTipDataType;
         }
 
         if (anythingChanged)
@@ -69,4 +82,5 @@ public class MenuNodeCalculation
     public string? Content { get; set; }
     public MenuNodeStyle? Style { get; set; }
     public bool Hidden { get; set; }
+    public object? ToolTipData { get; set; }
 }

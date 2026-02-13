@@ -43,6 +43,7 @@ export interface FuseNavigationItem
     badge?: {
         title?: string;
         classes?: string;
+        tooltip?: string;
     };
     children?: FuseNavigationItem[];
     meta?: any;

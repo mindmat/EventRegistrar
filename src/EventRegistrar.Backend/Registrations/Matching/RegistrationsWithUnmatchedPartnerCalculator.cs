@@ -48,8 +48,14 @@ public class RegistrationsWithUnmatchedPartnerCalculator(IQueryable<Registration
         {
             node.Content = $"{unmatched.Count}";
             node.Style = MenuNodeStyle.ToDo;
+            node.ToolTipData = new AssignPartnersToolTipData { UnmatchedCount = unmatched.Count };
         }
 
         return node;
     }
+}
+
+public class AssignPartnersToolTipData
+{
+    public int UnmatchedCount { get; set; }
 }
