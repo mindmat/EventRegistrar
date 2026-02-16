@@ -99,10 +99,23 @@ public class ShiftsOverviewCalculator(IQueryable<Shift> shifts)
             node.Style = shiftsWithCancelledRegistrations > 0
                              ? MenuNodeStyle.ToDo
                              : MenuNodeStyle.Info;
+            node.ToolTipData = new ShiftsOverviewToolTipData
+                               {
+                                   UnassignedShifts = unassignedShifts,
+                                   CancelledRegistrations = shiftsWithCancelledRegistrations,
+                                   UnconfirmedAssignments = unconfirmedAssignments
+                               };
         }
 
         return node;
     }
+}
+
+public class ShiftsOverviewToolTipData
+{
+    public int UnassignedShifts { get; set; }
+    public int CancelledRegistrations { get; set; }
+    public int UnconfirmedAssignments { get; set; }
 }
 
 public record ShiftGroup(DateTime Day, string? Location, IEnumerable<ShiftDisplayItem> Shifts);

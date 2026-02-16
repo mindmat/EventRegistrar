@@ -22,7 +22,8 @@ public class RegistrationFormsMenuNodeCalculation(IQueryable<Event> events,
                        Key = Key,
                        Content = pendingRawFormCount.ToString(),
                        Style = MenuNodeStyle.ToDo,
-                       Hidden = false
+                       Hidden = false,
+                       ToolTipData = new FormsToolTipData { PendingFormsCount = pendingRawFormCount }
                    },
             _ => new MenuNodeCalculation
                  {
@@ -33,4 +34,9 @@ public class RegistrationFormsMenuNodeCalculation(IQueryable<Event> events,
                  }
         };
     }
+}
+
+public class FormsToolTipData
+{
+    public int PendingFormsCount { get; set; }
 }

@@ -43,6 +43,7 @@ public class ProcessingErrorsCalculator(IQueryable<RawRegistration> rawRegistrat
         {
             node.Content = $"{errors.Count}";
             node.Style = MenuNodeStyle.Important;
+            node.ToolTipData = new FixRawProcessingToolTipData { ErrorCount = errors.Count };
         }
         else
         {
@@ -51,6 +52,11 @@ public class ProcessingErrorsCalculator(IQueryable<RawRegistration> rawRegistrat
 
         return (errors, node);
     }
+}
+
+public class FixRawProcessingToolTipData
+{
+    public int ErrorCount { get; set; }
 }
 
 public class ProcessingError

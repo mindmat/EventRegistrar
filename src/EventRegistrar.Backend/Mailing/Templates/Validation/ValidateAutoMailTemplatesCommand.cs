@@ -1,4 +1,6 @@
-﻿using EventRegistrar.Backend.Infrastructure;
+﻿using System.Text.Json;
+
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.MenuNodes;
 using EventRegistrar.Backend.Properties;
@@ -41,12 +43,18 @@ public class ValidateAutoMailTemplatesCommandHandler(IQueryable<AutoMailTemplate
         {
             menuNode.Content = $"{totalWarningCount}";
             menuNode.Style = MenuNodeStyle.ToDo;
+            menuNode.ToolTipData = new MailTemplatesToolTipData { WarningCount = totalWarningCount };
         }
         await UpsertMenuNode(command.EventId, menuNode);
     }
 
     private async Task UpsertMenuNode(Guid eventId, MenuNodeCalculation menuNodeCalculation)
     {
+        var toolTipData = menuNodeCalculation.ToolTipData != null
+                              ? JsonSerializer.Serialize(menuNodeCalculation.ToolTipData)
+                              : null;
+        var toolTipDataType = menuNodeCalculation.ToolTipData?.GetType().FullName;
+
         var node = await menuNodes.AsTracking()
                                   .FirstOrDefaultAsync(mnr => mnr.EventId == eventId
                                                            && mnr.Key == menuNodeCalculation.Key);
@@ -60,17 +68,23 @@ public class ValidateAutoMailTemplatesCommandHandler(IQueryable<AutoMailTemplate
                                            EventId = eventId,
                                            Key = menuNodeCalculation.Key,
                                            Content = menuNodeCalculation.Content,
-                                           Hidden = menuNodeCalculation.Hidden
+                                           Hidden = menuNodeCalculation.Hidden,
+                                           ToolTipData = toolTipData,
+                                           ToolTipDataType = toolTipDataType
                                        });
         }
         else if (node.Content != menuNodeCalculation.Content
               || node.Style != menuNodeCalculation.Style
-              || node.Hidden != menuNodeCalculation.Hidden)
+              || node.Hidden != menuNodeCalculation.Hidden
+              || node.ToolTipData != toolTipData
+              || node.ToolTipDataType != toolTipDataType)
         {
             anythingChanged = true;
             node.Content = menuNodeCalculation.Content;
             node.Style = menuNodeCalculation.Style;
             node.Hidden = menuNodeCalculation.Hidden;
+            node.ToolTipData = toolTipData;
+            node.ToolTipDataType = toolTipDataType;
         }
 
         if (anythingChanged)
@@ -78,6 +92,11 @@ public class ValidateAutoMailTemplatesCommandHandler(IQueryable<AutoMailTemplate
             changeTrigger.QueryChanged<MenuNodesQuery>(eventId);
         }
     }
+}
+
+public class MailTemplatesToolTipData
+{
+    public int WarningCount { get; set; }
 }
 
 public interface IAutoMailTemplateExpectedPlaceholders

@@ -415,6 +415,9 @@
   <data name="DuePayments" xml:space="preserve">
     <value>Ausstehende Zahlungen</value>
   </data>
+  <data name="DuePayments_Tooltip" xml:space="preserve">
+    <value>{{RemindersPossible}} Erinnerungen möglich von {{TotalDue}} ausstehenden Zahlungen</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Bearbeiten</value>
   </data>
@@ -550,6 +553,9 @@
   <data name="FirstName" xml:space="preserve">
     <value>Vorname</value>
   </data>
+  <data name="FixRawProcessing_Tooltip" xml:space="preserve">
+    <value>{{ErrorCount}} Anmeldungen mit Verarbeitungsfehlern</value>
+  </data>
   <data name="Follower" xml:space="preserve">
     <value>Follower</value>
   </data>
@@ -558,6 +564,9 @@
   </data>
   <data name="Forms" xml:space="preserve">
     <value>Formulare</value>
+  </data>
+  <data name="Forms_Tooltip" xml:space="preserve">
+    <value>{{PendingFormsCount}} Formulare warten auf Import</value>
   </data>
   <data name="from" xml:space="preserve">
     <value>von</value>
@@ -867,6 +876,9 @@
   </data>
   <data name="MailTemplate" xml:space="preserve">
     <value>Vorlage</value>
+  </data>
+  <data name="MailTemplates_Tooltip" xml:space="preserve">
+    <value>{{WarningCount}} Mail-Vorlagen mit fehlenden Platzhaltern</value>
   </data>
   <data name="MailTracking_Tooltip" xml:space="preserve">
     <value>{{NoneSucceeded}} E-Mails konnten nicht zugestellt werden, {{SomeSucceeded}} E-Mails hatten teilweise Probleme</value>
@@ -1495,6 +1507,9 @@
   </data>
   <data name="ShowInOverviewExplanation" xml:space="preserve">
     <value>Zeigt das Preispaket mit der Anzahl der Teilnehmer in der Event-Übersicht an.</value>
+  </data>
+  <data name="ShiftsOverview_Tooltip" xml:space="preserve">
+    <value>{{UnassignedShifts}} Schichten nicht besetzt | {{CancelledRegistrations}} Abgemeldete | {{UnconfirmedAssignments}} Unbestätigte</value>
   </data>
   <data name="SingleNotPossible" xml:space="preserve">
     <value>Einzelanmeldung nicht möglich</value>

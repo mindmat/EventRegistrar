@@ -169,6 +169,11 @@ public class DuePaymentsCalculator(IQueryable<Registration> registrations,
         if (remindersPossible > 0)
         {
             node.Content = $"{remindersPossible}/{duePayments.Count}";
+            node.ToolTipData = new DuePaymentsToolTipData
+                               {
+                                   RemindersPossible = remindersPossible,
+                                   TotalDue = duePayments.Count
+                               };
         }
         else
         {
@@ -222,4 +227,10 @@ public class SentMailDto
 {
     public Guid Id { get; set; }
     public DateTimeOffset Sent { get; set; }
+}
+
+public class DuePaymentsToolTipData
+{
+    public int RemindersPossible { get; set; }
+    public int TotalDue { get; set; }
 }
