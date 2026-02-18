@@ -104,7 +104,8 @@ public static class EndpointRouteBuilderExtensions
         var mediator = container.GetInstance<IMediator>();
         var response = await mediator.Send(request, context.RequestAborted);
 
-        if (context.Request.Headers.Accept == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        if (context.Request.Headers.Accept == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+         && response is not DownloadResult)
         {
             await SerializeAsXlsx(context, response, container.GetInstance<ILogger>());
         }
@@ -120,7 +121,7 @@ public static class EndpointRouteBuilderExtensions
                 context.Response.StatusCode = 204;
                 await context.Response.Body.FlushAsync(context.RequestAborted);
             }
-            else if(response is DownloadResult download)
+            else if (response is DownloadResult download)
             {
                 context.Response.ContentType = download.ContentType;
                 context.Response.StatusCode = 200;

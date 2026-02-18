@@ -72,10 +72,10 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                              .Select(reg => new { reg.Id, reg.PricePackageIds_Admitted })
                                              .ToListAsync(cancellationToken);
 
-        var registrations = (await readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery),
-                                                                                            query.EventId,
-                                                                                            registrationIds.Select(reg => reg.Id),
-                                                                                            cancellationToken))
+        var registrations = (await readModelReader.GetMultipleDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery),
+                                                                                                    query.EventId,
+                                                                                                    registrationIds.Select(reg => reg.Id),
+                                                                                                    cancellationToken))
             .AsCollection();
         var registrables = await tracks.Where(trk => trk.EventId == query.EventId)
                                        .Select(trk => new

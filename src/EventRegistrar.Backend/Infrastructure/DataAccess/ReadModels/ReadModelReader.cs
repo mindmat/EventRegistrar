@@ -35,10 +35,10 @@ public class ReadModelReader(IQueryable<ReadModel> _readModels)
         return JsonSerializer.Deserialize<T>(readModel, _serializerOptions)!;
     }
 
-    public async Task<IEnumerable<T>> GetDeserialized<T>(string queryName,
-                                                         Guid eventId,
-                                                         IEnumerable<Guid> rowIds,
-                                                         CancellationToken cancellationToken)
+    public async Task<IEnumerable<T>> GetMultipleDeserialized<T>(string queryName,
+                                                                 Guid eventId,
+                                                                 IEnumerable<Guid> rowIds,
+                                                                 CancellationToken cancellationToken)
     {
         var readModels = await _readModels.Where(rdm => rdm.QueryName == queryName
                                                      && rdm.EventId == eventId

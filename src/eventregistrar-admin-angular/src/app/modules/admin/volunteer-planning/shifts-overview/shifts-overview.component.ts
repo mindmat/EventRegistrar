@@ -29,6 +29,11 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     maxHelpersNeeded: number = 3; // Dynamic maximum based on shifts data
     // Preference selection properties
     showPreferenceSelection: boolean = false;
+
+    download(): void
+    {
+        this._volunteerPlanningService.downloadXlsx();
+    }
     currentShiftForPreference: ShiftDisplayItem | null = null;
     preferenceSearchString: string = '';
     // Configuration properties

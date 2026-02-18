@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, Optional } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable, Subscription } from 'rxjs';
-import { Api, CreateShiftCommand, UpdateShiftCommand, DeleteShiftCommand, AssignToShiftCommand, UnassignFromShiftCommand, AddHelperSlotCommand, RemoveHelperSlotCommand, AvailableParticipantsQuery, ShiftsOverviewQuery, ShiftGroup, ShiftDisplayItem, ParticipantDisplayItem, VolunteerAdminConfigurationQuery, VolunteerAdminConfigurationDto, UpdateVolunteerAdminConfigurationCommand, ConfirmShiftAssignmentCommand, UnconfirmShiftAssignmentCommand } from 'app/api/api';
+import { Api, API_BASE_URL, CreateShiftCommand, UpdateShiftCommand, DeleteShiftCommand, AssignToShiftCommand, UnassignFromShiftCommand, AddHelperSlotCommand, RemoveHelperSlotCommand, AvailableParticipantsQuery, ShiftsOverviewQuery, ShiftGroup, ShiftDisplayItem, ParticipantDisplayItem, VolunteerAdminConfigurationQuery, VolunteerAdminConfigurationDto, UpdateVolunteerAdminConfigurationCommand, ConfirmShiftAssignmentCommand, UnconfirmShiftAssignmentCommand } from 'app/api/api';
 import { FetchService } from '../infrastructure/fetchService';
 import { NotificationService } from '../infrastructure/notification.service';
 import { EventService } from '../events/event.service';
@@ -14,6 +15,8 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     constructor(
         private api: Api,
         private eventService: EventService,
+        @Inject(HttpClient) private http: HttpClient,
+        @Optional() @Inject(API_BASE_URL) private baseUrl: string,
         notificationService: NotificationService)
     {
         super('ShiftsOverviewQuery', notificationService);
@@ -207,5 +210,22 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     {
         return this.api.updateReadModel_Command({ eventId: this.eventService.selectedId, queryName: 'ShiftsOverviewQuery' })
             .subscribe();
+    }
+
+    downloadXlsx(): void
+    {
+        const url = this.baseUrl + '/api/ShiftsOverviewExcelQuery';
+        const formatXlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+        this.http.post(url, { eventId: this.eventService.selectedId }, { responseType: 'blob', headers: { 'Accept': formatXlsx } }).subscribe((file: Blob) =>
+        {
+            const blob = new Blob([file], { type: formatXlsx });
+            const anchor = window.document.createElement('a');
+            anchor.href = window.URL.createObjectURL(blob);
+            anchor.download = 'shifts-overview.xlsx';
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+            window.URL.revokeObjectURL(anchor.href);
+        });
     }
 }

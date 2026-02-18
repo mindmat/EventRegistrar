@@ -41,7 +41,10 @@ public class SearchRegistrationQueryHandler(IQueryable<Registration> _registrati
                                              .Select(reg => reg.Id)
                                              .ToListAsync(cancellationToken);
 
-        var registrations = await readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds, cancellationToken);
+        var registrations = await readModelReader.GetMultipleDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery),
+                                                                                                   query.EventId,
+                                                                                                   registrationIds,
+                                                                                                   cancellationToken);
 
         return registrations.Select(reg => new RegistrationMatch
                                            {

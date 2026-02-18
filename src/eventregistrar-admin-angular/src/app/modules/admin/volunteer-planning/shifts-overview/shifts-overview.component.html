@@ -1,5 +1,4 @@
 <div class="flex flex-col flex-auto min-w-0">
-
   <!-- Header -->
   <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
     <div class="flex-1 min-w-0">
@@ -12,30 +11,40 @@
     </div>
     <!-- Actions -->
     <div class="flex shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-
+      <button
+        mat-icon-button
+        (click)="download()"
+        [matTooltip]="'Download' | translate">
+        <mat-icon [svgIcon]="'mat_outline:file_download'"></mat-icon>
+      </button>
     </div>
   </div>
 
   <!-- Main -->
   <div class="flex flex-auto p-6 sm:p-10">
-
     <!-- Excel-like shifts planning table -->
     <div class="flex flex-col flex-auto w-full">
-
       <!-- Configuration Section -->
       @if (allRegistrables?.length > 0) {
         <div class="mb-8 bg-card shadow rounded-2xl overflow-hidden">
           <!-- Configuration Header -->
-          <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700" (click)="toggleConfiguration()">
+          <div
+            class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
+            (click)="toggleConfiguration()">
             <h3 class="text-base font-medium text-gray-800 dark:text-gray-200">
               {{ 'VolunteerConfiguration' | translate }}
             </h3>
-            <mat-icon class="transition-transform duration-200 text-gray-500 icon-size-4" [class.rotate-180]="!configurationCollapsed" [svgIcon]="'heroicons_outline:chevron-down'">
+            <mat-icon
+              class="transition-transform duration-200 text-gray-500 icon-size-4"
+              [class.rotate-180]="!configurationCollapsed"
+              [svgIcon]="'heroicons_outline:chevron-down'">
             </mat-icon>
           </div>
           <!-- Configuration Content -->
           @if (configurationLoaded) {
-            <div class="border-t border-gray-200 dark:border-gray-700" [class.hidden]="configurationCollapsed">
+            <div
+              class="border-t border-gray-200 dark:border-gray-700"
+              [class.hidden]="configurationCollapsed">
               <div class="p-6">
                 <div class="grid grid-cols-1 gap-6">
                   <!-- Registrables Selection -->
@@ -43,14 +52,25 @@
                     <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
                       {{ 'RegistrablesForVolunteers' | translate }}
                     </label>
-                    <app-tags-picker [allTags]="allRegistrables" [(ngModel)]="selectedRegistrableIds" (ngModelChange)="updateConfiguration()" idProperty="id" textProperty="name"
+                    <app-tags-picker
+                      [allTags]="allRegistrables"
+                      [(ngModel)]="selectedRegistrableIds"
+                      (ngModelChange)="updateConfiguration()"
+                      idProperty="id"
+                      textProperty="name"
                       class="w-full">
                     </app-tags-picker>
                   </div>
                   <!-- Update Read Model Button -->
                   <div class="space-y-2">
-                    <button mat-raised-button color="primary" (click)="recalculateReadModel()" class="w-full sm:w-auto">
-                      <mat-icon [svgIcon]="'heroicons_outline:arrow-path'" class="icon-size-4 mr-4"></mat-icon>
+                    <button
+                      mat-raised-button
+                      color="primary"
+                      (click)="recalculateReadModel()"
+                      class="w-full sm:w-auto">
+                      <mat-icon
+                        [svgIcon]="'heroicons_outline:arrow-path'"
+                        class="icon-size-4 mr-4"></mat-icon>
                       &nbsp;{{ 'Recalculate' | translate }}
                     </button>
                   </div>
@@ -61,7 +81,7 @@
         </div>
       }
 
-      @if ((shiftGroups$ | async); as shiftGroups) {
+      @if (shiftGroups$ | async; as shiftGroups) {
         @if (shiftGroups.length > 0) {
           <!-- Shift Groups -->
           @for (shiftGroup of shiftGroups; track trackByGroupFn($index, shiftGroup)) {
@@ -69,11 +89,9 @@
               <!-- Group Title -->
               <div class="mb-4">
                 <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                  {{ shiftGroup.day | date:'EEEE, dd.MM.yyyy' }}
+                  {{ shiftGroup.day | date: 'EEEE, dd.MM.yyyy' }}
                   @if (shiftGroup.location) {
-                    <span class="text-lg font-medium text-gray-600 dark:text-gray-400 ml-2">
-                      - {{ shiftGroup.location }}
-                    </span>
+                    <span class="text-lg font-medium text-gray-600 dark:text-gray-400 ml-2"> - {{ shiftGroup.location }} </span>
                   }
                 </h3>
               </div>
@@ -91,8 +109,7 @@
                         <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[150px] border-r border-gray-200 dark:border-gray-700">
                           {{ 'Post' | translate }}
                         </th>
-                        <th
-                          class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-900/40">
+                        <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-900/40">
                           {{ 'TimePreference' | translate }}
                         </th>
                         <th
@@ -100,9 +117,9 @@
                           {{ 'Responsible' | translate }}
                         </th>
                         @for (helper of getHelperColumns(shiftGroup); track helper) {
-                          <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-green-100 dark:bg-green-900/40"
-                            >
-                            {{ 'Helper' | translate }} {{helper}}
+                          <th
+                            class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-green-100 dark:bg-green-900/40">
+                            {{ 'Helper' | translate }} {{ helper }}
                           </th>
                         }
                         <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[100px]">
@@ -115,25 +132,27 @@
                       @for (shift of shiftGroup.shifts; track trackByFn($index, shift)) {
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150">
                           <!-- When (Time) -->
-                          <td class="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-950/70 cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-900/80"
+                          <td
+                            class="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-950/70 cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-900/80"
                             (click)="editShift(shift)">
-                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                              {{ shift.startTime | date:'HH:mm' }} - {{ shift.endTime | date:'HH:mm' }}
-                            </div>
+                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ shift.startTime | date: 'HH:mm' }} - {{ shift.endTime | date: 'HH:mm' }}</div>
                             <div class="text-sm text-secondary">
-                              {{ shift.startTime | date:'EEEE' }}
+                              {{ shift.startTime | date: 'EEEE' }}
                             </div>
                           </td>
                           <!-- Post (Task/Location) -->
-                          <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/70 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700/80"
+                          <td
+                            class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/70 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700/80"
                             (click)="editShift(shift)">
                             <div class="flex items-center justify-between">
                               <div>
-                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{shift.name}}</div>
-                                <div class="text-sm text-secondary">{{shift.location}}</div>
+                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ shift.name }}</div>
+                                <div class="text-sm text-secondary">{{ shift.location }}</div>
                               </div>
                               @if (shift.description) {
-                                <mat-icon class="icon-size-4 text-gray-500 ml-2" [svgIcon]="'heroicons_outline:information-circle'"
+                                <mat-icon
+                                  class="icon-size-4 text-gray-500 ml-2"
+                                  [svgIcon]="'heroicons_outline:information-circle'"
                                   [matTooltip]="shift.description">
                                 </mat-icon>
                               }
@@ -154,32 +173,41 @@
                                   <span class="text-sm text-gray-400 italic">{{ 'NoPreference' | translate }}</span>
                                 }
                               </div>
-                              <button mat-icon-button class="ml-2 text-blue-600 hover:text-blue-700" (click)="showPreferenceSelector(shift)"
+                              <button
+                                mat-icon-button
+                                class="ml-2 text-blue-600 hover:text-blue-700"
+                                (click)="showPreferenceSelector(shift)"
                                 [matTooltip]="'ChangeTimePreference' | translate">
-                                <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+                                <mat-icon
+                                  class="icon-size-4"
+                                  [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
                               </button>
                             </div>
                           </td>
                           <!-- Responsible -->
-                                            <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700" [ngClass]="{
-                                                    'bg-purple-100 dark:bg-purple-950/70': !shift.isParticipantResponsibleCancelled,
-                                                    'bg-red-100 dark:bg-red-950/70 border-2 border-red-400 dark:border-red-600': shift.isParticipantResponsibleCancelled
-                                                }">
+                          <td
+                            class="px-6 py-4 border-r border-gray-200 dark:border-gray-700"
+                            [ngClass]="{
+                              'bg-purple-100 dark:bg-purple-950/70': !shift.isParticipantResponsibleCancelled,
+                              'bg-red-100 dark:bg-red-950/70 border-2 border-red-400 dark:border-red-600': shift.isParticipantResponsibleCancelled,
+                            }">
                             <div class="flex items-center justify-between">
                               <div class="flex-1">
                                 @if (shift.responsibleRegistrationId) {
                                   <div class="flex items-center justify-between">
                                     <div class="flex-1">
-                                      <a [routerLink]="_navigatorService.getRegistrationUrl(shift.responsibleRegistrationId)"
+                                      <a
+                                        [routerLink]="_navigatorService.getRegistrationUrl(shift.responsibleRegistrationId)"
                                         class="hover:underline cursor-pointer block">
-                                                                        <div class="text-sm font-medium" [ngClass]="{
-                                                                                'text-gray-900 dark:text-gray-100': !shift.isParticipantResponsibleCancelled,
-                                                                                'text-red-800 dark:text-red-200 line-through': shift.isParticipantResponsibleCancelled
-                                                                            }">
+                                        <div
+                                          class="text-sm font-medium"
+                                          [ngClass]="{
+                                            'text-gray-900 dark:text-gray-100': !shift.isParticipantResponsibleCancelled,
+                                            'text-red-800 dark:text-red-200 line-through': shift.isParticipantResponsibleCancelled,
+                                          }">
                                           {{ shift.participantResponsible }}
                                           @if (shift.isParticipantResponsibleCancelled) {
-                                            <span
-                                            class="text-xs font-bold text-red-600 dark:text-red-400 ml-2">(CANCELLED)</span>
+                                            <span class="text-xs font-bold text-red-600 dark:text-red-400 ml-2">(CANCELLED)</span>
                                           }
                                         </div>
                                         @if (shift.responsibleEmail) {
@@ -193,12 +221,16 @@
                                     @if (shift.assignments && getResponsibleAssignment(shift)) {
                                       <div class="flex items-center ml-2">
                                         @if (getResponsibleAssignment(shift); as responsibleAssignment) {
-                                                                        <button mat-icon-button [color]="responsibleAssignment.isConfirmed ? 'primary' : ''" [ngClass]="{
-                                                                                    'text-gray-400 hover:text-gray-600': !responsibleAssignment.isConfirmed
-                                                                                }"
+                                          <button
+                                            mat-icon-button
+                                            [color]="responsibleAssignment.isConfirmed ? 'primary' : ''"
+                                            [ngClass]="{
+                                              'text-gray-400 hover:text-gray-600': !responsibleAssignment.isConfirmed,
+                                            }"
                                             (click)="responsibleAssignment.isConfirmed ? unconfirmShiftAssignment(responsibleAssignment.id) : confirmShiftAssignment(responsibleAssignment.id)"
                                             [matTooltip]="responsibleAssignment.isConfirmed ? 'Confirmed - Click to unconfirm' : 'Pending - Click to confirm'">
-                                            <mat-icon class="icon-size-4"
+                                            <mat-icon
+                                              class="icon-size-4"
                                               [svgIcon]="responsibleAssignment.isConfirmed ? 'heroicons_outline:check-circle' : 'heroicons_outline:question-mark-circle'">
                                             </mat-icon>
                                           </button>
@@ -210,60 +242,91 @@
                                   <span class="text-sm text-gray-400 italic">{{ 'Unassigned' | translate }}</span>
                                 }
                               </div>
-                              <button mat-icon-button class="ml-2 text-purple-600 hover:text-purple-700" (click)="showCandidatesForAssignment(shift, 'responsible')"
+                              <button
+                                mat-icon-button
+                                class="ml-2 text-purple-600 hover:text-purple-700"
+                                (click)="showCandidatesForAssignment(shift, 'responsible')"
                                 [matTooltip]="'AssignResponsible' | translate">
-                                <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
+                                <mat-icon
+                                  class="icon-size-4"
+                                  [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
                               </button>
                             </div>
                           </td>
                           <!-- Helpers -->
                           @for (helperIndex of getHelperColumns(shiftGroup); track helperIndex; let i = $index) {
-<td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700" [ngClass]="{
-                                                    'bg-green-50 dark:bg-green-950/30': i < shift.helpersNeeded && (!shift.assignments || !shift.assignments[i] || !shift.assignments[i].registrationId),
-                                                    'bg-green-100 dark:bg-green-900/50': i < shift.helpersNeeded && shift.assignments && shift.assignments[i] && shift.assignments[i].registrationId && !shift.assignments[i].isRegistrationCancelled && !shift.assignments[i].isConfirmed,
-                                                    'bg-green-200 dark:bg-green-800': i < shift.helpersNeeded && shift.assignments && shift.assignments[i] && shift.assignments[i].registrationId && !shift.assignments[i].isRegistrationCancelled && shift.assignments[i].isConfirmed,
-                                                    'bg-red-100 dark:bg-red-950/70 border-2 border-red-400 dark:border-red-600': i < shift.helpersNeeded && shift.assignments && shift.assignments[i] && shift.assignments[i].isRegistrationCancelled
-                                                }">
+                            <td
+                              class="px-6 py-4 border-r border-gray-200 dark:border-gray-700"
+                              [ngClass]="{
+                                'bg-green-50 dark:bg-green-950/30': i < shift.helpersNeeded && (!shift.assignments || !shift.assignments[i] || !shift.assignments[i].registrationId),
+                                'bg-green-100 dark:bg-green-900/50':
+                                  i < shift.helpersNeeded &&
+                                  shift.assignments &&
+                                  shift.assignments[i] &&
+                                  shift.assignments[i].registrationId &&
+                                  !shift.assignments[i].isRegistrationCancelled &&
+                                  !shift.assignments[i].isConfirmed,
+                                'bg-green-200 dark:bg-green-800':
+                                  i < shift.helpersNeeded &&
+                                  shift.assignments &&
+                                  shift.assignments[i] &&
+                                  shift.assignments[i].registrationId &&
+                                  !shift.assignments[i].isRegistrationCancelled &&
+                                  shift.assignments[i].isConfirmed,
+                                'bg-red-100 dark:bg-red-950/70 border-2 border-red-400 dark:border-red-600':
+                                  i < shift.helpersNeeded && shift.assignments && shift.assignments[i] && shift.assignments[i].isRegistrationCancelled,
+                              }">
                               @if (i < shift.helpersNeeded) {
                                 <div class="flex items-center justify-between">
                                   <div class="flex-1">
                                     @if (shift.assignments && shift.assignments[i] && shift.assignments[i].registrationId) {
                                       <div class="flex items-center justify-between">
                                         <div class="flex-1">
-                                          <a [routerLink]="_navigatorService.getRegistrationUrl(shift.assignments[i].registrationId)"
+                                          <a
+                                            [routerLink]="_navigatorService.getRegistrationUrl(shift.assignments[i].registrationId)"
                                             class="hover:underline cursor-pointer block">
-                                                                        <div class="text-sm font-medium" [ngClass]="{
-                                                                                'text-gray-900 dark:text-gray-100': !shift.assignments[i].isRegistrationCancelled,
-                                                                                'text-red-800 dark:text-red-200 line-through': shift.assignments[i].isRegistrationCancelled
-                                                                            }">
+                                            <div
+                                              class="text-sm font-medium"
+                                              [ngClass]="{
+                                                'text-gray-900 dark:text-gray-100': !shift.assignments[i].isRegistrationCancelled,
+                                                'text-red-800 dark:text-red-200 line-through': shift.assignments[i].isRegistrationCancelled,
+                                              }">
                                               {{ shift.assignments[i].participant }}
                                               @if (shift.assignments[i].isRegistrationCancelled) {
-                                                <span
-                                                class="text-xs font-bold text-red-600 dark:text-red-400 ml-2">(CANCELLED)</span>
+                                                <span class="text-xs font-bold text-red-600 dark:text-red-400 ml-2">(CANCELLED)</span>
                                               }
                                             </div>
                                             @if (shift.assignments[i].email) {
                                               <div class="text-sm text-secondary">
-                                                {{shift.assignments[i].email}}
+                                                {{ shift.assignments[i].email }}
                                               </div>
                                             }
                                           </a>
                                         </div>
                                         <div class="flex items-center ml-2 space-x-1">
                                           <!-- Single confirmation toggle button -->
-                                                                    <button mat-icon-button [color]="shift.assignments[i].isConfirmed ? 'primary' : ''" [ngClass]="{
-                                                                                'text-gray-400 hover:text-gray-600': !shift.assignments[i].isConfirmed
-                                                                            }"
+                                          <button
+                                            mat-icon-button
+                                            [color]="shift.assignments[i].isConfirmed ? 'primary' : ''"
+                                            [ngClass]="{
+                                              'text-gray-400 hover:text-gray-600': !shift.assignments[i].isConfirmed,
+                                            }"
                                             (click)="shift.assignments[i].isConfirmed ? unconfirmShiftAssignment(shift.assignments[i].id) : confirmShiftAssignment(shift.assignments[i].id)"
                                             [matTooltip]="shift.assignments[i].isConfirmed ? 'Confirmed - Click to unconfirm' : 'Pending - Click to confirm'">
-                                            <mat-icon class="icon-size-4"
+                                            <mat-icon
+                                              class="icon-size-4"
                                               [svgIcon]="shift.assignments[i].isConfirmed ? 'heroicons_outline:check-circle' : 'heroicons_outline:question-mark-circle'">
                                             </mat-icon>
                                           </button>
                                           <!-- Assign helper button -->
-                                          <button mat-icon-button class="text-green-600 hover:text-green-700" (click)="showCandidatesForAssignment(shift, 'helper', i)"
+                                          <button
+                                            mat-icon-button
+                                            class="text-green-600 hover:text-green-700"
+                                            (click)="showCandidatesForAssignment(shift, 'helper', i)"
                                             [matTooltip]="('AssignHelper' | translate) + ' ' + (i + 1)">
-                                            <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
+                                            <mat-icon
+                                              class="icon-size-4"
+                                              [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
                                           </button>
                                         </div>
                                       </div>
@@ -274,9 +337,14 @@
                                         </div>
                                         <div class="flex items-center ml-2">
                                           <!-- Assign helper button -->
-                                          <button mat-icon-button class="text-green-600 hover:text-green-700" (click)="showCandidatesForAssignment(shift, 'helper', i)"
+                                          <button
+                                            mat-icon-button
+                                            class="text-green-600 hover:text-green-700"
+                                            (click)="showCandidatesForAssignment(shift, 'helper', i)"
                                             [matTooltip]="('AssignHelper' | translate) + ' ' + (i + 1)">
-                                            <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
+                                            <mat-icon
+                                              class="icon-size-4"
+                                              [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
                                           </button>
                                         </div>
                                       </div>
@@ -294,19 +362,37 @@
                           <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex flex-row space-x-1">
                               <!-- Add helper slot -->
-                              <button mat-icon-button class="text-green-600 hover:text-green-700" (click)="addHelperSlot(shift)" [matTooltip]="'AddHelperSlot' | translate">
-                                <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                              <button
+                                mat-icon-button
+                                class="text-green-600 hover:text-green-700"
+                                (click)="addHelperSlot(shift)"
+                                [matTooltip]="'AddHelperSlot' | translate">
+                                <mat-icon
+                                  class="icon-size-4"
+                                  [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                               </button>
                               <!-- Remove helper slot -->
-                              <button mat-icon-button class="text-orange-600 hover:text-orange-700" (click)="removeHelperSlot(shift)"
-                                [matTooltip]="'RemoveHelperSlot' | translate" [disabled]="shift.helpersNeeded <= 0">
-                                <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:minus'"></mat-icon>
+                              <button
+                                mat-icon-button
+                                class="text-orange-600 hover:text-orange-700"
+                                (click)="removeHelperSlot(shift)"
+                                [matTooltip]="'RemoveHelperSlot' | translate"
+                                [disabled]="shift.helpersNeeded <= 0">
+                                <mat-icon
+                                  class="icon-size-4"
+                                  [svgIcon]="'heroicons_outline:minus'"></mat-icon>
                               </button>
                               <!-- Divider -->
                               <div class="border-l border-gray-300 mx-1 h-6"></div>
                               <!-- Standard actions -->
-                              <button mat-icon-button class="text-red-600 hover:text-red-700" (click)="deleteShift(shift)" [matTooltip]="'DeleteShift' | translate">
-                                <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                              <button
+                                mat-icon-button
+                                class="text-red-600 hover:text-red-700"
+                                (click)="deleteShift(shift)"
+                                [matTooltip]="'DeleteShift' | translate">
+                                <mat-icon
+                                  class="icon-size-4"
+                                  [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                               </button>
                             </div>
                           </td>
@@ -316,8 +402,14 @@
                     <!-- Add new shift row -->
                     <tbody>
                       <tr class="bg-gray-50 dark:bg-gray-800/50">
-                        <td [attr.colspan]="5 + maxHelpersNeeded + 1" class="px-6 py-3">
-                          <button mat-stroked-button [color]="'primary'" (click)="createShift(shiftGroup)" class="w-full">
+                        <td
+                          [attr.colspan]="5 + maxHelpersNeeded + 1"
+                          class="px-6 py-3">
+                          <button
+                            mat-stroked-button
+                            [color]="'primary'"
+                            (click)="createShift(shiftGroup)"
+                            class="w-full">
                             <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                             <span class="ml-2">{{ 'AddNewShift' | translate }}</span>
                           </button>
@@ -332,13 +424,18 @@
         } @else {
           <div class="bg-card shadow rounded-2xl p-16 text-center">
             <div class="mb-8">
-              <mat-icon class="icon-size-24 text-gray-300 dark:text-gray-600" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+              <mat-icon
+                class="icon-size-24 text-gray-300 dark:text-gray-600"
+                [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
             </div>
             <div class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{{ 'NoShiftsPlannedYet' | translate }}</div>
             <div class="text-lg text-secondary mb-8">
               {{ 'NoShiftsDescription' | translate }}
             </div>
-            <button mat-flat-button [color]="'primary'" (click)="createShift()">
+            <button
+              mat-flat-button
+              [color]="'primary'"
+              (click)="createShift()">
               <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
               <span class="ml-2">{{ 'AddNewShift' | translate }}</span>
             </button>
@@ -346,7 +443,6 @@
         }
         <!-- No shifts -->
       }
-
     </div>
 
     <!-- Candidate Selection Overlay -->
@@ -358,183 +454,217 @@
               <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
                 {{ 'Select' | translate }} {{ currentAssignment?.role === 'responsible' ? ('Responsible' | translate) : ('Helper' | translate) }}
               </h3>
-              <button mat-icon-button (click)="closeCandidateSelection()">
+              <button
+                mat-icon-button
+                (click)="closeCandidateSelection()">
                 <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
               </button>
             </div>
             <div class="relative">
-              <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
-              <input type="text" [(ngModel)]="searchString" [placeholder]="'SearchParticipants' | translate"
-                class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
-              </div>
-            </div>
-            <div class="max-h-96 overflow-y-auto">
-              <!-- Remove current assignment option -->
-              @if (getCurrentAssignedParticipant(); as currentAssigned) {
-                <div class="border-b-2 border-gray-300 dark:border-gray-600">
-                  <div class="px-6 py-3 bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800">
-                    <div class="text-sm font-semibold text-red-800 dark:text-red-200 flex items-center">
-                      <mat-icon class="icon-size-4 mr-2 text-red-600" [svgIcon]="'heroicons_outline:user-minus'"></mat-icon>
-                      {{ 'CurrentAssignment' | translate }}
-                    </div>
-                  </div>
-                  <div class="px-6 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer border-b border-gray-100 dark:border-gray-600" (click)="selectCandidate(null)">
-                    <div class="flex items-center justify-between">
-                      <div class="flex-1">
-                        <div class="text-lg font-medium text-red-600 dark:text-red-400">
-                          {{ 'RemoveAssignment' | translate }}: {{currentAssigned.participant}}
-                        </div>
-                        @if (currentAssigned.email) {
-                          <div class="mt-0.5 text-sm text-red-500 dark:text-red-400">
-                            {{currentAssigned.email}}
-                          </div>
-                        }
-                      </div>
-                      <mat-icon class="text-red-400" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                    </div>
-                  </div>
-                </div>
-              }
-              @if (filteredCandidates.length === 0 && !searchString.trim()) {
-                <div class="p-6 text-center text-gray-500 dark:text-gray-400">
-                  {{ 'NoAvailableCandidates' | translate }}
-                </div>
-              }
-              @if (filteredCandidates.length === 0 && searchString.trim()) {
-                <div class="p-6 text-center text-gray-500 dark:text-gray-400">
-                  {{ 'NoParticipantsFound' | translate }} "{{searchString}}"
-                </div>
-              }
-              <!-- Candidates who prefer this time -->
-              @if (candidatesWhoPreferTime.length > 0) {
-                <div>
-                  <div class="px-6 py-3 bg-green-50 dark:bg-green-900/20 border-b border-green-200 dark:border-green-800">
-                    <div class="text-sm font-semibold text-green-800 dark:text-green-200 flex items-center">
-                      <mat-icon class="icon-size-4 mr-2 text-green-600" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
-                      {{ 'PrefersThisTime' | translate }} ({{candidatesWhoPreferTime.length}})
-                    </div>
-                  </div>
-                  @for (candidate of candidatesWhoPreferTime; track candidate) {
-                    <div class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600"
-                      (click)="selectCandidate(candidate)">
-                      <div class="flex items-center justify-between">
-                        <div>
-                          <div>
-                            <div class="text-lg font-medium ">{{candidate.firstName}} {{candidate.lastName}}</div>
-                            @if (candidate.email) {
-                              <div class="mt-0.5 line-clamp-2 text-secondary">{{candidate.email}}</div>
-                            }
-                          </div>
-                        </div>
-                        <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
-                      </div>
-                    </div>
-                  }
-                </div>
-              }
-              <!-- Candidates who don't prefer this time -->
-              @if (candidatesWhoDoNotPreferTime.length > 0) {
-                <div>
-                  <div class="px-6 py-3 bg-orange-50 dark:bg-orange-900/20 border-b border-orange-200 dark:border-orange-800">
-                    <div class="text-sm font-semibold text-orange-800 dark:text-orange-200 flex items-center">
-                      <mat-icon class="icon-size-4 mr-2 text-orange-600" [svgIcon]="'heroicons_outline:exclamation-triangle'"></mat-icon>
-                      {{ 'DoesNotPreferThisTime' | translate }} ({{candidatesWhoDoNotPreferTime.length}})
-                    </div>
-                  </div>
-                  @for (candidate of candidatesWhoDoNotPreferTime; track candidate) {
-                    <div
-                      class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0" (click)="selectCandidate(candidate)">
-                      <div class="flex items-center justify-between">
-                        <div>
-                          <div>
-                            <div class="text-lg font-medium ">{{candidate.firstName}} {{candidate.lastName}}</div>
-                            @if (candidate.email) {
-                              <div class="mt-0.5 line-clamp-2 text-secondary">{{candidate.email}}</div>
-                            }
-                          </div>
-                        </div>
-                        <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
-                      </div>
-                    </div>
-                  }
-                </div>
-              }
-            </div>
-            <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-600">
-              <button mat-button (click)="closeCandidateSelection()" class="w-full">
-                {{ 'Cancel' | translate }}
-              </button>
+              <mat-icon
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
+              <input
+                type="text"
+                [(ngModel)]="searchString"
+                [placeholder]="'SearchParticipants' | translate"
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400" />
             </div>
           </div>
-        </div>
-      }
-
-      <!-- Preference Selection Overlay -->
-      @if (showPreferenceSelection) {
-        <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-          <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4">
-            <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-600">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                  {{ 'SelectTimePreference' | translate }}
-                </h3>
-                <button mat-icon-button (click)="closePreferenceSelection()">
-                  <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
-                </button>
-              </div>
-              <div class="relative">
-                <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
-                <input type="text" [(ngModel)]="preferenceSearchString" [placeholder]="'SearchPreferences' | translate"
-                  class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
+          <div class="max-h-96 overflow-y-auto">
+            <!-- Remove current assignment option -->
+            @if (getCurrentAssignedParticipant(); as currentAssigned) {
+              <div class="border-b-2 border-gray-300 dark:border-gray-600">
+                <div class="px-6 py-3 bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800">
+                  <div class="text-sm font-semibold text-red-800 dark:text-red-200 flex items-center">
+                    <mat-icon
+                      class="icon-size-4 mr-2 text-red-600"
+                      [svgIcon]="'heroicons_outline:user-minus'"></mat-icon>
+                    {{ 'CurrentAssignment' | translate }}
+                  </div>
                 </div>
-              </div>
-              <div class="max-h-96 overflow-y-auto">
-                <!-- No Preference Option -->
-                <div class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600" (click)="selectPreference(null)">
+                <div
+                  class="px-6 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer border-b border-gray-100 dark:border-gray-600"
+                  (click)="selectCandidate(null)">
                   <div class="flex items-center justify-between">
-                    <div>
-                      <div class="text-sm font-medium text-gray-400 italic">
-                        {{ 'NoPreference' | translate }}
-                      </div>
+                    <div class="flex-1">
+                      <div class="text-lg font-medium text-red-600 dark:text-red-400">{{ 'RemoveAssignment' | translate }}: {{ currentAssigned.participant }}</div>
+                      @if (currentAssigned.email) {
+                        <div class="mt-0.5 text-sm text-red-500 dark:text-red-400">
+                          {{ currentAssigned.email }}
+                        </div>
+                      }
                     </div>
-                    <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
+                    <mat-icon
+                      class="text-red-400"
+                      [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                   </div>
                 </div>
-                <!-- Empty state messages -->
-                @if (filteredRegistrables.length === 0 && !preferenceSearchString.trim()) {
-                  <div class="p-6 text-center text-gray-500 dark:text-gray-400">
-                    {{ 'NoAvailablePreferences' | translate }}
+              </div>
+            }
+            @if (filteredCandidates.length === 0 && !searchString.trim()) {
+              <div class="p-6 text-center text-gray-500 dark:text-gray-400">
+                {{ 'NoAvailableCandidates' | translate }}
+              </div>
+            }
+            @if (filteredCandidates.length === 0 && searchString.trim()) {
+              <div class="p-6 text-center text-gray-500 dark:text-gray-400">{{ 'NoParticipantsFound' | translate }} "{{ searchString }}"</div>
+            }
+            <!-- Candidates who prefer this time -->
+            @if (candidatesWhoPreferTime.length > 0) {
+              <div>
+                <div class="px-6 py-3 bg-green-50 dark:bg-green-900/20 border-b border-green-200 dark:border-green-800">
+                  <div class="text-sm font-semibold text-green-800 dark:text-green-200 flex items-center">
+                    <mat-icon
+                      class="icon-size-4 mr-2 text-green-600"
+                      [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                    {{ 'PrefersThisTime' | translate }} ({{ candidatesWhoPreferTime.length }})
                   </div>
-                }
-                @if (filteredRegistrables.length === 0 && preferenceSearchString.trim()) {
-                  <div class="p-6 text-center text-gray-500 dark:text-gray-400">
-                    {{ 'NoPreferencesFound' | translate }} "{{preferenceSearchString}}"
-                  </div>
-                }
-                <!-- Registrable Options -->
-                @for (registrable of filteredRegistrables; track registrable) {
+                </div>
+                @for (candidate of candidatesWhoPreferTime; track candidate) {
                   <div
-                    class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0"
-                    (click)="selectPreference(registrable.id)">
+                    class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600"
+                    (click)="selectCandidate(candidate)">
                     <div class="flex items-center justify-between">
                       <div>
-                        <div class="text-lg font-medium ">{{ registrable.name }}</div>
-                        <div class="mt-0.5 line-clamp-2 text-secondary">{{ registrable.nameSecondary }}</div>
+                        <div>
+                          <div class="text-lg font-medium">{{ candidate.firstName }} {{ candidate.lastName }}</div>
+                          @if (candidate.email) {
+                            <div class="mt-0.5 line-clamp-2 text-secondary">{{ candidate.email }}</div>
+                          }
+                        </div>
                       </div>
-                      <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
+                      <mat-icon
+                        class="text-gray-400"
+                        [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
                     </div>
                   </div>
                 }
               </div>
-              <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-600">
-                <button mat-button (click)="closePreferenceSelection()" class="w-full">
-                  {{ 'Cancel' | translate }}
-                </button>
+            }
+            <!-- Candidates who don't prefer this time -->
+            @if (candidatesWhoDoNotPreferTime.length > 0) {
+              <div>
+                <div class="px-6 py-3 bg-orange-50 dark:bg-orange-900/20 border-b border-orange-200 dark:border-orange-800">
+                  <div class="text-sm font-semibold text-orange-800 dark:text-orange-200 flex items-center">
+                    <mat-icon
+                      class="icon-size-4 mr-2 text-orange-600"
+                      [svgIcon]="'heroicons_outline:exclamation-triangle'"></mat-icon>
+                    {{ 'DoesNotPreferThisTime' | translate }} ({{ candidatesWhoDoNotPreferTime.length }})
+                  </div>
+                </div>
+                @for (candidate of candidatesWhoDoNotPreferTime; track candidate) {
+                  <div
+                    class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0"
+                    (click)="selectCandidate(candidate)">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <div>
+                          <div class="text-lg font-medium">{{ candidate.firstName }} {{ candidate.lastName }}</div>
+                          @if (candidate.email) {
+                            <div class="mt-0.5 line-clamp-2 text-secondary">{{ candidate.email }}</div>
+                          }
+                        </div>
+                      </div>
+                      <mat-icon
+                        class="text-gray-400"
+                        [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
+                    </div>
+                  </div>
+                }
               </div>
+            }
+          </div>
+          <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-600">
+            <button
+              mat-button
+              (click)="closeCandidateSelection()"
+              class="w-full">
+              {{ 'Cancel' | translate }}
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Preference Selection Overlay -->
+    @if (showPreferenceSelection) {
+      <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4">
+          <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                {{ 'SelectTimePreference' | translate }}
+              </h3>
+              <button
+                mat-icon-button
+                (click)="closePreferenceSelection()">
+                <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+              </button>
+            </div>
+            <div class="relative">
+              <mat-icon
+                class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
+              <input
+                type="text"
+                [(ngModel)]="preferenceSearchString"
+                [placeholder]="'SearchPreferences' | translate"
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400" />
             </div>
           </div>
-        }
-
+          <div class="max-h-96 overflow-y-auto">
+            <!-- No Preference Option -->
+            <div
+              class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600"
+              (click)="selectPreference(null)">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="text-sm font-medium text-gray-400 italic">
+                    {{ 'NoPreference' | translate }}
+                  </div>
+                </div>
+                <mat-icon
+                  class="text-gray-400"
+                  [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
+              </div>
+            </div>
+            <!-- Empty state messages -->
+            @if (filteredRegistrables.length === 0 && !preferenceSearchString.trim()) {
+              <div class="p-6 text-center text-gray-500 dark:text-gray-400">
+                {{ 'NoAvailablePreferences' | translate }}
+              </div>
+            }
+            @if (filteredRegistrables.length === 0 && preferenceSearchString.trim()) {
+              <div class="p-6 text-center text-gray-500 dark:text-gray-400">{{ 'NoPreferencesFound' | translate }} "{{ preferenceSearchString }}"</div>
+            }
+            <!-- Registrable Options -->
+            @for (registrable of filteredRegistrables; track registrable) {
+              <div
+                class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0"
+                (click)="selectPreference(registrable.id)">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <div class="text-lg font-medium">{{ registrable.name }}</div>
+                    <div class="mt-0.5 line-clamp-2 text-secondary">{{ registrable.nameSecondary }}</div>
+                  </div>
+                  <mat-icon
+                    class="text-gray-400"
+                    [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
+                </div>
+              </div>
+            }
+          </div>
+          <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-600">
+            <button
+              mat-button
+              (click)="closePreferenceSelection()"
+              class="w-full">
+              {{ 'Cancel' | translate }}
+            </button>
+          </div>
+        </div>
       </div>
-
-    </div>
+    }
+  </div>
+</div>
