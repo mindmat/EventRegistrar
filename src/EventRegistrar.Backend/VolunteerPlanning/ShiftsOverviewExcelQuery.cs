@@ -14,8 +14,18 @@ public class ShiftsOverviewExcelQuery : IRequest<DownloadResult>, IEventBoundReq
 public class ShiftsOverviewExcelQueryHandler(ReadModelReader readModelReader)
     : IRequestHandler<ShiftsOverviewExcelQuery, DownloadResult>
 {
+    // Colors matching the Angular view (Tailwind light-mode palette)
     private static readonly XLColor HeaderBackground = XLColor.FromHtml("#333333");
-    private static readonly XLColor EmptyHelperBackground = XLColor.FromHtml("#00FF00");
+    private static readonly XLColor WhenBackground = XLColor.FromHtml("#DBEAFE");              // blue-100
+    private static readonly XLColor PostBackground = XLColor.FromHtml("#F3F4F6");              // gray-100
+    private static readonly XLColor ResponsibleBackground = XLColor.FromHtml("#F3E8FF");       // purple-100
+    private static readonly XLColor CancelledBackground = XLColor.FromHtml("#FEE2E2");         // red-100
+    private static readonly XLColor HelperConfirmedBackground = XLColor.FromHtml("#BBF7D0");   // green-200
+    private static readonly XLColor HelperUnconfirmedBackground = XLColor.FromHtml("#F0FDF4"); // green-50
+    private static readonly XLColor HelperUnconfirmedFontColor = XLColor.FromHtml("#9CA3AF");  // gray-400
+    private static readonly XLColor HelperUnassignedBackground = XLColor.FromHtml("#F0FDF4");  // green-50
+
+    private const double DataRowHeight = 30;
 
     public async Task<DownloadResult> Handle(ShiftsOverviewExcelQuery query, CancellationToken cancellationToken)
     {
@@ -25,10 +35,6 @@ public class ShiftsOverviewExcelQueryHandler(ReadModelReader readModelReader)
                                                                                          cancellationToken);
 
         var groups = shiftGroups.ToList();
-        var maxHelpers = groups.SelectMany(g => g.Shifts)
-                               .Select(s => s.Assignments.Count)
-                               .DefaultIfEmpty(0)
-                               .Max();
 
         LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine("DejaVu Sans");
         using var workbook = new XLWorkbook();
@@ -44,6 +50,11 @@ public class ShiftsOverviewExcelQueryHandler(ReadModelReader readModelReader)
 
         foreach (var group in groups)
         {
+            var groupMaxHelpers = group.Shifts
+                                       .Select(s => Math.Max(s.Assignments.Count, s.HelpersNeeded))
+                                       .DefaultIfEmpty(0)
+                                       .Max();
+
             // Group header (e.g. "FRIDAY@WORKSHOP (LeCap)")
             var dayName = group.Day.ToString("dddd").ToUpperInvariant();
             var groupTitle = string.IsNullOrEmpty(group.Location)
@@ -52,21 +63,19 @@ public class ShiftsOverviewExcelQueryHandler(ReadModelReader readModelReader)
             ws.Cell(row, 1).Value = groupTitle;
             ws.Cell(row, 1).Style.Font.FontSize = 18;
             ws.Cell(row, 1).Style.Font.Bold = true;
-            ws.Range(row, 1, row, 5 + maxHelpers).Merge();
+            ws.Range(row, 1, row, 5 + groupMaxHelpers).Merge();
             row += 3;
 
             // Column headers
-            WriteHeaderRow(ws, row, maxHelpers);
+            WriteHeaderRow(ws, row, groupMaxHelpers);
             row++;
 
             // Data rows
-            var colorIndex = 0;
             foreach (var shift in group.Shifts)
             {
-                var rowColor = colorIndex % 2 == 0 ? XLColor.Cyan : XLColor.Magenta;
-                WriteDataRow(ws, row, shift, maxHelpers, rowColor);
+                WriteDataRow(ws, row, shift, groupMaxHelpers);
+                ws.Row(row).Height = DataRowHeight;
                 row++;
-                colorIndex++;
             }
 
             row += 2;
@@ -102,6 +111,7 @@ public class ShiftsOverviewExcelQueryHandler(ReadModelReader readModelReader)
             cell.Style.Font.Bold = true;
             cell.Style.Fill.BackgroundColor = HeaderBackground;
             cell.Style.Font.FontColor = XLColor.White;
+            cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
         }
 
         for (var h = 0; h < maxHelpers; h++)
@@ -111,21 +121,36 @@ public class ShiftsOverviewExcelQueryHandler(ReadModelReader readModelReader)
             cell.Style.Font.Bold = true;
             cell.Style.Fill.BackgroundColor = HeaderBackground;
             cell.Style.Font.FontColor = XLColor.White;
+            cell.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
         }
     }
 
-    private static void WriteDataRow(IXLWorksheet ws, int row, ShiftDisplayItem shift, int maxHelpers, XLColor rowColor)
+    private static void WriteDataRow(IXLWorksheet ws,
+                                     int row,
+                                     ShiftDisplayItem shift,
+                                     int maxHelpers)
     {
-        // Col A: Start time
+        // Col A-C: Time (blue-100, matching bg-blue-100 in the view)
         ws.Cell(row, 1).Value = shift.StartTime.LocalDateTime.ToString("HH:mm");
-        // Col B: Separator
         ws.Cell(row, 2).Value = "-";
-        // Col C: End time
         ws.Cell(row, 3).Value = shift.EndTime.LocalDateTime.ToString("HH:mm");
-        // Col D: Post
+        for (var c = 1; c <= 3; c++)
+        {
+            ws.Cell(row, c).Style.Fill.BackgroundColor = WhenBackground;
+        }
+
+        // Vertical center alignment for all columns in this row
+        for (var c = 1; c <= 5 + maxHelpers; c++)
+        {
+            ws.Cell(row, c).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+        }
+
+        // Col D: Post (gray-100, matching bg-gray-100 in the view)
         var postParts = new[] { shift.Name, shift.Location }.Where(p => !string.IsNullOrEmpty(p));
         ws.Cell(row, 4).Value = string.Join(" / ", postParts);
-        // Col E: Responsible
+        ws.Cell(row, 4).Style.Fill.BackgroundColor = PostBackground;
+
+        // Col E: Responsible (purple-100 or red-100 if cancelled)
         var responsible = shift.ParticipantResponsible;
         if (shift.IsParticipantResponsibleCancelled && responsible != null)
         {
@@ -135,27 +160,67 @@ public class ShiftsOverviewExcelQueryHandler(ReadModelReader readModelReader)
         ws.Cell(row, 5).Value = responsible;
         ws.Cell(row, 5).Style.Font.Bold = true;
 
-        // Apply row color to fixed columns
-        for (var c = 1; c <= 5; c++)
+        if (shift.ResponsibleRegistrationId != null)
         {
-            ws.Cell(row, c).Style.Fill.BackgroundColor = rowColor;
+            ws.Cell(row, 5).Style.Fill.BackgroundColor = shift.IsParticipantResponsibleCancelled
+                                                             ? CancelledBackground
+                                                             : ResponsibleBackground;
+            if (shift.IsParticipantResponsibleCancelled)
+            {
+                ws.Cell(row, 5).Style.Font.FontColor = XLColor.DarkRed;
+                ws.Cell(row, 5).Style.Font.Strikethrough = true;
+            }
         }
 
         // Helper columns
         for (var h = 0; h < maxHelpers; h++)
         {
             var cell = ws.Cell(row, 6 + h);
+
+            if (h >= shift.HelpersNeeded)
+            {
+                // Beyond needed slots: no color (unassigned, not needed)
+                cell.Value = "";
+                continue;
+            }
+
             if (h < shift.Assignments.Count)
             {
                 var assignment = shift.Assignments.ElementAt(h);
-                var cancelledSuffix = assignment.IsRegistrationCancelled ? " (CANCELLED)" : "";
-                cell.Value = $"{assignment.Participant}{cancelledSuffix}";
-                cell.Style.Fill.BackgroundColor = rowColor;
+                if (assignment.RegistrationId != Guid.Empty)
+                {
+                    var cancelledSuffix = assignment.IsRegistrationCancelled ? " (CANCELLED)" : "";
+                    cell.Value = $"{assignment.Participant}{cancelledSuffix}";
+
+                    if (assignment.IsRegistrationCancelled)
+                    {
+                        cell.Style.Fill.BackgroundColor = CancelledBackground;
+                        cell.Style.Font.FontColor = XLColor.DarkRed;
+                        cell.Style.Font.Strikethrough = true;
+                    }
+                    else if (assignment.IsConfirmed)
+                    {
+                        cell.Style.Fill.BackgroundColor = HelperConfirmedBackground;
+                    }
+                    else
+                    {
+                        cell.Value = $"{assignment.Participant} ?";
+                        cell.Style.Fill.BackgroundColor = HelperUnconfirmedBackground;
+                        cell.Style.Font.FontColor = HelperUnconfirmedFontColor;
+                    }
+                }
+                else
+                {
+                    // Slot exists but no one assigned: light green-50
+                    cell.Value = "";
+                    cell.Style.Fill.BackgroundColor = HelperUnassignedBackground;
+                }
             }
             else
             {
+                // Open slot needing a helper: light green-50
                 cell.Value = "";
-                cell.Style.Fill.BackgroundColor = EmptyHelperBackground;
+                cell.Style.Fill.BackgroundColor = HelperUnassignedBackground;
             }
         }
     }
