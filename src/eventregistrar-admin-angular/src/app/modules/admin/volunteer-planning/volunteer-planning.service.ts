@@ -216,7 +216,8 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     {
         const url = this.baseUrl + '/api/ShiftsOverviewExcelQuery';
         const formatXlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-        this.http.post(url, { eventId: this.eventService.selectedId }, { responseType: 'blob', headers: { 'Accept': formatXlsx } }).subscribe((file: Blob) =>
+        const timeZoneId = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        this.http.post(url, { eventId: this.eventService.selectedId, timeZoneId }, { responseType: 'blob', headers: { 'Accept': formatXlsx } }).subscribe((file: Blob) =>
         {
             const blob = new Blob([file], { type: formatXlsx });
             const anchor = window.document.createElement('a');

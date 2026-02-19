@@ -9,6 +9,7 @@ namespace EventRegistrar.Backend.VolunteerPlanning;
 public class ShiftsOverviewExcelQuery : IRequest<DownloadResult>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
+    public string? TimeZoneId { get; set; }
 }
 
 public class ShiftsOverviewExcelQueryHandler(ReadModelReader readModelReader)
@@ -35,6 +36,7 @@ public class ShiftsOverviewExcelQueryHandler(ReadModelReader readModelReader)
                                                                                          cancellationToken);
 
         var groups = shiftGroups.ToList();
+        var timeZone = GetTimeZone(query.TimeZoneId);
 
         LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine("DejaVu Sans");
         using var workbook = new XLWorkbook();
@@ -73,7 +75,7 @@ public class ShiftsOverviewExcelQueryHandler(ReadModelReader readModelReader)
             // Data rows
             foreach (var shift in group.Shifts)
             {
-                WriteDataRow(ws, row, shift, groupMaxHelpers);
+                WriteDataRow(ws, row, shift, groupMaxHelpers, timeZone);
                 ws.Row(row).Height = DataRowHeight;
                 row++;
             }
@@ -125,15 +127,30 @@ public class ShiftsOverviewExcelQueryHandler(ReadModelReader readModelReader)
         }
     }
 
+    private static TimeZoneInfo GetTimeZone(string? timeZoneId)
+    {
+        if (!string.IsNullOrEmpty(timeZoneId))
+        {
+            try
+            {
+                return TimeZoneInfo.FindSystemTimeZoneById(timeZoneId);
+            }
+            catch (TimeZoneNotFoundException) { }
+        }
+
+        return TimeZoneInfo.Local;
+    }
+
     private static void WriteDataRow(IXLWorksheet ws,
                                      int row,
                                      ShiftDisplayItem shift,
-                                     int maxHelpers)
+                                     int maxHelpers,
+                                     TimeZoneInfo timeZone)
     {
         // Col A-C: Time (blue-100, matching bg-blue-100 in the view)
-        ws.Cell(row, 1).Value = shift.StartTime.LocalDateTime.ToString("HH:mm");
+        ws.Cell(row, 1).Value = TimeZoneInfo.ConvertTime(shift.StartTime, timeZone).ToString("HH:mm");
         ws.Cell(row, 2).Value = "-";
-        ws.Cell(row, 3).Value = shift.EndTime.LocalDateTime.ToString("HH:mm");
+        ws.Cell(row, 3).Value = TimeZoneInfo.ConvertTime(shift.EndTime, timeZone).ToString("HH:mm");
         for (var c = 1; c <= 3; c++)
         {
             ws.Cell(row, c).Style.Fill.BackgroundColor = WhenBackground;
