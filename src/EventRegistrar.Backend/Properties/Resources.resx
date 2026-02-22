@@ -151,11 +151,17 @@
   <data name="Actions" xml:space="preserve">
     <value>Aktionen</value>
   </data>
+  <data name="ActivateAutomaticPromotionCommand" xml:space="preserve">
+    <value>Automatisches Nachrücken aktiviert für {{RegistrableId}}</value>
+  </data>
   <data name="Add" xml:space="preserve">
     <value>Hinzufügen</value>
   </data>
   <data name="AddHelperSlot" xml:space="preserve">
     <value>Helfer erhöhen</value>
+  </data>
+  <data name="AddHelperSlotCommand" xml:space="preserve">
+    <value>Helferplatz hinzugefügt für Schicht {{ShiftId}}</value>
   </data>
   <data name="AddIcs" xml:space="preserve">
     <value>ics hinzufügen</value>
@@ -163,8 +169,14 @@
   <data name="AddIcsAsAttachment" xml:space="preserve">
     <value>ics als Anhang ans Mail anhängen</value>
   </data>
+  <data name="AddIcsToMailCommand" xml:space="preserve">
+    <value>ICS-Anhang hinzugefügt an Mail {{MailId}}</value>
+  </data>
   <data name="AddImap" xml:space="preserve">
     <value>Mail-Import hinzufügen</value>
+  </data>
+  <data name="AddIndividualReductionCommand" xml:space="preserve">
+    <value>Individuelle Reduktion hinzugefügt für Anmeldung {{RegistrationId}}, Betrag {{Amount}}, Grund: {{Reason}}</value>
   </data>
   <data name="AddLink" xml:space="preserve">
     <value>Neue Zuordnung</value>
@@ -183,6 +195,9 @@
   </data>
   <data name="AddScreenshot" xml:space="preserve">
     <value>Screenshot hinzufügen</value>
+  </data>
+  <data name="AddSpotCommand" xml:space="preserve">
+    <value>Platz hinzugefügt für Anmeldung {{RegistrationId}} in {{RegistrableId}}</value>
   </data>
   <data name="AddTrack" xml:space="preserve">
     <value>Neuen Track erstellen</value>
@@ -229,14 +244,26 @@
   <data name="AssignIncoming" xml:space="preserve">
     <value>Zahlungseingang zuordnen</value>
   </data>
+  <data name="AssignIncomingPaymentCommand" xml:space="preserve">
+    <value>Eingehende Zahlung {{PaymentIncomingId}} zugewiesen an Anmeldung {{RegistrationId}}, Betrag {{Amount}}</value>
+  </data>
   <data name="AssignOutgoing" xml:space="preserve">
     <value>Zahlungsausgang zuordnen</value>
+  </data>
+  <data name="AssignOutgoingPaymentCommand" xml:space="preserve">
+    <value>Ausgehende Zahlung {{OutgoingPaymentId}} zugewiesen, Betrag {{Amount}}</value>
   </data>
   <data name="AssignPartners_Tooltip" xml:space="preserve">
     <value>{{UnmatchedCount}} Anmeldungen ohne zugewiesenen Partner</value>
   </data>
+  <data name="AssignRepaymentCommand" xml:space="preserve">
+    <value>Rückzahlung zugewiesen: eingehend {{IncomingPaymentId}} an ausgehend {{OutgoingPaymentId}}, Betrag {{Amount}}</value>
+  </data>
   <data name="AssignResponsible" xml:space="preserve">
     <value>Verantwortliche:n zuordnen</value>
+  </data>
+  <data name="AssignToShiftCommand" xml:space="preserve">
+    <value>Anmeldung {{RegistrationId}} der Schicht {{ShiftId}} zugewiesen</value>
   </data>
   <data name="Audiences" xml:space="preserve">
     <value>Adressaten</value>
@@ -286,6 +313,9 @@
   <data name="CancelRegistration" xml:space="preserve">
     <value>Anmeldung stornieren</value>
   </data>
+  <data name="CancelRegistrationCommand" xml:space="preserve">
+    <value>Anmeldung {{RegistrationId}} storniert</value>
+  </data>
   <data name="Change" xml:space="preserve">
     <value>Ändern</value>
   </data>
@@ -294,6 +324,9 @@
   </data>
   <data name="ChangeName" xml:space="preserve">
     <value>Name ändern</value>
+  </data>
+  <data name="ChangeParticipantNameCommand" xml:space="preserve">
+    <value>Teilnehmername geändert für Anmeldung {{RegistrationId}}: {{FirstName}} {{LastName}}</value>
   </data>
   <data name="ChangeRegistrableIcs" xml:space="preserve">
     <value>Kalender bearbeiten</value>
@@ -304,11 +337,29 @@
   <data name="ChangeTimePreference" xml:space="preserve">
     <value>Bevorzugte Zeit ändern</value>
   </data>
+  <data name="ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand" xml:space="preserve">
+    <value>Partner-Anmeldung {{RegistrationId}} zu Einzelanmeldung geändert</value>
+  </data>
+  <data name="CheckExternalMailConfigurationCommand" xml:space="preserve">
+    <value>Externe Mail-Konfiguration geprüft</value>
+  </data>
+  <data name="CheckIfRegistrationHasMultiplePartnersCommand" xml:space="preserve">
+    <value>Mehrfach-Partner-Prüfung für Anmeldung {{RegistrationId}}</value>
+  </data>
   <data name="CheckinListColumn" xml:space="preserve">
     <value>Spalte in Checkin-Liste</value>
   </data>
   <data name="ClickToUpload" xml:space="preserve">
     <value>Klicken zum Hochladen</value>
+  </data>
+  <data name="ComposeAndSendAutoMailCommand" xml:space="preserve">
+    <value>Automatisches Mail {{MailType}} gesendet an Anmeldung {{RegistrationId}}</value>
+  </data>
+  <data name="ComposeAndSendBulkMailCommand" xml:space="preserve">
+    <value>Massenmail {{BulkMailKey}} gesendet an Anmeldung {{RegistrationId}}</value>
+  </data>
+  <data name="ConfirmShiftAssignmentCommand" xml:space="preserve">
+    <value>Schichtzuweisung {{ShiftAssignmentId}} bestätigt</value>
   </data>
   <data name="ConnectionInterrupted" xml:space="preserve">
     <value>Verbindung unterbrochen</value>
@@ -343,14 +394,29 @@
   <data name="CreateAndAddIncomingPayment" xml:space="preserve">
     <value>Manuelle Zahlung erfassen...</value>
   </data>
+  <data name="CreateAndAssignIncomingPaymentCommand" xml:space="preserve">
+    <value>Manuelle Zahlung erstellt und zugewiesen an Anmeldung {{RegistrationId}}, Betrag {{Amount}}, {{DebitorName}}</value>
+  </data>
+  <data name="CreateAutoMailTemplateCommand" xml:space="preserve">
+    <value>Auto-Mail-Vorlage erstellt: {{Type}}, Sprache {{Language}}</value>
+  </data>
   <data name="CreateAutoMailTemplates" xml:space="preserve">
     <value>Mailvorlagen erstellen</value>
+  </data>
+  <data name="CreateBulkMailsCommand" xml:space="preserve">
+    <value>Massenmails erstellt für {{BulkMailKey}}</value>
+  </data>
+  <data name="CreateBulkMailTemplateCommand" xml:space="preserve">
+    <value>Massenmail-Vorlage erstellt: {{Key}}</value>
   </data>
   <data name="CreateIndividualReduction" xml:space="preserve">
     <value>Individuelle Reduktion erstellen</value>
   </data>
   <data name="CreateMail" xml:space="preserve">
     <value>Mail erstellen</value>
+  </data>
+  <data name="CreateShiftCommand" xml:space="preserve">
+    <value>Schicht erstellt: {{Location}}</value>
   </data>
   <data name="CreateSuccessorEvent" xml:space="preserve">
     <value>Nachfolge-Event erstellen</value>
@@ -364,6 +430,9 @@
   <data name="date" xml:space="preserve">
     <value>Datum</value>
   </data>
+  <data name="DeactivateAutomaticPromotionCommand" xml:space="preserve">
+    <value>Automatisches Nachrücken deaktiviert für {{RegistrableId}}</value>
+  </data>
   <data name="DebitorIban" xml:space="preserve">
     <value>Debitor IBAN</value>
   </data>
@@ -373,20 +442,41 @@
   <data name="DefragRegistrableCommand" xml:space="preserve">
     <value>Defragmentieren</value>
   </data>
+  <data name="DefragRegistrableCommand_Duplicate[1]" xml:space="preserve">
+    <value>Registrierbares {{RegistrableId}} defragmentiert</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Löschen</value>
   </data>
   <data name="DeleteAll" xml:space="preserve">
     <value>Alle löschen</value>
   </data>
+  <data name="DeleteBulkMailTemplateCommand" xml:space="preserve">
+    <value>Massenmail-Vorlage gelöscht: {{BulkMailKey}}</value>
+  </data>
+  <data name="DeleteMailsCommand" xml:space="preserve">
+    <value>Mails gelöscht</value>
+  </data>
   <data name="DeleteRegistrable" xml:space="preserve">
     <value>Track löschen</value>
+  </data>
+  <data name="DeleteRegistrableCommand" xml:space="preserve">
+    <value>Registrierbares {{RegistrableId}} gelöscht</value>
+  </data>
+  <data name="DeleteRegistrationFormCommand" xml:space="preserve">
+    <value>Anmeldeformular {{RegistrationFormId}} gelöscht</value>
   </data>
   <data name="DeleteShift" xml:space="preserve">
     <value>Schicht löschen</value>
   </data>
+  <data name="DeleteShiftCommand" xml:space="preserve">
+    <value>Schicht {{ShiftId}} gelöscht</value>
+  </data>
   <data name="DeleteTestData" xml:space="preserve">
     <value>Testdaten löschen</value>
+  </data>
+  <data name="DeleteTestDataCommand" xml:space="preserve">
+    <value>Testdaten gelöscht</value>
   </data>
   <data name="Deposits" xml:space="preserve">
     <value>Einzahlungen</value>
@@ -541,6 +631,9 @@
   <data name="FeedbackTitle" xml:space="preserve">
     <value>Feedback senden</value>
   </data>
+  <data name="FetchBankStatementsFileCommand" xml:space="preserve">
+    <value>Kontoauszüge abgerufen</value>
+  </data>
   <data name="FilterBySection" xml:space="preserve">
     <value>Nach Bereich filtern</value>
   </data>
@@ -552,6 +645,12 @@
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>Vorname</value>
+  </data>
+  <data name="FixInvalidAddressCommand" xml:space="preserve">
+    <value>E-Mail-Adresse korrigiert für Anmeldung {{RegistrationId}}: {{OldEmailAddress}} → {{NewEmailAddress}}</value>
+  </data>
+  <data name="FixMissingRoleCommand" xml:space="preserve">
+    <value>Fehlende Rolle korrigiert für Rohanmeldung {{RawRegistrationId}}: {{Role}}</value>
   </data>
   <data name="FixRawProcessing_Tooltip" xml:space="preserve">
     <value>{{ErrorCount}} Anmeldungen mit Verarbeitungsfehlern</value>
@@ -664,6 +763,9 @@
   <data name="Ignored" xml:space="preserve">
     <value>Ignorierte</value>
   </data>
+  <data name="IgnorePaymentCommand" xml:space="preserve">
+    <value>Zahlung {{PaymentId}} ignoriert</value>
+  </data>
   <data name="ImapConfigExplanation" xml:space="preserve">
     <value>IMAP-Postfächer konfigurieren, deren eingehende Mails fortlaufend importiert werden sollen.</value>
   </data>
@@ -682,11 +784,17 @@
   <data name="Import" xml:space="preserve">
     <value>Importieren</value>
   </data>
+  <data name="ImportMailsFromImapCommand" xml:space="preserve">
+    <value>Mails aus IMAP importiert</value>
+  </data>
   <data name="ImportMailsSince" xml:space="preserve">
     <value>Mails importieren ab</value>
   </data>
   <data name="ImportNewVersion" xml:space="preserve">
     <value>Neue Version importieren</value>
+  </data>
+  <data name="ImportRegistrationFormCommand" xml:space="preserve">
+    <value>Anmeldeformular importiert: {{FormExternalIdentifier}}</value>
   </data>
   <data name="IncludeWaitingList" xml:space="preserve">
     <value>inkl. Warteliste</value>
@@ -985,8 +1093,14 @@
   <data name="MappingType_HostingRequest_TravelByCar" xml:space="preserve">
     <value>Sucht Hosting - Reist mit Auto</value>
   </data>
+  <data name="MatchPartnerRegistrationsCommand" xml:space="preserve">
+    <value>Partner-Anmeldungen verknüpft: {{RegistrationId1}} und {{RegistrationId2}}</value>
+  </data>
   <data name="MatchPartners" xml:space="preserve">
     <value>Partner zuordnen</value>
+  </data>
+  <data name="MatchSingleSpotsCommand" xml:space="preserve">
+    <value>Einzelplätze verknüpft: Leader {{SpotId_Leader}} mit Follower {{SpotId_Follower}}</value>
   </data>
   <data name="MaxAllowedImbalance" xml:space="preserve">
     <value>Maximales Ungleichgewicht</value>
@@ -1041,6 +1155,9 @@
   </data>
   <data name="OnlyParticipantsOf" xml:space="preserve">
     <value>Nur an Teilnehmer:innen von</value>
+  </data>
+  <data name="OpenRegistrationCommand" xml:space="preserve">
+    <value>Anmeldung eröffnet</value>
   </data>
   <data name="OpenRegistrationDeleteTestData" xml:space="preserve">
     <value>Registrierung öffnen (inkl. Testdaten löschen)</value>
@@ -1216,6 +1333,9 @@
   <data name="Processed" xml:space="preserve">
     <value>Verarbeitet</value>
   </data>
+  <data name="ProcessFetchedBankStatementsFileCommand" xml:space="preserve">
+    <value>Abgerufene Kontoauszugsdatei {{RawBankStatementFileId}} verarbeitet</value>
+  </data>
   <data name="QrCodeGenerateError" xml:space="preserve">
     <value>QR-Code konnte nicht erstellt werden</value>
   </data>
@@ -1270,6 +1390,9 @@
   <data name="Recalculate" xml:space="preserve">
     <value>Neu berechnen</value>
   </data>
+  <data name="RecalculateAllPriceAndWaitingListCommand" xml:space="preserve">
+    <value>Alle Preise und Wartelisten neu berechnet</value>
+  </data>
   <data name="RecentlySentMailsStats" xml:space="preserve">
     <value>Zuletzt versendete Mails</value>
   </data>
@@ -1287,6 +1410,9 @@
   </data>
   <data name="RefundButtonText" xml:space="preserve">
     <value>{{ amount }} zurückbezahlen</value>
+  </data>
+  <data name="RefundDifferenceCommand" xml:space="preserve">
+    <value>Differenz erstattet für Anmeldung {{RegistrationId}}</value>
   </data>
   <data name="RegisteredAt" xml:space="preserve">
     <value>Angemeldet</value>
@@ -1337,6 +1463,12 @@
   <data name="ReleaseAll" xml:space="preserve">
     <value>Alle freigeben</value>
   </data>
+  <data name="ReleaseAllPendingMailsCommand" xml:space="preserve">
+    <value>Alle ausstehenden Mails freigegeben</value>
+  </data>
+  <data name="ReleaseBulkMailsCommand" xml:space="preserve">
+    <value>Massenmails freigegeben für {{BulkMailKey}}</value>
+  </data>
   <data name="Released" xml:space="preserve">
     <value>Freigegeben</value>
   </data>
@@ -1345,6 +1477,9 @@
   </data>
   <data name="ReleaseMails" xml:space="preserve">
     <value>Mails freigeben</value>
+  </data>
+  <data name="ReleaseMailsCommand" xml:space="preserve">
+    <value>Mails freigegeben</value>
   </data>
   <data name="Remarks" xml:space="preserve">
     <value>Bemerkungen</value>
@@ -1373,11 +1508,23 @@
   <data name="RemoveHelperSlot" xml:space="preserve">
     <value>Helfer reduzieren</value>
   </data>
+  <data name="RemoveHelperSlotCommand" xml:space="preserve">
+    <value>Helferplatz entfernt aus Schicht {{ShiftId}}</value>
+  </data>
+  <data name="RemoveIndividualReductionCommand" xml:space="preserve">
+    <value>Individuelle Reduktion {{ReductionId}} entfernt</value>
+  </data>
   <data name="RemoveLink" xml:space="preserve">
     <value>Zuordnung aufheben</value>
   </data>
   <data name="RemoveScreenshot" xml:space="preserve">
     <value>Screenshot entfernen</value>
+  </data>
+  <data name="RemoveSpotCommand" xml:space="preserve">
+    <value>Platz entfernt für Anmeldung {{RegistrationId}} aus {{RegistrableId}}</value>
+  </data>
+  <data name="RemoveUserFromEventCommand" xml:space="preserve">
+    <value>Benutzer {{UserId}} vom Event entfernt</value>
   </data>
   <data name="Repaid" xml:space="preserve">
     <value>Zurückbezahlt</value>
@@ -1388,11 +1535,41 @@
   <data name="ReprocessQuestionOption" xml:space="preserve">
     <value>Antwort neu importieren</value>
   </data>
+  <data name="ReprocessQuestionOptionCommand" xml:space="preserve">
+    <value>Frageoption {{QuestionOptionId}} erneut verarbeitet</value>
+  </data>
   <data name="RequestAccess" xml:space="preserve">
     <value>Zugriff beantragen</value>
   </data>
+  <data name="RequestLogDisplayItem_Exception" xml:space="preserve">
+    <value>Fehler</value>
+  </data>
+  <data name="RequestLogDisplayItem_ExecutionTimeInMilliseconds" xml:space="preserve">
+    <value>Ausführungszeit (ms)</value>
+  </data>
+  <data name="RequestLogDisplayItem_RequestJson" xml:space="preserve">
+    <value>Anfrageinhalt</value>
+  </data>
+  <data name="RequestLogDisplayItem_RequestTypeText" xml:space="preserve">
+    <value>Anfragetyp</value>
+  </data>
+  <data name="RequestLogDisplayItem_User" xml:space="preserve">
+    <value>Benutzer</value>
+  </data>
+  <data name="RequestLogDisplayItem_When" xml:space="preserve">
+    <value>Zeitpunkt</value>
+  </data>
+  <data name="RequestLogQuery" xml:space="preserve">
+    <value>Anfrage-Protokoll</value>
+  </data>
   <data name="Required" xml:space="preserve">
     <value>(erforderlich)</value>
+  </data>
+  <data name="ResendSentMailsWithoutStateCommand" xml:space="preserve">
+    <value>Gesendete Mails ohne Status erneut gesendet</value>
+  </data>
+  <data name="RespondToRequestCommand" xml:space="preserve">
+    <value>Zugriffsanfrage {{AccessToEventRequestId}} beantwortet: {{Response}}</value>
   </data>
   <data name="Responsible" xml:space="preserve">
     <value>Verantwortlich</value>
@@ -1408,6 +1585,27 @@
   </data>
   <data name="Save" xml:space="preserve">
     <value>Speichern</value>
+  </data>
+  <data name="SaveBankAccountConfigurationCommand" xml:space="preserve">
+    <value>Bankkonto-Konfiguration gespeichert</value>
+  </data>
+  <data name="SaveExternalMailConfigurationCommand" xml:space="preserve">
+    <value>Externe Mail-Konfiguration gespeichert</value>
+  </data>
+  <data name="SavePaymentFileCommand" xml:space="preserve">
+    <value>Zahlungsdatei importiert: {{Filename}}</value>
+  </data>
+  <data name="SavePricingCommand" xml:space="preserve">
+    <value>Preise gespeichert</value>
+  </data>
+  <data name="SaveRegistrableCommand" xml:space="preserve">
+    <value>Registrierbares gespeichert: {{Name}}</value>
+  </data>
+  <data name="SaveRegistrableIcsCommand" xml:space="preserve">
+    <value>ICS-Kalendereintrag gespeichert</value>
+  </data>
+  <data name="SaveRegistrationFormMappingsCommand" xml:space="preserve">
+    <value>Formular-Zuordnungen gespeichert für Formular {{FormId}}</value>
   </data>
   <data name="Search" xml:space="preserve">
     <value>Suchen</value>
@@ -1448,6 +1646,9 @@
   <data name="SenderMail" xml:space="preserve">
     <value>Absender Mail</value>
   </data>
+  <data name="SendPaymentDueMailCommand" xml:space="preserve">
+    <value>Zahlungserinnerung gesendet an Anmeldung {{RegistrationId}}</value>
+  </data>
   <data name="SendPleasePayDifferenceMail" xml:space="preserve">
     <value>Mail senden</value>
   </data>
@@ -1457,8 +1658,14 @@
   <data name="SendReminderMail" xml:space="preserve">
     <value>Erinnerungsmail senden</value>
   </data>
+  <data name="SendReminderMailCommand" xml:space="preserve">
+    <value>Erinnerungsmail gesendet an Anmeldung {{RegistrationId}}</value>
+  </data>
   <data name="SendReminderSms" xml:space="preserve">
     <value>Erinnerungs-SMS senden</value>
+  </data>
+  <data name="SendSmsCommand" xml:space="preserve">
+    <value>SMS gesendet an Anmeldung {{RegistrationId}}</value>
   </data>
   <data name="Sent" xml:space="preserve">
     <value>Gesendet</value>
@@ -1466,8 +1673,23 @@
   <data name="SetFallbackPackage" xml:space="preserve">
     <value>Anderes Paket aktivieren</value>
   </data>
+  <data name="SetManualFallbackToPricePackageCommand" xml:space="preserve">
+    <value>Manuelles Preispaket-Fallback gesetzt für Anmeldung {{RegistrationId}}</value>
+  </data>
   <data name="SetPricing" xml:space="preserve">
     <value>Preise festlegen</value>
+  </data>
+  <data name="SetReductionCommand" xml:space="preserve">
+    <value>Reduktion gesetzt für Anmeldung {{RegistrationId}}: {{IsReduced}}</value>
+  </data>
+  <data name="SetReleaseMailCommand" xml:space="preserve">
+    <value>Mail-Freigabe gesetzt für Typ {{Type}}: sofort={{ReleaseImmediately}}</value>
+  </data>
+  <data name="SetRemarksProcessedStateCommand" xml:space="preserve">
+    <value>Bemerkung {{RemarkId}} als verarbeitet markiert: {{NewProcessedState}}</value>
+  </data>
+  <data name="SetRoleOfUserInEventCommand" xml:space="preserve">
+    <value>Benutzerrolle gesetzt: Benutzer {{UserId}}, Rolle {{Role}}</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
@@ -1493,6 +1715,9 @@
   <data name="ShareOkWithRandom" xml:space="preserve">
     <value>Teilen mit Fremden OK (gleiches Geschlecht)</value>
   </data>
+  <data name="ShiftsOverview_Tooltip" xml:space="preserve">
+    <value>{{UnassignedShifts}} Schichten nicht besetzt | {{CancelledRegistrations}} Abgemeldete | {{UnconfirmedAssignments}} Unbestätigte</value>
+  </data>
   <data name="ShowFinished" xml:space="preserve">
     <value>Beendete Events anzeigen</value>
   </data>
@@ -1507,9 +1732,6 @@
   </data>
   <data name="ShowInOverviewExplanation" xml:space="preserve">
     <value>Zeigt das Preispaket mit der Anzahl der Teilnehmer in der Event-Übersicht an.</value>
-  </data>
-  <data name="ShiftsOverview_Tooltip" xml:space="preserve">
-    <value>{{UnassignedShifts}} Schichten nicht besetzt | {{CancelledRegistrations}} Abgemeldete | {{UnconfirmedAssignments}} Unbestätigte</value>
   </data>
   <data name="SingleNotPossible" xml:space="preserve">
     <value>Einzelanmeldung nicht möglich</value>
@@ -1544,6 +1766,9 @@
   <data name="Spots" xml:space="preserve">
     <value>Plätze</value>
   </data>
+  <data name="StartProcessAllPendingRawRegistrationsCommand" xml:space="preserve">
+    <value>Verarbeitung aller ausstehenden Rohanmeldungen gestartet</value>
+  </data>
   <data name="Street" xml:space="preserve">
     <value>Strasse</value>
   </data>
@@ -1552,6 +1777,12 @@
   </data>
   <data name="Submit" xml:space="preserve">
     <value>Senden</value>
+  </data>
+  <data name="SwapFirstLastNameCommand" xml:space="preserve">
+    <value>Vor-/Nachname getauscht für Anmeldung {{RegistrationId}}</value>
+  </data>
+  <data name="SwitchRoleOfParticipantCommand" xml:space="preserve">
+    <value>Rolle gewechselt für Anmeldung {{RegistrationId}} in {{RegistrableId}} zu {{ToRole}}</value>
   </data>
   <data name="SwitchToFollower" xml:space="preserve">
     <value>Zu Follower switchen</value>
@@ -1595,17 +1826,59 @@
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Nachrücken auslösen</value>
   </data>
+  <data name="TriggerMoveUpFromWaitingListCommand" xml:space="preserve">
+    <value>Nachrücken ausgelöst für {{RegistrableId}}</value>
+  </data>
   <data name="Unassigned" xml:space="preserve">
     <value>Nicht zugeordnet</value>
   </data>
+  <data name="UnassignFromShiftCommand" xml:space="preserve">
+    <value>Anmeldung {{RegistrationId}} von Schicht {{ShiftId}} entfernt</value>
+  </data>
   <data name="UnassignPayment" xml:space="preserve">
     <value>Zuordnung zurücknehmen</value>
+  </data>
+  <data name="UnassignPaymentCommand" xml:space="preserve">
+    <value>Zahlungszuweisung {{PaymentAssignmentId}} aufgehoben</value>
+  </data>
+  <data name="UnbindPartnerRegistrationCommand" xml:space="preserve">
+    <value>Partner-Verknüpfung aufgelöst für Anmeldung {{RegistrationId}}</value>
+  </data>
+  <data name="UnbindPartnerSpotCommand" xml:space="preserve">
+    <value>Partner-Platz {{SpotId}} aufgelöst</value>
+  </data>
+  <data name="UnconfirmShiftAssignmentCommand" xml:space="preserve">
+    <value>Bestätigung der Schichtzuweisung {{ShiftAssignmentId}} aufgehoben</value>
   </data>
   <data name="UnmatchedRegistrations" xml:space="preserve">
     <value>Nicht zugeordnete Anmeldungen</value>
   </data>
   <data name="UnprocessedRawRegistrationCount" xml:space="preserve">
     <value>Nicht importierte Anmeldungen {{count}}</value>
+  </data>
+  <data name="UpdateAutoMailConfigurationCommand" xml:space="preserve">
+    <value>Auto-Mail-Konfiguration aktualisiert, Absender: {{SenderName}} ({{SenderMail}})</value>
+  </data>
+  <data name="UpdateAutoMailTemplateCommand" xml:space="preserve">
+    <value>Auto-Mail-Vorlage {{TemplateId}} aktualisiert</value>
+  </data>
+  <data name="UpdateBulkMailTemplateCommand" xml:space="preserve">
+    <value>Massenmail-Vorlage {{TemplateId}} aktualisiert</value>
+  </data>
+  <data name="UpdateInternalNotesCommand" xml:space="preserve">
+    <value>Interne Notizen aktualisiert für Anmeldung {{RegistrationId}}</value>
+  </data>
+  <data name="UpdateReadModelCommand" xml:space="preserve">
+    <value>ReadModel aktualisiert: {{QueryName}}</value>
+  </data>
+  <data name="UpdateShiftCommand" xml:space="preserve">
+    <value>Schicht {{ShiftId}} aktualisiert: {{Name}}</value>
+  </data>
+  <data name="UpdateUserInfoCommand" xml:space="preserve">
+    <value>Benutzerinformationen aktualisiert</value>
+  </data>
+  <data name="UpdateVolunteerAdminConfigurationCommand" xml:space="preserve">
+    <value>Helfer-Konfiguration aktualisiert</value>
   </data>
   <data name="Uploading" xml:space="preserve">
     <value>{{filename}} hochladen...</value>
@@ -1637,6 +1910,9 @@
   <data name="Username" xml:space="preserve">
     <value>Username</value>
   </data>
+  <data name="ValidateAutoMailTemplatesCommand" xml:space="preserve">
+    <value>Auto-Mail-Vorlagen validiert</value>
+  </data>
   <data name="Valuta" xml:space="preserve">
     <value>Valuta</value>
   </data>
@@ -1660,6 +1936,9 @@
   </data>
   <data name="WillPayAtCheckin" xml:space="preserve">
     <value>Bezahlt am Checkin</value>
+  </data>
+  <data name="WillPayAtCheckinCommand" xml:space="preserve">
+    <value>Bezahlung am Checkin gesetzt für Anmeldung {{RegistrationId}}: {{WillPayAtCheckin}}</value>
   </data>
   <data name="Zugriffsanfragen" xml:space="preserve">
     <value>Zugriffsanfragen</value>
