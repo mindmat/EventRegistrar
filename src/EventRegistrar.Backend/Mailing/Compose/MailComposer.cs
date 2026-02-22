@@ -46,6 +46,7 @@ public class MailComposer(
                                               .Include(reg => reg.Event)
                                               .Include(reg => reg.RemarksList!)
                                               .ThenInclude(rmk => rmk.Question)
+                                              .AsSplitQuery()
                                               .FirstAsync(cancellationToken);
 
         var mainRegistrationRole = registration.Seats_AsFollower!.Any(spt => !spt.IsCancelled)
@@ -72,6 +73,7 @@ public class MailComposer(
                                                      .ThenInclude(map => map.Mail)
                                                      .Include(reg => reg.RemarksList!)
                                                      .ThenInclude(rmk => rmk.Question)
+                                                     .AsSplitQuery()
                                                      .FirstOrDefaultAsync(cancellationToken);
             if (mainRegistrationRole == Role.Leader)
             {
