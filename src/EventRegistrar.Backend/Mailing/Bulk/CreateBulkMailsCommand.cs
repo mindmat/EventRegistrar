@@ -60,7 +60,7 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
                                                                      .Take(ChunkSize)
                                                                      .ToList();
             var receivers = new List<Registration>();
-            if (mailTemplate.MailingAudience.HasAnyFlags())
+            if (!mailTemplate.MailingAudience.HasAnyFlags())
             {
                 // no audience set -> no filtering
                 receivers.AddRange(registrationsForTemplate.Where(reg => reg.Language == mailTemplate.Language || reg.Language == null));
@@ -109,8 +109,10 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
         }
 
         changeTrigger.QueryChanged<GeneratedBulkMailsQuery>(command.EventId);
+        changeTrigger.TriggerUpdate<PendingMailsCalculator>(command.EventId);
 
-        if (remainingChunkSize <= 0)
+        var moreMailsToSend = remainingChunkSize <= 0; // if the whole chunk was needed then there are (probably) more mails to send
+        if (moreMailsToSend)
         {
             // enqueue next chunk
             changeTrigger.EnqueueCommand(new CreateBulkMailsCommand
