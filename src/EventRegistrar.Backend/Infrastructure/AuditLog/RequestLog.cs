@@ -17,6 +17,8 @@ public class RequestLog
 
 public class RequestLogMap : IEntityTypeConfiguration<RequestLog>
 {
+    public const string SequencePropertyName = "Sequence";
+
     public void Configure(EntityTypeBuilder<RequestLog> builder)
     {
         builder.ToTable(nameof(RequestLog));
@@ -27,13 +29,13 @@ public class RequestLogMap : IEntityTypeConfiguration<RequestLog>
         builder.HasKey(req => req.Id)
                .IsClustered(false);
 
-        builder.Property<long>("Sequence")
+        builder.Property<long>(SequencePropertyName)
                .UseIdentityColumn()
                .ValueGeneratedOnAdd();
         //propertyBuilder.Metadata.SetBeforeSaveBehavior(PropertySaveBehavior.Ignore);
         //propertyBuilder.Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
-        builder.HasIndex("Sequence")
+        builder.HasIndex(SequencePropertyName)
                .IsUnique()
                .IsClustered();
 

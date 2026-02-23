@@ -20,7 +20,8 @@ public class RequestLogDisplayItem
 public class RequestLogQuery : IRequest<IEnumerable<RequestLogDisplayItem>>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
-    public string? RequestType { get; set; }
+    public string[]? IncludeRequestTypes { get; set; }
+    public string[]? ExcludeRequestTypes { get; set; }
     public string? SearchString { get; set; }
     public DateTimeOffset? From { get; set; }
     public DateTimeOffset? To { get; set; }
@@ -33,10 +34,14 @@ public class RequestLogQueryHandler(AuditLogDbContext dbContext)
     public async Task<IEnumerable<RequestLogDisplayItem>> Handle(RequestLogQuery query,
                                                                  CancellationToken cancellationToken)
     {
+        var excludeRequestTypes = query.ExcludeRequestTypes ?? [];
+        var includeRequestTypes = query.IncludeRequestTypes ?? [];
         var logs = dbContext.Set<RequestLog>()
                             .Where(log => log.EventId == query.EventId)
-                            .WhereIf(!string.IsNullOrEmpty(query.RequestType),
-                                     log => log.RequestType == query.RequestType)
+                            .WhereIf(excludeRequestTypes.Any(),
+                                     log => !excludeRequestTypes.Contains(log.RequestType))
+                            .WhereIf(includeRequestTypes.Any(),
+                                     log => includeRequestTypes.Contains(log.RequestType))
                             .WhereIf(query.From.HasValue,
                                      log => log.When >= query.From!.Value)
                             .WhereIf(query.To.HasValue,
@@ -48,7 +53,7 @@ public class RequestLogQueryHandler(AuditLogDbContext dbContext)
                                          || log.UserDisplayText!.Contains(query.SearchString!)
                                          || log.RequestType.Contains(query.SearchString!));
 
-        var rawLogs = await logs.OrderByDescending(log => log.When)
+        var rawLogs = await logs.OrderByDescending(e => EF.Property<RequestLogMap>(e, RequestLogMap.SequencePropertyName))
                                 .Take(100)
                                 .Select(log => new
                                                {

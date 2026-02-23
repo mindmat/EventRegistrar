@@ -3993,6 +3993,41 @@
                 }
             }
         },
+        "/api/RequestLogQuery": {
+            "post": {
+                "tags": [
+                    "RequestLog"
+                ],
+                "operationId": "RequestLog_Query",
+                "requestBody": {
+                    "x-name": "RequestLogQuery",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestLogQuery"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequestLogDisplayItem"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/ResendSentMailsWithoutStateCommand": {
             "post": {
                 "tags": [
@@ -4569,6 +4604,39 @@
                 "responses": {
                     "204": {
                         "description": ""
+                    }
+                }
+            }
+        },
+        "/api/ShiftsOverviewExcelQuery": {
+            "post": {
+                "tags": [
+                    "ShiftsOverviewExcel"
+                ],
+                "operationId": "ShiftsOverviewExcel_Query",
+                "requestBody": {
+                    "x-name": "ShiftsOverviewExcelQuery",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ShiftsOverviewExcelQuery"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/octet-stream": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -11815,6 +11883,83 @@
                     }
                 }
             },
+            "RequestLogDisplayItem": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "requestType": {
+                        "type": "string"
+                    },
+                    "requestTypeText": {
+                        "type": "string"
+                    },
+                    "requestJson": {
+                        "type": "string"
+                    },
+                    "when": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "user": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "exception": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "executionTimeInMilliseconds": {
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                }
+            },
+            "RequestLogQuery": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "includeRequestTypes": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "excludeRequestTypes": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "searchString": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "from": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "to": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "onlyWithErrors": {
+                        "type": "boolean",
+                        "nullable": true
+                    }
+                }
+            },
             "ResendSentMailsWithoutStateCommand": {
                 "type": "object",
                 "additionalProperties": false,
@@ -12448,6 +12593,20 @@
                     },
                     "role": {
                         "$ref": "#/components/schemas/UserInEventRole"
+                    }
+                }
+            },
+            "ShiftsOverviewExcelQuery": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "timeZoneId": {
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             },

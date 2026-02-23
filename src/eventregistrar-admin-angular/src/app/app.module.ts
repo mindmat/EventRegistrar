@@ -126,6 +126,7 @@ import localeDeExtra from '@angular/common/locales/extra/de-CH';
 import { ErrorHandlingInterceptor } from './api/errorhandling.interceptor';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import * as Sentry from "@sentry/angular";
+import { RequestLogComponent } from './modules/admin/infrastructure/request-log/request-log.component';
 // import { ShiftsOverviewComponent } from './modules/admin/volunteer-planning/shifts-overview/shifts-overview.component';
 
 const routerConfig: ExtraOptions = {
@@ -210,6 +211,7 @@ export const DE_FORMATS_TIME = {
         FixRawProcessingComponent,
         MatchSingleSpotsComponent,
         RegistrableIcsComponent,
+        RequestLogComponent,
         // ShiftsOverviewComponent
     ],
     providers: [
