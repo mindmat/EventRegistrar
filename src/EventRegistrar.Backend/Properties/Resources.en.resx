@@ -432,6 +432,12 @@
   <data name="EventState_Setup" xml:space="preserve">
     <value>Setup</value>
   </data>
+  <data name="ExcludeRequestTypes" xml:space="preserve">
+    <value>Exclude request types</value>
+  </data>
+  <data name="ExecutionTimeInMilliseconds" xml:space="preserve">
+    <value>Execution time (ms)</value>
+  </data>
   <data name="ExistingAssignments" xml:space="preserve">
     <value>Existing assignments</value>
   </data>
@@ -578,6 +584,9 @@
   </data>
   <data name="ImportNewVersion" xml:space="preserve">
     <value>Import new version</value>
+  </data>
+  <data name="IncludeRequestTypes" xml:space="preserve">
+    <value>Include request types</value>
   </data>
   <data name="IncludeWaitingList" xml:space="preserve">
     <value>incl. waiting list</value>
@@ -918,6 +927,12 @@
   <data name="OnlyParticipantsOf" xml:space="preserve">
     <value>Only to participants of</value>
   </data>
+  <data name="OnlyUserInitiatedRequests" xml:space="preserve">
+    <value>Only user-initiated requests</value>
+  </data>
+  <data name="OnlyWithErrors" xml:space="preserve">
+    <value>Only with errors</value>
+  </data>
   <data name="OpenRegistrationDeleteTestData" xml:space="preserve">
     <value>Open registration (incl. delete test data)</value>
   </data>
@@ -1247,6 +1262,30 @@
   </data>
   <data name="RequestAccess" xml:space="preserve">
     <value>Request access</value>
+  </data>
+  <data name="RequestLogDisplayItem_Exception" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="RequestLogDisplayItem_ExecutionTimeInMilliseconds" xml:space="preserve">
+    <value>Execution time (ms)</value>
+  </data>
+  <data name="RequestLogDisplayItem_RequestJson" xml:space="preserve">
+    <value>Request payload</value>
+  </data>
+  <data name="RequestLogDisplayItem_RequestTypeText" xml:space="preserve">
+    <value>Request type</value>
+  </data>
+  <data name="RequestLogDisplayItem_User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="RequestLogDisplayItem_When" xml:space="preserve">
+    <value>Timestamp</value>
+  </data>
+  <data name="RequestLogJson" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="RequestLogQuery" xml:space="preserve">
+    <value>Request log</value>
   </data>
   <data name="Required" xml:space="preserve">
     <value>(required)</value>

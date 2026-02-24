@@ -4028,6 +4028,41 @@
                 }
             }
         },
+        "/api/RequestLogRequestTypesQuery": {
+            "post": {
+                "tags": [
+                    "RequestLogRequestTypes"
+                ],
+                "operationId": "RequestLogRequestTypes_Query",
+                "requestBody": {
+                    "x-name": "RequestLogRequestTypesQuery",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RequestLogRequestTypesQuery"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/RequestTypeDisplayItem"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/ResendSentMailsWithoutStateCommand": {
             "post": {
                 "tags": [
@@ -11957,6 +11992,32 @@
                     "onlyWithErrors": {
                         "type": "boolean",
                         "nullable": true
+                    },
+                    "onlyUserInitiatedRequests": {
+                        "type": "boolean",
+                        "nullable": true
+                    }
+                }
+            },
+            "RequestTypeDisplayItem": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "requestType": {
+                        "type": "string"
+                    },
+                    "requestTypeText": {
+                        "type": "string"
+                    }
+                }
+            },
+            "RequestLogRequestTypesQuery": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
                     }
                 }
             },

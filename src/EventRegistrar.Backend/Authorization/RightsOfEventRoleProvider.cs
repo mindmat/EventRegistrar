@@ -143,6 +143,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(VolunteerAdminConfigurationQuery);
             yield return nameof(ShiftsOverviewExcelQuery);
             yield return nameof(RequestLogQuery);
+            yield return nameof(RequestLogRequestTypesQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { RequestLogDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../../events/event.service';
-import { RequestLogService } from './request-log.service';
+import { RequestLogService, RequestTypeOption } from './request-log.service';
 
 @Component({
     standalone: false,
@@ -13,13 +13,15 @@ import { RequestLogService } from './request-log.service';
 export class RequestLogComponent implements OnInit, OnDestroy
 {
     requestLogs: RequestLogDisplayItem[] = [];
+    requestTypeOptions: RequestTypeOption[] = [];
 
     searchString = '';
-    includeRequestTypes = '';
-    excludeRequestTypes = '';
+    includeRequestTypes: string[] = [];
+    excludeRequestTypes: string[] = [];
     from: Date | null = null;
     to: Date | null = null;
     onlyWithErrors = false;
+    onlyUserInitiatedRequests = false;
 
     private readonly _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -36,6 +38,14 @@ export class RequestLogComponent implements OnInit, OnDestroy
                 this.requestLogs = requestLogs;
                 this._changeDetectorRef.markForCheck();
             });
+
+        this.requestLogService.fetchRequestTypeOptions()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(requestTypeOptions =>
+            {
+                this.requestTypeOptions = requestTypeOptions;
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     ngOnDestroy(): void
@@ -49,22 +59,24 @@ export class RequestLogComponent implements OnInit, OnDestroy
         this.requestLogService.fetchRequestLog({
             eventId: this.eventService.selectedId ?? undefined,
             searchString: this.searchString || null,
-            includeRequestTypes: this.parseRequestTypes(this.includeRequestTypes),
-            excludeRequestTypes: this.parseRequestTypes(this.excludeRequestTypes),
+            includeRequestTypes: this.toNullableArray(this.includeRequestTypes),
+            excludeRequestTypes: this.toNullableArray(this.excludeRequestTypes),
             from: this.from,
             to: this.to,
-            onlyWithErrors: this.onlyWithErrors ? true : null
+            onlyWithErrors: this.onlyWithErrors ? true : null,
+            onlyUserInitiatedRequests: this.onlyUserInitiatedRequests ? true : null
         }).subscribe();
     }
 
     clearFilters(): void
     {
         this.searchString = '';
-        this.includeRequestTypes = '';
-        this.excludeRequestTypes = '';
+        this.includeRequestTypes = [];
+        this.excludeRequestTypes = [];
         this.from = null;
         this.to = null;
         this.onlyWithErrors = false;
+        this.onlyUserInitiatedRequests = false;
 
         this.applyFilters();
     }
@@ -74,13 +86,8 @@ export class RequestLogComponent implements OnInit, OnDestroy
         return item.id || index;
     }
 
-    private parseRequestTypes(requestTypes: string): string[] | null
+    private toNullableArray(requestTypes: string[]): string[] | null
     {
-        const parsed = requestTypes
-            .split(',')
-            .map(requestType => requestType.trim())
-            .filter(requestType => requestType.length > 0);
-
-        return parsed.length > 0 ? parsed : null;
+        return requestTypes.length > 0 ? requestTypes : null;
     }
 }

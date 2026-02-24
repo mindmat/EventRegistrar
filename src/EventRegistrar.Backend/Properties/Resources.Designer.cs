@@ -160,7 +160,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Automatisches Nachrücken aktiviert für {{RegistrableId}}.
+        ///   Looks up a localized string similar to Automatisches Nachrücken aktivieren.
         /// </summary>
         internal static string ActivateAutomaticPromotionCommand {
             get {
@@ -187,7 +187,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Helferplatz hinzugefügt für Schicht {{ShiftId}}.
+        ///   Looks up a localized string similar to Helferplatz hinzufügen für Schicht.
         /// </summary>
         internal static string AddHelperSlotCommand {
             get {
@@ -214,7 +214,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ICS-Anhang hinzugefügt an Mail {{MailId}}.
+        ///   Looks up a localized string similar to ICS-Anhang hinzufügen an Mail.
         /// </summary>
         internal static string AddIcsToMailCommand {
             get {
@@ -232,7 +232,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Individuelle Reduktion hinzugefügt für Anmeldung {{RegistrationId}}, Betrag {{Amount}}, Grund: {{Reason}}.
+        ///   Looks up a localized string similar to Individuelle Reduktion hinzufügen für Anmeldung, Betrag, Grund.
         /// </summary>
         internal static string AddIndividualReductionCommand {
             get {
@@ -295,7 +295,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Platz hinzugefügt für Anmeldung {{RegistrationId}} in {{RegistrableId}}.
+        ///   Looks up a localized string similar to Platz hinzufügen für Anmeldung.
         /// </summary>
         internal static string AddSpotCommand {
             get {
@@ -439,7 +439,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Eingehende Zahlung {{PaymentIncomingId}} zugewiesen an Anmeldung {{RegistrationId}}, Betrag {{Amount}}.
+        ///   Looks up a localized string similar to Eingehende Zahlung zuweisen an Anmeldung, Betrag.
         /// </summary>
         internal static string AssignIncomingPaymentCommand {
             get {
@@ -457,7 +457,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ausgehende Zahlung {{OutgoingPaymentId}} zugewiesen, Betrag {{Amount}}.
+        ///   Looks up a localized string similar to Ausgehende Zahlung zuweisen, Betrag.
         /// </summary>
         internal static string AssignOutgoingPaymentCommand {
             get {
@@ -475,7 +475,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rückzahlung zugewiesen: eingehend {{IncomingPaymentId}} an ausgehend {{OutgoingPaymentId}}, Betrag {{Amount}}.
+        ///   Looks up a localized string similar to Rückzahlung zuweisen: eingehend an ausgehend, Betrag.
         /// </summary>
         internal static string AssignRepaymentCommand {
             get {
@@ -493,7 +493,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Anmeldung {{RegistrationId}} der Schicht {{ShiftId}} zugewiesen.
+        ///   Looks up a localized string similar to Anmeldung der Schicht zuweisen.
         /// </summary>
         internal static string AssignToShiftCommand {
             get {
@@ -646,7 +646,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Anmeldung {{RegistrationId}} storniert.
+        ///   Looks up a localized string similar to Anmeldung stornieren.
         /// </summary>
         internal static string CancelRegistrationCommand {
             get {
@@ -682,7 +682,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Teilnehmername geändert für Anmeldung {{RegistrationId}}: {{FirstName}} {{LastName}}.
+        ///   Looks up a localized string similar to Teilnehmername ändern für Anmeldung.
         /// </summary>
         internal static string ChangeParticipantNameCommand {
             get {
@@ -718,7 +718,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Partner-Anmeldung {{RegistrationId}} zu Einzelanmeldung geändert.
+        ///   Looks up a localized string similar to Partner-Anmeldung zu Einzelanmeldung ändern.
         /// </summary>
         internal static string ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand {
             get {
@@ -736,7 +736,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mehrfach-Partner-Prüfung für Anmeldung {{RegistrationId}}.
+        ///   Looks up a localized string similar to Mehrfach-Partner-Prüfung für Anmeldung.
         /// </summary>
         internal static string CheckIfRegistrationHasMultiplePartnersCommand {
             get {
@@ -763,7 +763,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Automatisches Mail {{MailType}} gesendet an Anmeldung {{RegistrationId}}.
+        ///   Looks up a localized string similar to Automatisches Mail senden an Anmeldung.
         /// </summary>
         internal static string ComposeAndSendAutoMailCommand {
             get {
@@ -772,7 +772,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Massenmail {{BulkMailKey}} gesendet an Anmeldung {{RegistrationId}}.
+        ///   Looks up a localized string similar to Massenmail senden an Anmeldung.
         /// </summary>
         internal static string ComposeAndSendBulkMailCommand {
             get {
@@ -781,7 +781,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Schichtzuweisung {{ShiftAssignmentId}} bestätigt.
+        ///   Looks up a localized string similar to Schichtzuweisung bestätigen.
         /// </summary>
         internal static string ConfirmShiftAssignmentCommand {
             get {
@@ -889,7 +889,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Manuelle Zahlung erstellt und zugewiesen an Anmeldung {{RegistrationId}}, Betrag {{Amount}}, {{DebitorName}}.
+        ///   Looks up a localized string similar to Manuelle Zahlung erstellen und zuweisen an Anmeldung, Betrag.
         /// </summary>
         internal static string CreateAndAssignIncomingPaymentCommand {
             get {
@@ -898,7 +898,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Auto-Mail-Vorlage erstellt: {{Type}}, Sprache {{Language}}.
+        ///   Looks up a localized string similar to Auto-Mail-Vorlage erstellen:, Sprache.
         /// </summary>
         internal static string CreateAutoMailTemplateCommand {
             get {
@@ -916,7 +916,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Massenmails erstellt für {{BulkMailKey}}.
+        ///   Looks up a localized string similar to Massenmails erstellen.
         /// </summary>
         internal static string CreateBulkMailsCommand {
             get {
@@ -925,7 +925,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Massenmail-Vorlage erstellt: {{Key}}.
+        ///   Looks up a localized string similar to Massenmail-Vorlage erstellen.
         /// </summary>
         internal static string CreateBulkMailTemplateCommand {
             get {
@@ -952,7 +952,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Schicht erstellt: {{Location}}.
+        ///   Looks up a localized string similar to Schicht erstellen.
         /// </summary>
         internal static string CreateShiftCommand {
             get {
@@ -997,7 +997,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Automatisches Nachrücken deaktiviert für {{RegistrableId}}.
+        ///   Looks up a localized string similar to Automatisches Nachrücken deaktivieren.
         /// </summary>
         internal static string DeactivateAutomaticPromotionCommand {
             get {
@@ -1060,7 +1060,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Massenmail-Vorlage gelöscht: {{BulkMailKey}}.
+        ///   Looks up a localized string similar to Massenmail-Vorlage löschen.
         /// </summary>
         internal static string DeleteBulkMailTemplateCommand {
             get {
@@ -1069,7 +1069,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mails gelöscht.
+        ///   Looks up a localized string similar to Mails löschen.
         /// </summary>
         internal static string DeleteMailsCommand {
             get {
@@ -1087,7 +1087,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Registrierbares {{RegistrableId}} gelöscht.
+        ///   Looks up a localized string similar to Registrierbares löschen.
         /// </summary>
         internal static string DeleteRegistrableCommand {
             get {
@@ -1096,7 +1096,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Anmeldeformular {{RegistrationFormId}} gelöscht.
+        ///   Looks up a localized string similar to Anmeldeformular löschen.
         /// </summary>
         internal static string DeleteRegistrationFormCommand {
             get {
@@ -1114,7 +1114,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Schicht {{ShiftId}} gelöscht.
+        ///   Looks up a localized string similar to Schicht löschen.
         /// </summary>
         internal static string DeleteShiftCommand {
             get {
@@ -1132,7 +1132,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Testdaten gelöscht.
+        ///   Looks up a localized string similar to Testdaten löschen.
         /// </summary>
         internal static string DeleteTestDataCommand {
             get {
@@ -1569,6 +1569,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ausschliessen: Anfragetypen.
+        /// </summary>
+        internal static string ExcludeRequestTypes {
+            get {
+                return ResourceManager.GetString("ExcludeRequestTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausführungszeit (ms).
+        /// </summary>
+        internal static string ExecutionTimeInMilliseconds {
+            get {
+                return ResourceManager.GetString("ExecutionTimeInMilliseconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bestehende Zuordnungen.
         /// </summary>
         internal static string ExistingAssignments {
@@ -1650,7 +1668,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to E-Mail-Adresse korrigiert für Anmeldung {{RegistrationId}}: {{OldEmailAddress}} → {{NewEmailAddress}}.
+        ///   Looks up a localized string similar to E-Mail-Adresse korrigieren für Anmeldung: →.
         /// </summary>
         internal static string FixInvalidAddressCommand {
             get {
@@ -1659,7 +1677,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fehlende Rolle korrigiert für Rohanmeldung {{RawRegistrationId}}: {{Role}}.
+        ///   Looks up a localized string similar to Fehlende Rolle korrigieren für Rohanmeldung.
         /// </summary>
         internal static string FixMissingRoleCommand {
             get {
@@ -2012,7 +2030,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zahlung {{PaymentId}} ignoriert.
+        ///   Looks up a localized string similar to Zahlung ignoriert.
         /// </summary>
         internal static string IgnorePaymentCommand {
             get {
@@ -2075,7 +2093,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mails aus IMAP importiert.
+        ///   Looks up a localized string similar to Mails aus IMAP importieren.
         /// </summary>
         internal static string ImportMailsFromImapCommand {
             get {
@@ -2102,11 +2120,20 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Anmeldeformular importiert: {{FormExternalIdentifier}}.
+        ///   Looks up a localized string similar to Anmeldeformular importieren.
         /// </summary>
         internal static string ImportRegistrationFormCommand {
             get {
                 return ResourceManager.GetString("ImportRegistrationFormCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einschliessen: Anfragetypen.
+        /// </summary>
+        internal static string IncludeRequestTypes {
+            get {
+                return ResourceManager.GetString("IncludeRequestTypes", resourceCulture);
             }
         }
         
@@ -3002,7 +3029,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Partner-Anmeldungen verknüpft: {{RegistrationId1}} und {{RegistrationId2}}.
+        ///   Looks up a localized string similar to Partner-Anmeldungen verknüpfen: und.
         /// </summary>
         internal static string MatchPartnerRegistrationsCommand {
             get {
@@ -3020,7 +3047,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Einzelplätze verknüpft: Leader {{SpotId_Leader}} mit Follower {{SpotId_Follower}}.
+        ///   Looks up a localized string similar to Einzelplätze verknüpfen: Leader mit Follower.
         /// </summary>
         internal static string MatchSingleSpotsCommand {
             get {
@@ -3187,6 +3214,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string OnlyParticipantsOf {
             get {
                 return ResourceManager.GetString("OnlyParticipantsOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nur benutzerinitiierte Anfragen.
+        /// </summary>
+        internal static string OnlyUserInitiatedRequests {
+            get {
+                return ResourceManager.GetString("OnlyUserInitiatedRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nur mit Fehlern.
+        /// </summary>
+        internal static string OnlyWithErrors {
+            get {
+                return ResourceManager.GetString("OnlyWithErrors", resourceCulture);
             }
         }
         
@@ -3722,7 +3767,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Abgerufene Kontoauszugsdatei {{RawBankStatementFileId}} verarbeitet.
+        ///   Looks up a localized string similar to Abgerufene Kontoauszugsdatei verarbeiten.
         /// </summary>
         internal static string ProcessFetchedBankStatementsFileCommand {
             get {
@@ -3956,7 +4001,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Differenz erstattet für Anmeldung {{RegistrationId}}.
+        ///   Looks up a localized string similar to Differenz erstatten für Anmeldung.
         /// </summary>
         internal static string RefundDifferenceCommand {
             get {
@@ -4109,7 +4154,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Alle ausstehenden Mails freigegeben.
+        ///   Looks up a localized string similar to Alle ausstehenden Mails freigeben.
         /// </summary>
         internal static string ReleaseAllPendingMailsCommand {
             get {
@@ -4118,7 +4163,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Massenmails freigegeben für {{BulkMailKey}}.
+        ///   Looks up a localized string similar to Massenmails freigeben.
         /// </summary>
         internal static string ReleaseBulkMailsCommand {
             get {
@@ -4154,7 +4199,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mails freigegeben.
+        ///   Looks up a localized string similar to Mails freigeben.
         /// </summary>
         internal static string ReleaseMailsCommand {
             get {
@@ -4244,7 +4289,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Helferplatz entfernt aus Schicht {{ShiftId}}.
+        ///   Looks up a localized string similar to Helferplatz entfernen aus Schicht.
         /// </summary>
         internal static string RemoveHelperSlotCommand {
             get {
@@ -4253,7 +4298,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Individuelle Reduktion {{ReductionId}} entfernt.
+        ///   Looks up a localized string similar to Individuelle Reduktion entfernen.
         /// </summary>
         internal static string RemoveIndividualReductionCommand {
             get {
@@ -4280,7 +4325,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Platz entfernt für Anmeldung {{RegistrationId}} aus {{RegistrableId}}.
+        ///   Looks up a localized string similar to Platz entfernen für Anmeldung.
         /// </summary>
         internal static string RemoveSpotCommand {
             get {
@@ -4289,7 +4334,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Benutzer {{UserId}} vom Event entfernt.
+        ///   Looks up a localized string similar to Benutzer vom Event entfernen.
         /// </summary>
         internal static string RemoveUserFromEventCommand {
             get {
@@ -4325,7 +4370,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Frageoption {{QuestionOptionId}} erneut verarbeitet.
+        ///   Looks up a localized string similar to Frageoption erneut verarbeiten.
         /// </summary>
         internal static string ReprocessQuestionOptionCommand {
             get {
@@ -4397,6 +4442,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to JSON.
+        /// </summary>
+        internal static string RequestLogJson {
+            get {
+                return ResourceManager.GetString("RequestLogJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anfrage-Protokoll.
         /// </summary>
         internal static string RequestLogQuery {
@@ -4415,7 +4469,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gesendete Mails ohne Status erneut gesendet.
+        ///   Looks up a localized string similar to Gesendete Mails ohne Status erneut senden.
         /// </summary>
         internal static string ResendSentMailsWithoutStateCommand {
             get {
@@ -4424,7 +4478,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zugriffsanfrage {{AccessToEventRequestId}} beantwortet: {{Response}}.
+        ///   Looks up a localized string similar to Zugriffsanfrage beantworten.
         /// </summary>
         internal static string RespondToRequestCommand {
             get {
@@ -4478,7 +4532,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bankkonto-Konfiguration gespeichert.
+        ///   Looks up a localized string similar to Bankkonto-Konfiguration speichern.
         /// </summary>
         internal static string SaveBankAccountConfigurationCommand {
             get {
@@ -4487,7 +4541,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Externe Mail-Konfiguration gespeichert.
+        ///   Looks up a localized string similar to Externe Mail-Konfiguration speichern.
         /// </summary>
         internal static string SaveExternalMailConfigurationCommand {
             get {
@@ -4496,7 +4550,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zahlungsdatei importiert: {{Filename}}.
+        ///   Looks up a localized string similar to Zahlungsdatei importieren.
         /// </summary>
         internal static string SavePaymentFileCommand {
             get {
@@ -4505,7 +4559,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Preise gespeichert.
+        ///   Looks up a localized string similar to Preise speichern.
         /// </summary>
         internal static string SavePricingCommand {
             get {
@@ -4514,7 +4568,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Registrierbares gespeichert: {{Name}}.
+        ///   Looks up a localized string similar to Registrierbares speichern.
         /// </summary>
         internal static string SaveRegistrableCommand {
             get {
@@ -4523,7 +4577,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ICS-Kalendereintrag gespeichert.
+        ///   Looks up a localized string similar to ICS-Kalendereintrag speichern.
         /// </summary>
         internal static string SaveRegistrableIcsCommand {
             get {
@@ -4532,7 +4586,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Formular-Zuordnungen gespeichert für Formular {{FormId}}.
+        ///   Looks up a localized string similar to Formular-Zuordnungen speichern für Formular.
         /// </summary>
         internal static string SaveRegistrationFormMappingsCommand {
             get {
@@ -4658,7 +4712,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zahlungserinnerung gesendet an Anmeldung {{RegistrationId}}.
+        ///   Looks up a localized string similar to Zahlungserinnerung senden an Anmeldung.
         /// </summary>
         internal static string SendPaymentDueMailCommand {
             get {
@@ -4694,7 +4748,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Erinnerungsmail gesendet an Anmeldung {{RegistrationId}}.
+        ///   Looks up a localized string similar to Erinnerungsmail senden an Anmeldung.
         /// </summary>
         internal static string SendReminderMailCommand {
             get {
@@ -4712,7 +4766,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to SMS gesendet an Anmeldung {{RegistrationId}}.
+        ///   Looks up a localized string similar to SMS senden an Anmeldung.
         /// </summary>
         internal static string SendSmsCommand {
             get {
@@ -4739,7 +4793,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Manuelles Preispaket-Fallback gesetzt für Anmeldung {{RegistrationId}}.
+        ///   Looks up a localized string similar to Manuelles Preispaket-Fallback setzen für Anmeldung.
         /// </summary>
         internal static string SetManualFallbackToPricePackageCommand {
             get {
@@ -4757,7 +4811,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reduktion gesetzt für Anmeldung {{RegistrationId}}: {{IsReduced}}.
+        ///   Looks up a localized string similar to Reduktion setzen für Anmeldung.
         /// </summary>
         internal static string SetReductionCommand {
             get {
@@ -4766,7 +4820,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Mail-Freigabe gesetzt für Typ {{Type}}: sofort={{ReleaseImmediately}}.
+        ///   Looks up a localized string similar to Mail-Freigabe setzen für Typ: sofort=.
         /// </summary>
         internal static string SetReleaseMailCommand {
             get {
@@ -4775,7 +4829,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bemerkung {{RemarkId}} als verarbeitet markiert: {{NewProcessedState}}.
+        ///   Looks up a localized string similar to Bemerkung als verarbeiten markieren.
         /// </summary>
         internal static string SetRemarksProcessedStateCommand {
             get {
@@ -4784,7 +4838,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Benutzerrolle gesetzt: Benutzer {{UserId}}, Rolle {{Role}}.
+        ///   Looks up a localized string similar to Benutzerrolle setzen: Benutzer, Rolle.
         /// </summary>
         internal static string SetRoleOfUserInEventCommand {
             get {
@@ -5054,7 +5108,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Vor-/Nachname getauscht für Anmeldung {{RegistrationId}}.
+        ///   Looks up a localized string similar to Vor-/Nachname tauschen für Anmeldung.
         /// </summary>
         internal static string SwapFirstLastNameCommand {
             get {
@@ -5063,7 +5117,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Rolle gewechselt für Anmeldung {{RegistrationId}} in {{RegistrableId}} zu {{ToRole}}.
+        ///   Looks up a localized string similar to Rolle von Teilnehmer:in wechseln.
         /// </summary>
         internal static string SwitchRoleOfParticipantCommand {
             get {
@@ -5198,7 +5252,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Nachrücken ausgelöst für {{RegistrableId}}.
+        ///   Looks up a localized string similar to Nachrücken auslösen.
         /// </summary>
         internal static string TriggerMoveUpFromWaitingListCommand {
             get {
@@ -5216,7 +5270,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Anmeldung {{RegistrationId}} von Schicht {{ShiftId}} entfernt.
+        ///   Looks up a localized string similar to Anmeldung von Schicht entfernen.
         /// </summary>
         internal static string UnassignFromShiftCommand {
             get {
@@ -5234,7 +5288,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zahlungszuweisung {{PaymentAssignmentId}} aufgehoben.
+        ///   Looks up a localized string similar to Zahlungszuweisung aufheben.
         /// </summary>
         internal static string UnassignPaymentCommand {
             get {
@@ -5243,7 +5297,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Partner-Verknüpfung aufgelöst für Anmeldung {{RegistrationId}}.
+        ///   Looks up a localized string similar to Partner-Verknüpfung aufgelöst für Anmeldung.
         /// </summary>
         internal static string UnbindPartnerRegistrationCommand {
             get {
@@ -5252,7 +5306,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Partner-Platz {{SpotId}} aufgelöst.
+        ///   Looks up a localized string similar to Partner-Platz aufgelöst.
         /// </summary>
         internal static string UnbindPartnerSpotCommand {
             get {
@@ -5261,7 +5315,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bestätigung der Schichtzuweisung {{ShiftAssignmentId}} aufgehoben.
+        ///   Looks up a localized string similar to Bestätigung der Schichtzuweisung aufheben.
         /// </summary>
         internal static string UnconfirmShiftAssignmentCommand {
             get {
@@ -5288,7 +5342,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Auto-Mail-Konfiguration aktualisiert, Absender: {{SenderName}} ({{SenderMail}}).
+        ///   Looks up a localized string similar to Auto-Mail-Konfiguration aktualisieren, Absender: ().
         /// </summary>
         internal static string UpdateAutoMailConfigurationCommand {
             get {
@@ -5297,7 +5351,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Auto-Mail-Vorlage {{TemplateId}} aktualisiert.
+        ///   Looks up a localized string similar to Auto-Mail-Vorlage aktualisieren.
         /// </summary>
         internal static string UpdateAutoMailTemplateCommand {
             get {
@@ -5306,7 +5360,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Massenmail-Vorlage {{TemplateId}} aktualisiert.
+        ///   Looks up a localized string similar to Massenmail-Vorlage aktualisieren.
         /// </summary>
         internal static string UpdateBulkMailTemplateCommand {
             get {
@@ -5315,7 +5369,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Interne Notizen aktualisiert für Anmeldung {{RegistrationId}}.
+        ///   Looks up a localized string similar to Interne Notizen aktualisieren für Anmeldung.
         /// </summary>
         internal static string UpdateInternalNotesCommand {
             get {
@@ -5324,7 +5378,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ReadModel aktualisiert: {{QueryName}}.
+        ///   Looks up a localized string similar to ReadModel aktualisieren.
         /// </summary>
         internal static string UpdateReadModelCommand {
             get {
@@ -5333,7 +5387,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Schicht {{ShiftId}} aktualisiert: {{Name}}.
+        ///   Looks up a localized string similar to Schicht aktualisieren.
         /// </summary>
         internal static string UpdateShiftCommand {
             get {
@@ -5342,7 +5396,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Benutzerinformationen aktualisiert.
+        ///   Looks up a localized string similar to Benutzerinformationen aktualisieren.
         /// </summary>
         internal static string UpdateUserInfoCommand {
             get {
@@ -5351,7 +5405,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Helfer-Konfiguration aktualisiert.
+        ///   Looks up a localized string similar to Helfer-Konfiguration aktualisieren.
         /// </summary>
         internal static string UpdateVolunteerAdminConfigurationCommand {
             get {
@@ -5525,7 +5579,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bezahlung am Checkin gesetzt für Anmeldung {{RegistrationId}}: {{WillPayAtCheckin}}.
+        ///   Looks up a localized string similar to Bezahlung am Checkin setzen für Anmeldung.
         /// </summary>
         internal static string WillPayAtCheckinCommand {
             get {

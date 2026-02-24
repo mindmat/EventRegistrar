@@ -13,25 +13,31 @@
             [(ngModel)]="searchString" />
         </mat-form-field>
 
-        <mat-form-field
-          class="fuse-mat-no-subscript w-full"
-          [floatLabel]="'always'">
-          <mat-label>{{ 'IncludeRequestTypes' | translate }}</mat-label>
-          <input
-            matInput
-            [(ngModel)]="includeRequestTypes"
-            placeholder="QueryA, QueryB" />
-        </mat-form-field>
+        <div class="w-full">
+          <mat-label class="fuse-mat-no-subscript">{{ 'IncludeRequestTypes' | translate }}</mat-label>
+          <div class="flex flex-col">
+            <app-tags-picker
+              [allTags]="requestTypeOptions"
+              [(ngModel)]="includeRequestTypes"
+              idProperty="requestType"
+              textProperty="requestTypeText"
+              [showBorder]="true">
+            </app-tags-picker>
+          </div>
+        </div>
 
-        <mat-form-field
-          class="fuse-mat-no-subscript w-full"
-          [floatLabel]="'always'">
-          <mat-label>{{ 'ExcludeRequestTypes' | translate }}</mat-label>
-          <input
-            matInput
-            [(ngModel)]="excludeRequestTypes"
-            placeholder="QueryA, QueryB" />
-        </mat-form-field>
+        <div class="w-full">
+          <mat-label class="fuse-mat-no-subscript">{{ 'ExcludeRequestTypes' | translate }}</mat-label>
+          <div class="flex flex-col">
+            <app-tags-picker
+              [allTags]="requestTypeOptions"
+              [(ngModel)]="excludeRequestTypes"
+              idProperty="requestType"
+              textProperty="requestTypeText"
+              [showBorder]="true">
+            </app-tags-picker>
+          </div>
+        </div>
 
         <mat-form-field
           class="fuse-mat-no-subscript w-full"
@@ -61,8 +67,9 @@
           <mat-datepicker #toPicker></mat-datepicker>
         </mat-form-field>
 
-        <div class="flex items-center h-full pt-1">
+        <div class="flex flex-col items-start justify-center h-full pt-1 gap-2">
           <mat-slide-toggle [(ngModel)]="onlyWithErrors">{{ 'OnlyWithErrors' | translate }}</mat-slide-toggle>
+          <mat-slide-toggle [(ngModel)]="onlyUserInitiatedRequests">{{ 'OnlyUserInitiatedRequests' | translate }}</mat-slide-toggle>
         </div>
       </div>
 
@@ -106,7 +113,7 @@
             </div>
 
             <div class="mt-4">
-              <div class="text-secondary text-sm">JSON</div>
+              <div class="text-secondary text-sm">{{ 'RequestLogJson' | translate }}</div>
               <pre class="whitespace-pre-wrap break-all mt-1 text-xs">{{ requestLog.requestJson }}</pre>
             </div>
           </div>

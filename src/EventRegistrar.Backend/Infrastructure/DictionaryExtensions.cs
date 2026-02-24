@@ -20,10 +20,16 @@ public static class DictionaryExtensions
                    : null;
     }
 
-    public static TValue? LookupNullable<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
-        where TValue : struct
+    public static TValue? LookupNullable<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey? key)
+        where TKey : struct
+        where TValue : class
     {
-        return dictionary.TryGetValue(key, out var value)
+        if (key == null)
+        {
+            return null;
+        }
+
+        return dictionary.TryGetValue(key.Value, out var value)
                    ? value
                    : null;
     }
