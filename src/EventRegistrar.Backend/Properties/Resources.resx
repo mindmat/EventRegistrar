@@ -442,9 +442,6 @@
   <data name="DefragRegistrableCommand" xml:space="preserve">
     <value>Defragmentieren</value>
   </data>
-  <data name="DefragRegistrableCommand_Duplicate[1]" xml:space="preserve">
-    <value>Registrierbares {{RegistrableId}} defragmentiert</value>
-  </data>
   <data name="Delete" xml:space="preserve">
     <value>Löschen</value>
   </data>

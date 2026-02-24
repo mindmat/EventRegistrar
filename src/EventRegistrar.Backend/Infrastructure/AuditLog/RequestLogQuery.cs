@@ -63,7 +63,7 @@ public class RequestLogQueryHandler(AuditLogDbContext dbContext,
                                          || log.UserDisplayText!.Contains(query.SearchString!)
                                          || log.RequestType.Contains(query.SearchString!));
 
-        var rawLogs = await logs.OrderByDescending(e => EF.Property<RequestLogMap>(e, RequestLogMap.SequencePropertyName))
+        var rawLogs = await logs.OrderByDescending(e => EF.Property<long>(e, RequestLogMap.SequencePropertyName))
                                 .Take(100)
                                 .Select(log => new
                                                {

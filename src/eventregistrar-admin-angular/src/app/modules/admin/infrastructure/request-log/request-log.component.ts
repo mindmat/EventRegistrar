@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { RequestLogDisplayItem } from 'app/api/api';
+import { RequestLogDisplayItem, RequestTypeDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../../events/event.service';
-import { RequestLogService, RequestTypeOption } from './request-log.service';
+import { RequestLogService } from './request-log.service';
 
 @Component({
     standalone: false,
@@ -13,7 +13,7 @@ import { RequestLogService, RequestTypeOption } from './request-log.service';
 export class RequestLogComponent implements OnInit, OnDestroy
 {
     requestLogs: RequestLogDisplayItem[] = [];
-    requestTypeOptions: RequestTypeOption[] = [];
+    requestTypeOptions: RequestTypeDisplayItem[] = [];
 
     searchString = '';
     includeRequestTypes: string[] = [];
