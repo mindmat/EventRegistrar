@@ -73,8 +73,6 @@ public class IcsCreator(IQueryable<Seat> spots,
         sb.AppendLine("BEGIN:VCALENDAR");
         sb.AppendLine("VERSION:2.0");
         sb.AppendLine($"PRODID:-//EventRegistrar//{eventName}//DE");
-        sb.AppendLine($"TIMEZONE:{calendarConfiguration.TimeZone}");
-        sb.AppendLine($"X-WR-TIMEZONE:{calendarConfiguration.TimeZone}");
         sb.AppendLine($"NAME:{calendarName}");
         sb.AppendLine($"X-WR-CALNAME:{calendarName}");
 
@@ -142,10 +140,9 @@ public class IcsCreator(IQueryable<Seat> spots,
                    : track.Title;
     }
 
-    private string FormatDateTime(DateTimeOffset dateTime)
+    private static string FormatDateTime(DateTimeOffset dateTime)
     {
-        var eventDateTime = calendarConfiguration.ConvertToEventTime(dateTime).DateTime;
-        return eventDateTime.ToString("yyyyMMdd'T'HHmmss");
+        return dateTime.UtcDateTime.ToString("yyyyMMdd'T'HHmmss'Z'");
     }
 
     private byte[] ComposeWithLibrary(string eventName, string calendarName, List<RegistrableIcs> tracks)
