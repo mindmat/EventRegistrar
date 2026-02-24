@@ -1033,15 +1033,6 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Registrierbares {{RegistrableId}} defragmentiert.
-        /// </summary>
-        internal static string DefragRegistrableCommand_Duplicate_1_ {
-            get {
-                return ResourceManager.GetString("DefragRegistrableCommand_Duplicate[1]", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Löschen.
         /// </summary>
         internal static string Delete {
