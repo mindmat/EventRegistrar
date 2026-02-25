@@ -14,6 +14,6 @@ export class RequestLogResolver implements Resolve<any>
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
-        return this.service.fetchRequestLog({ eventId: this.eventService.selectedId ?? undefined });
+        return this.service.fetchRequestLog({ eventId: this.eventService.selectedId, onlyUserInitiatedRequests: true });
     }
 }
