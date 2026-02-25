@@ -246,6 +246,13 @@ export class NavigationService
                                     icon: 'heroicons_outline:currency-euro',
                                     link: `/${e.acronym}/admin/pricing`,
                                 },
+                                {
+                                    id: 'request-log',
+                                    title: translateService.instant('RequestLogQuery'),
+                                    type: 'basic',
+                                    icon: 'mat_outline:history',
+                                    link: `/${e.acronym}/admin/request-log`,
+                                },
                             ]
                         },
                     ]);

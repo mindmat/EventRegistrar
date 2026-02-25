@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Hosting;
 using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.AuditLog;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.MenuNodes;
@@ -141,6 +142,8 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(ShiftsOverviewQuery);
             yield return nameof(VolunteerAdminConfigurationQuery);
             yield return nameof(ShiftsOverviewExcelQuery);
+            yield return nameof(RequestLogQuery);
+            yield return nameof(RequestLogRequestTypesQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)

@@ -160,6 +160,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Automatisches Nachrücken aktivieren.
+        /// </summary>
+        internal static string ActivateAutomaticPromotionCommand {
+            get {
+                return ResourceManager.GetString("ActivateAutomaticPromotionCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hinzufügen.
         /// </summary>
         internal static string Add {
@@ -174,6 +183,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string AddHelperSlot {
             get {
                 return ResourceManager.GetString("AddHelperSlot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Helferplatz hinzufügen für Schicht.
+        /// </summary>
+        internal static string AddHelperSlotCommand {
+            get {
+                return ResourceManager.GetString("AddHelperSlotCommand", resourceCulture);
             }
         }
         
@@ -196,11 +214,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ICS-Anhang hinzufügen an Mail.
+        /// </summary>
+        internal static string AddIcsToMailCommand {
+            get {
+                return ResourceManager.GetString("AddIcsToMailCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mail-Import hinzufügen.
         /// </summary>
         internal static string AddImap {
             get {
                 return ResourceManager.GetString("AddImap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Individuelle Reduktion hinzufügen für Anmeldung, Betrag, Grund.
+        /// </summary>
+        internal static string AddIndividualReductionCommand {
+            get {
+                return ResourceManager.GetString("AddIndividualReductionCommand", resourceCulture);
             }
         }
         
@@ -255,6 +291,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string AddScreenshot {
             get {
                 return ResourceManager.GetString("AddScreenshot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Platz hinzufügen für Anmeldung.
+        /// </summary>
+        internal static string AddSpotCommand {
+            get {
+                return ResourceManager.GetString("AddSpotCommand", resourceCulture);
             }
         }
         
@@ -394,6 +439,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Eingehende Zahlung zuweisen an Anmeldung, Betrag.
+        /// </summary>
+        internal static string AssignIncomingPaymentCommand {
+            get {
+                return ResourceManager.GetString("AssignIncomingPaymentCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zahlungsausgang zuordnen.
         /// </summary>
         internal static string AssignOutgoing {
@@ -403,11 +457,47 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ausgehende Zahlung zuweisen, Betrag.
+        /// </summary>
+        internal static string AssignOutgoingPaymentCommand {
+            get {
+                return ResourceManager.GetString("AssignOutgoingPaymentCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {{UnmatchedCount}} Anmeldungen ohne zugewiesenen Partner.
+        /// </summary>
+        internal static string AssignPartners_Tooltip {
+            get {
+                return ResourceManager.GetString("AssignPartners_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rückzahlung zuweisen: eingehend an ausgehend, Betrag.
+        /// </summary>
+        internal static string AssignRepaymentCommand {
+            get {
+                return ResourceManager.GetString("AssignRepaymentCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Verantwortliche:n zuordnen.
         /// </summary>
         internal static string AssignResponsible {
             get {
                 return ResourceManager.GetString("AssignResponsible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anmeldung der Schicht zuweisen.
+        /// </summary>
+        internal static string AssignToShiftCommand {
+            get {
+                return ResourceManager.GetString("AssignToShiftCommand", resourceCulture);
             }
         }
         
@@ -556,6 +646,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anmeldung stornieren.
+        /// </summary>
+        internal static string CancelRegistrationCommand {
+            get {
+                return ResourceManager.GetString("CancelRegistrationCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ändern.
         /// </summary>
         internal static string Change {
@@ -579,6 +678,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string ChangeName {
             get {
                 return ResourceManager.GetString("ChangeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teilnehmername ändern für Anmeldung.
+        /// </summary>
+        internal static string ChangeParticipantNameCommand {
+            get {
+                return ResourceManager.GetString("ChangeParticipantNameCommand", resourceCulture);
             }
         }
         
@@ -610,6 +718,33 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Partner-Anmeldung zu Einzelanmeldung ändern.
+        /// </summary>
+        internal static string ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand {
+            get {
+                return ResourceManager.GetString("ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Externe Mail-Konfiguration geprüft.
+        /// </summary>
+        internal static string CheckExternalMailConfigurationCommand {
+            get {
+                return ResourceManager.GetString("CheckExternalMailConfigurationCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mehrfach-Partner-Prüfung für Anmeldung.
+        /// </summary>
+        internal static string CheckIfRegistrationHasMultiplePartnersCommand {
+            get {
+                return ResourceManager.GetString("CheckIfRegistrationHasMultiplePartnersCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Spalte in Checkin-Liste.
         /// </summary>
         internal static string CheckinListColumn {
@@ -624,6 +759,33 @@ namespace EventRegistrar.Backend.Properties {
         internal static string ClickToUpload {
             get {
                 return ResourceManager.GetString("ClickToUpload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatisches Mail senden an Anmeldung.
+        /// </summary>
+        internal static string ComposeAndSendAutoMailCommand {
+            get {
+                return ResourceManager.GetString("ComposeAndSendAutoMailCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Massenmail senden an Anmeldung.
+        /// </summary>
+        internal static string ComposeAndSendBulkMailCommand {
+            get {
+                return ResourceManager.GetString("ComposeAndSendBulkMailCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schichtzuweisung bestätigen.
+        /// </summary>
+        internal static string ConfirmShiftAssignmentCommand {
+            get {
+                return ResourceManager.GetString("ConfirmShiftAssignmentCommand", resourceCulture);
             }
         }
         
@@ -727,11 +889,47 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manuelle Zahlung erstellen und zuweisen an Anmeldung, Betrag.
+        /// </summary>
+        internal static string CreateAndAssignIncomingPaymentCommand {
+            get {
+                return ResourceManager.GetString("CreateAndAssignIncomingPaymentCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto-Mail-Vorlage erstellen:, Sprache.
+        /// </summary>
+        internal static string CreateAutoMailTemplateCommand {
+            get {
+                return ResourceManager.GetString("CreateAutoMailTemplateCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mailvorlagen erstellen.
         /// </summary>
         internal static string CreateAutoMailTemplates {
             get {
                 return ResourceManager.GetString("CreateAutoMailTemplates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Massenmails erstellen.
+        /// </summary>
+        internal static string CreateBulkMailsCommand {
+            get {
+                return ResourceManager.GetString("CreateBulkMailsCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Massenmail-Vorlage erstellen.
+        /// </summary>
+        internal static string CreateBulkMailTemplateCommand {
+            get {
+                return ResourceManager.GetString("CreateBulkMailTemplateCommand", resourceCulture);
             }
         }
         
@@ -750,6 +948,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string CreateMail {
             get {
                 return ResourceManager.GetString("CreateMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schicht erstellen.
+        /// </summary>
+        internal static string CreateShiftCommand {
+            get {
+                return ResourceManager.GetString("CreateShiftCommand", resourceCulture);
             }
         }
         
@@ -786,6 +993,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string date {
             get {
                 return ResourceManager.GetString("date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatisches Nachrücken deaktivieren.
+        /// </summary>
+        internal static string DeactivateAutomaticPromotionCommand {
+            get {
+                return ResourceManager.GetString("DeactivateAutomaticPromotionCommand", resourceCulture);
             }
         }
         
@@ -835,11 +1051,47 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Massenmail-Vorlage löschen.
+        /// </summary>
+        internal static string DeleteBulkMailTemplateCommand {
+            get {
+                return ResourceManager.GetString("DeleteBulkMailTemplateCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mails löschen.
+        /// </summary>
+        internal static string DeleteMailsCommand {
+            get {
+                return ResourceManager.GetString("DeleteMailsCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Track löschen.
         /// </summary>
         internal static string DeleteRegistrable {
             get {
                 return ResourceManager.GetString("DeleteRegistrable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registrierbares löschen.
+        /// </summary>
+        internal static string DeleteRegistrableCommand {
+            get {
+                return ResourceManager.GetString("DeleteRegistrableCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anmeldeformular löschen.
+        /// </summary>
+        internal static string DeleteRegistrationFormCommand {
+            get {
+                return ResourceManager.GetString("DeleteRegistrationFormCommand", resourceCulture);
             }
         }
         
@@ -853,11 +1105,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Schicht löschen.
+        /// </summary>
+        internal static string DeleteShiftCommand {
+            get {
+                return ResourceManager.GetString("DeleteShiftCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Testdaten löschen.
         /// </summary>
         internal static string DeleteTestData {
             get {
                 return ResourceManager.GetString("DeleteTestData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Testdaten löschen.
+        /// </summary>
+        internal static string DeleteTestDataCommand {
+            get {
+                return ResourceManager.GetString("DeleteTestDataCommand", resourceCulture);
             }
         }
         
@@ -939,6 +1209,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string DuePayments {
             get {
                 return ResourceManager.GetString("DuePayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {{RemindersPossible}} Erinnerungen möglich von {{TotalDue}} ausstehenden Zahlungen.
+        /// </summary>
+        internal static string DuePayments_Tooltip {
+            get {
+                return ResourceManager.GetString("DuePayments_Tooltip", resourceCulture);
             }
         }
         
@@ -1281,6 +1560,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ausschliessen: Anfragetypen.
+        /// </summary>
+        internal static string ExcludeRequestTypes {
+            get {
+                return ResourceManager.GetString("ExcludeRequestTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausführungszeit (ms).
+        /// </summary>
+        internal static string ExecutionTimeInMilliseconds {
+            get {
+                return ResourceManager.GetString("ExecutionTimeInMilliseconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bestehende Zuordnungen.
         /// </summary>
         internal static string ExistingAssignments {
@@ -1313,6 +1610,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string FeedbackTitle {
             get {
                 return ResourceManager.GetString("FeedbackTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kontoauszüge abgerufen.
+        /// </summary>
+        internal static string FetchBankStatementsFileCommand {
+            get {
+                return ResourceManager.GetString("FetchBankStatementsFileCommand", resourceCulture);
             }
         }
         
@@ -1353,6 +1659,33 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to E-Mail-Adresse korrigieren für Anmeldung: →.
+        /// </summary>
+        internal static string FixInvalidAddressCommand {
+            get {
+                return ResourceManager.GetString("FixInvalidAddressCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fehlende Rolle korrigieren für Rohanmeldung.
+        /// </summary>
+        internal static string FixMissingRoleCommand {
+            get {
+                return ResourceManager.GetString("FixMissingRoleCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {{ErrorCount}} Anmeldungen mit Verarbeitungsfehlern.
+        /// </summary>
+        internal static string FixRawProcessing_Tooltip {
+            get {
+                return ResourceManager.GetString("FixRawProcessing_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Follower.
         /// </summary>
         internal static string Follower {
@@ -1376,6 +1709,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Forms {
             get {
                 return ResourceManager.GetString("Forms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {{PendingFormsCount}} Formulare warten auf Import.
+        /// </summary>
+        internal static string Forms_Tooltip {
+            get {
+                return ResourceManager.GetString("Forms_Tooltip", resourceCulture);
             }
         }
         
@@ -1679,6 +2021,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zahlung ignoriert.
+        /// </summary>
+        internal static string IgnorePaymentCommand {
+            get {
+                return ResourceManager.GetString("IgnorePaymentCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IMAP-Postfächer konfigurieren, deren eingehende Mails fortlaufend importiert werden sollen..
         /// </summary>
         internal static string ImapConfigExplanation {
@@ -1733,6 +2084,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mails aus IMAP importieren.
+        /// </summary>
+        internal static string ImportMailsFromImapCommand {
+            get {
+                return ResourceManager.GetString("ImportMailsFromImapCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mails importieren ab.
         /// </summary>
         internal static string ImportMailsSince {
@@ -1747,6 +2107,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string ImportNewVersion {
             get {
                 return ResourceManager.GetString("ImportNewVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anmeldeformular importieren.
+        /// </summary>
+        internal static string ImportRegistrationFormCommand {
+            get {
+                return ResourceManager.GetString("ImportRegistrationFormCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einschliessen: Anfragetypen.
+        /// </summary>
+        internal static string IncludeRequestTypes {
+            get {
+                return ResourceManager.GetString("IncludeRequestTypes", resourceCulture);
             }
         }
         
@@ -2318,6 +2696,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {{WarningCount}} Mail-Vorlagen mit fehlenden Platzhaltern.
+        /// </summary>
+        internal static string MailTemplates_Tooltip {
+            get {
+                return ResourceManager.GetString("MailTemplates_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {{NoneSucceeded}} E-Mails konnten nicht zugestellt werden, {{SomeSucceeded}} E-Mails hatten teilweise Probleme.
+        /// </summary>
+        internal static string MailTracking_Tooltip {
+            get {
+                return ResourceManager.GetString("MailTracking_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Typ.
         /// </summary>
         internal static string MailType {
@@ -2624,11 +3020,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Partner-Anmeldungen verknüpfen: und.
+        /// </summary>
+        internal static string MatchPartnerRegistrationsCommand {
+            get {
+                return ResourceManager.GetString("MatchPartnerRegistrationsCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Partner zuordnen.
         /// </summary>
         internal static string MatchPartners {
             get {
                 return ResourceManager.GetString("MatchPartners", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einzelplätze verknüpfen: Leader mit Follower.
+        /// </summary>
+        internal static string MatchSingleSpotsCommand {
+            get {
+                return ResourceManager.GetString("MatchSingleSpotsCommand", resourceCulture);
             }
         }
         
@@ -2791,6 +3205,33 @@ namespace EventRegistrar.Backend.Properties {
         internal static string OnlyParticipantsOf {
             get {
                 return ResourceManager.GetString("OnlyParticipantsOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nur benutzerinitiierte Anfragen.
+        /// </summary>
+        internal static string OnlyUserInitiatedRequests {
+            get {
+                return ResourceManager.GetString("OnlyUserInitiatedRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nur mit Fehlern.
+        /// </summary>
+        internal static string OnlyWithErrors {
+            get {
+                return ResourceManager.GetString("OnlyWithErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anmeldung eröffnet.
+        /// </summary>
+        internal static string OpenRegistrationCommand {
+            get {
+                return ResourceManager.GetString("OpenRegistrationCommand", resourceCulture);
             }
         }
         
@@ -3119,6 +3560,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {{Count}} E-Mails warten auf Freigabe.
+        /// </summary>
+        internal static string PendingMails_Tooltip {
+            get {
+                return ResourceManager.GetString("PendingMails_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ausstehende Rückzahlungen.
         /// </summary>
         internal static string PendingPayouts {
@@ -3308,6 +3758,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abgerufene Kontoauszugsdatei verarbeiten.
+        /// </summary>
+        internal static string ProcessFetchedBankStatementsFileCommand {
+            get {
+                return ResourceManager.GetString("ProcessFetchedBankStatementsFileCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to QR-Code konnte nicht erstellt werden.
         /// </summary>
         internal static string QrCodeGenerateError {
@@ -3470,6 +3929,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alle Preise und Wartelisten neu berechnet.
+        /// </summary>
+        internal static string RecalculateAllPriceAndWaitingListCommand {
+            get {
+                return ResourceManager.GetString("RecalculateAllPriceAndWaitingListCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zuletzt versendete Mails.
         /// </summary>
         internal static string RecentlySentMailsStats {
@@ -3520,6 +3988,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string RefundButtonText {
             get {
                 return ResourceManager.GetString("RefundButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Differenz erstatten für Anmeldung.
+        /// </summary>
+        internal static string RefundDifferenceCommand {
+            get {
+                return ResourceManager.GetString("RefundDifferenceCommand", resourceCulture);
             }
         }
         
@@ -3668,6 +4145,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alle ausstehenden Mails freigeben.
+        /// </summary>
+        internal static string ReleaseAllPendingMailsCommand {
+            get {
+                return ResourceManager.GetString("ReleaseAllPendingMailsCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Massenmails freigeben.
+        /// </summary>
+        internal static string ReleaseBulkMailsCommand {
+            get {
+                return ResourceManager.GetString("ReleaseBulkMailsCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Freigegeben.
         /// </summary>
         internal static string Released {
@@ -3695,11 +4190,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mails freigeben.
+        /// </summary>
+        internal static string ReleaseMailsCommand {
+            get {
+                return ResourceManager.GetString("ReleaseMailsCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bemerkungen.
         /// </summary>
         internal static string Remarks {
             get {
                 return ResourceManager.GetString("Remarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {{UnprocessedCount}} Bemerkungen noch nicht bearbeitet.
+        /// </summary>
+        internal static string Remarks_Tooltip {
+            get {
+                return ResourceManager.GetString("Remarks_Tooltip", resourceCulture);
             }
         }
         
@@ -3767,6 +4280,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Helferplatz entfernen aus Schicht.
+        /// </summary>
+        internal static string RemoveHelperSlotCommand {
+            get {
+                return ResourceManager.GetString("RemoveHelperSlotCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Individuelle Reduktion entfernen.
+        /// </summary>
+        internal static string RemoveIndividualReductionCommand {
+            get {
+                return ResourceManager.GetString("RemoveIndividualReductionCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zuordnung aufheben.
         /// </summary>
         internal static string RemoveLink {
@@ -3781,6 +4312,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string RemoveScreenshot {
             get {
                 return ResourceManager.GetString("RemoveScreenshot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Platz entfernen für Anmeldung.
+        /// </summary>
+        internal static string RemoveSpotCommand {
+            get {
+                return ResourceManager.GetString("RemoveSpotCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benutzer vom Event entfernen.
+        /// </summary>
+        internal static string RemoveUserFromEventCommand {
+            get {
+                return ResourceManager.GetString("RemoveUserFromEventCommand", resourceCulture);
             }
         }
         
@@ -3812,6 +4361,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Frageoption erneut verarbeiten.
+        /// </summary>
+        internal static string ReprocessQuestionOptionCommand {
+            get {
+                return ResourceManager.GetString("ReprocessQuestionOptionCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zugriff beantragen.
         /// </summary>
         internal static string RequestAccess {
@@ -3821,11 +4379,101 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fehler.
+        /// </summary>
+        internal static string RequestLogDisplayItem_Exception {
+            get {
+                return ResourceManager.GetString("RequestLogDisplayItem_Exception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausführungszeit (ms).
+        /// </summary>
+        internal static string RequestLogDisplayItem_ExecutionTimeInMilliseconds {
+            get {
+                return ResourceManager.GetString("RequestLogDisplayItem_ExecutionTimeInMilliseconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anfrageinhalt.
+        /// </summary>
+        internal static string RequestLogDisplayItem_RequestJson {
+            get {
+                return ResourceManager.GetString("RequestLogDisplayItem_RequestJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anfragetyp.
+        /// </summary>
+        internal static string RequestLogDisplayItem_RequestTypeText {
+            get {
+                return ResourceManager.GetString("RequestLogDisplayItem_RequestTypeText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benutzer.
+        /// </summary>
+        internal static string RequestLogDisplayItem_User {
+            get {
+                return ResourceManager.GetString("RequestLogDisplayItem_User", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeitpunkt.
+        /// </summary>
+        internal static string RequestLogDisplayItem_When {
+            get {
+                return ResourceManager.GetString("RequestLogDisplayItem_When", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to JSON.
+        /// </summary>
+        internal static string RequestLogJson {
+            get {
+                return ResourceManager.GetString("RequestLogJson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anfrage-Protokoll.
+        /// </summary>
+        internal static string RequestLogQuery {
+            get {
+                return ResourceManager.GetString("RequestLogQuery", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to (erforderlich).
         /// </summary>
         internal static string Required {
             get {
                 return ResourceManager.GetString("Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gesendete Mails ohne Status erneut senden.
+        /// </summary>
+        internal static string ResendSentMailsWithoutStateCommand {
+            get {
+                return ResourceManager.GetString("ResendSentMailsWithoutStateCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zugriffsanfrage beantworten.
+        /// </summary>
+        internal static string RespondToRequestCommand {
+            get {
+                return ResourceManager.GetString("RespondToRequestCommand", resourceCulture);
             }
         }
         
@@ -3871,6 +4519,69 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Save {
             get {
                 return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bankkonto-Konfiguration speichern.
+        /// </summary>
+        internal static string SaveBankAccountConfigurationCommand {
+            get {
+                return ResourceManager.GetString("SaveBankAccountConfigurationCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Externe Mail-Konfiguration speichern.
+        /// </summary>
+        internal static string SaveExternalMailConfigurationCommand {
+            get {
+                return ResourceManager.GetString("SaveExternalMailConfigurationCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zahlungsdatei importieren.
+        /// </summary>
+        internal static string SavePaymentFileCommand {
+            get {
+                return ResourceManager.GetString("SavePaymentFileCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preise speichern.
+        /// </summary>
+        internal static string SavePricingCommand {
+            get {
+                return ResourceManager.GetString("SavePricingCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registrierbares speichern.
+        /// </summary>
+        internal static string SaveRegistrableCommand {
+            get {
+                return ResourceManager.GetString("SaveRegistrableCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ICS-Kalendereintrag speichern.
+        /// </summary>
+        internal static string SaveRegistrableIcsCommand {
+            get {
+                return ResourceManager.GetString("SaveRegistrableIcsCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Formular-Zuordnungen speichern für Formular.
+        /// </summary>
+        internal static string SaveRegistrationFormMappingsCommand {
+            get {
+                return ResourceManager.GetString("SaveRegistrationFormMappingsCommand", resourceCulture);
             }
         }
         
@@ -3992,6 +4703,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zahlungserinnerung senden an Anmeldung.
+        /// </summary>
+        internal static string SendPaymentDueMailCommand {
+            get {
+                return ResourceManager.GetString("SendPaymentDueMailCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mail senden.
         /// </summary>
         internal static string SendPleasePayDifferenceMail {
@@ -4019,11 +4739,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erinnerungsmail senden an Anmeldung.
+        /// </summary>
+        internal static string SendReminderMailCommand {
+            get {
+                return ResourceManager.GetString("SendReminderMailCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Erinnerungs-SMS senden.
         /// </summary>
         internal static string SendReminderSms {
             get {
                 return ResourceManager.GetString("SendReminderSms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SMS senden an Anmeldung.
+        /// </summary>
+        internal static string SendSmsCommand {
+            get {
+                return ResourceManager.GetString("SendSmsCommand", resourceCulture);
             }
         }
         
@@ -4046,11 +4784,56 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manuelles Preispaket-Fallback setzen für Anmeldung.
+        /// </summary>
+        internal static string SetManualFallbackToPricePackageCommand {
+            get {
+                return ResourceManager.GetString("SetManualFallbackToPricePackageCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preise festlegen.
         /// </summary>
         internal static string SetPricing {
             get {
                 return ResourceManager.GetString("SetPricing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reduktion setzen für Anmeldung.
+        /// </summary>
+        internal static string SetReductionCommand {
+            get {
+                return ResourceManager.GetString("SetReductionCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mail-Freigabe setzen für Typ: sofort=.
+        /// </summary>
+        internal static string SetReleaseMailCommand {
+            get {
+                return ResourceManager.GetString("SetReleaseMailCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bemerkung als verarbeiten markieren.
+        /// </summary>
+        internal static string SetRemarksProcessedStateCommand {
+            get {
+                return ResourceManager.GetString("SetRemarksProcessedStateCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benutzerrolle setzen: Benutzer, Rolle.
+        /// </summary>
+        internal static string SetRoleOfUserInEventCommand {
+            get {
+                return ResourceManager.GetString("SetRoleOfUserInEventCommand", resourceCulture);
             }
         }
         
@@ -4123,6 +4906,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string ShareOkWithRandom {
             get {
                 return ResourceManager.GetString("ShareOkWithRandom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {{UnassignedShifts}} Schichten nicht besetzt | {{CancelledRegistrations}} Abgemeldete | {{UnconfirmedAssignments}} Unbestätigte.
+        /// </summary>
+        internal static string ShiftsOverview_Tooltip {
+            get {
+                return ResourceManager.GetString("ShiftsOverview_Tooltip", resourceCulture);
             }
         }
         
@@ -4271,6 +5063,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Verarbeitung aller ausstehenden Rohanmeldungen gestartet.
+        /// </summary>
+        internal static string StartProcessAllPendingRawRegistrationsCommand {
+            get {
+                return ResourceManager.GetString("StartProcessAllPendingRawRegistrationsCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Strasse.
         /// </summary>
         internal static string Street {
@@ -4294,6 +5095,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Submit {
             get {
                 return ResourceManager.GetString("Submit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vor-/Nachname tauschen für Anmeldung.
+        /// </summary>
+        internal static string SwapFirstLastNameCommand {
+            get {
+                return ResourceManager.GetString("SwapFirstLastNameCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rolle von Teilnehmer:in wechseln.
+        /// </summary>
+        internal static string SwitchRoleOfParticipantCommand {
+            get {
+                return ResourceManager.GetString("SwitchRoleOfParticipantCommand", resourceCulture);
             }
         }
         
@@ -4424,6 +5243,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nachrücken auslösen.
+        /// </summary>
+        internal static string TriggerMoveUpFromWaitingListCommand {
+            get {
+                return ResourceManager.GetString("TriggerMoveUpFromWaitingListCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nicht zugeordnet.
         /// </summary>
         internal static string Unassigned {
@@ -4433,11 +5261,56 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anmeldung von Schicht entfernen.
+        /// </summary>
+        internal static string UnassignFromShiftCommand {
+            get {
+                return ResourceManager.GetString("UnassignFromShiftCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zuordnung zurücknehmen.
         /// </summary>
         internal static string UnassignPayment {
             get {
                 return ResourceManager.GetString("UnassignPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zahlungszuweisung aufheben.
+        /// </summary>
+        internal static string UnassignPaymentCommand {
+            get {
+                return ResourceManager.GetString("UnassignPaymentCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Partner-Verknüpfung aufgelöst für Anmeldung.
+        /// </summary>
+        internal static string UnbindPartnerRegistrationCommand {
+            get {
+                return ResourceManager.GetString("UnbindPartnerRegistrationCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Partner-Platz aufgelöst.
+        /// </summary>
+        internal static string UnbindPartnerSpotCommand {
+            get {
+                return ResourceManager.GetString("UnbindPartnerSpotCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bestätigung der Schichtzuweisung aufheben.
+        /// </summary>
+        internal static string UnconfirmShiftAssignmentCommand {
+            get {
+                return ResourceManager.GetString("UnconfirmShiftAssignmentCommand", resourceCulture);
             }
         }
         
@@ -4456,6 +5329,78 @@ namespace EventRegistrar.Backend.Properties {
         internal static string UnprocessedRawRegistrationCount {
             get {
                 return ResourceManager.GetString("UnprocessedRawRegistrationCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto-Mail-Konfiguration aktualisieren, Absender: ().
+        /// </summary>
+        internal static string UpdateAutoMailConfigurationCommand {
+            get {
+                return ResourceManager.GetString("UpdateAutoMailConfigurationCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auto-Mail-Vorlage aktualisieren.
+        /// </summary>
+        internal static string UpdateAutoMailTemplateCommand {
+            get {
+                return ResourceManager.GetString("UpdateAutoMailTemplateCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Massenmail-Vorlage aktualisieren.
+        /// </summary>
+        internal static string UpdateBulkMailTemplateCommand {
+            get {
+                return ResourceManager.GetString("UpdateBulkMailTemplateCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interne Notizen aktualisieren für Anmeldung.
+        /// </summary>
+        internal static string UpdateInternalNotesCommand {
+            get {
+                return ResourceManager.GetString("UpdateInternalNotesCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ReadModel aktualisieren.
+        /// </summary>
+        internal static string UpdateReadModelCommand {
+            get {
+                return ResourceManager.GetString("UpdateReadModelCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schicht aktualisieren.
+        /// </summary>
+        internal static string UpdateShiftCommand {
+            get {
+                return ResourceManager.GetString("UpdateShiftCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Benutzerinformationen aktualisieren.
+        /// </summary>
+        internal static string UpdateUserInfoCommand {
+            get {
+                return ResourceManager.GetString("UpdateUserInfoCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Helfer-Konfiguration aktualisieren.
+        /// </summary>
+        internal static string UpdateVolunteerAdminConfigurationCommand {
+            get {
+                return ResourceManager.GetString("UpdateVolunteerAdminConfigurationCommand", resourceCulture);
             }
         }
         
@@ -4544,6 +5489,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto-Mail-Vorlagen validiert.
+        /// </summary>
+        internal static string ValidateAutoMailTemplatesCommand {
+            get {
+                return ResourceManager.GetString("ValidateAutoMailTemplatesCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Valuta.
         /// </summary>
         internal static string Valuta {
@@ -4612,6 +5566,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string WillPayAtCheckin {
             get {
                 return ResourceManager.GetString("WillPayAtCheckin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bezahlung am Checkin setzen für Anmeldung.
+        /// </summary>
+        internal static string WillPayAtCheckinCommand {
+            get {
+                return ResourceManager.GetString("WillPayAtCheckinCommand", resourceCulture);
             }
         }
         

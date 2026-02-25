@@ -74,6 +74,8 @@ import { ShiftsOverviewComponent } from './modules/admin/volunteer-planning/shif
 import { ShiftsOverviewResolver } from './modules/admin/volunteer-planning/shifts-overview/shifts-overview.resolver';
 import { CalendarViewComponent } from './modules/admin/calendar-view/calendar-view.component';
 import { CalendarViewResolver } from './modules/admin/calendar-view/calendar-view.resolver';
+import { RequestLogComponent } from './modules/admin/infrastructure/request-log/request-log.component';
+import { RequestLogResolver } from './modules/admin/infrastructure/request-log/request-log.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -433,6 +435,12 @@ export const appRoutes: Route[] =
                             canActivate: [AuthGuard],
                             component: PricingComponent,
                             resolve: { initialData: PricingResolver }
+                        },
+                        {
+                            path: 'request-log',
+                            canActivate: [AuthGuard],
+                            component: RequestLogComponent,
+                            resolve: { initialData: RequestLogResolver }
                         }
                     ]
                 }]
