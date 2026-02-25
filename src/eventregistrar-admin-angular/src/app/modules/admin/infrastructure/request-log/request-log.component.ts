@@ -21,7 +21,7 @@ export class RequestLogComponent implements OnInit, OnDestroy
     from: Date | null = null;
     to: Date | null = null;
     onlyWithErrors = false;
-    onlyUserInitiatedRequests = false;
+    onlyUserInitiatedRequests = true;
 
     private readonly _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -76,7 +76,7 @@ export class RequestLogComponent implements OnInit, OnDestroy
         this.from = null;
         this.to = null;
         this.onlyWithErrors = false;
-        this.onlyUserInitiatedRequests = false;
+        this.onlyUserInitiatedRequests = true;
 
         this.applyFilters();
     }
