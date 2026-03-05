@@ -28,6 +28,7 @@ public class SavePaymentFileCommandHandler(IRepository<PaymentsFile> paymentFile
                                            IRepository<PaymentSlip> paymentSlips,
                                            IQueryable<Event> events,
                                            CamtParser camtParser,
+                                           Camt053V08Parser camt053V08Parser,
                                            ILogger log,
                                            IEventBus eventBus,
                                            ChangeTrigger changeTrigger)
@@ -89,7 +90,10 @@ public class SavePaymentFileCommandHandler(IRepository<PaymentsFile> paymentFile
         stream.Position = 0;
         var xml = XDocument.Load(stream);
 
-        var camt = camtParser.Parse(xml);
+        var defaultNamespace = ((XElement)xml.FirstNode!).GetDefaultNamespace().NamespaceName;
+        var camt = defaultNamespace == Camt053V08Parser.Namespace
+                       ? camt053V08Parser.Parse(xml)
+                       : camtParser.Parse(xml);
 
         var existingFile = await paymentFiles.FirstOrDefaultAsync(fil => fil.EventId == eventId
                                                                       && fil.FileId == camt.FileId, cancellationToken);
