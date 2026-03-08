@@ -3,6 +3,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
+using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Mailing.Bulk;
 
@@ -13,8 +14,7 @@ public class ReleaseBulkMailsCommand : IRequest, IEventBoundRequest
 }
 
 public class ReleaseBulkMailsCommandHandler(IRepository<Mail> mails,
-                                            CommandQueue commandQueue,
-                                            IEventBus eventBus,
+                                            ChangeTrigger changeTrigger,
                                             IDateTimeProvider dateTimeProvider)
     : IRequestHandler<ReleaseBulkMailsCommand>
 {
@@ -36,29 +36,30 @@ public class ReleaseBulkMailsCommandHandler(IRepository<Mail> mails,
         {
             var sendMailCommand = new SendMailCommand
                                   {
-                                      EventId = withheldMail.EventId!.Value,
+                                      EventId = command.EventId,
                                       MailId = withheldMail.Id
                                   };
 
             withheldMail.Withhold = false;
             withheldMail.Sent = dateTimeProvider.Now;
 
-            commandQueue.EnqueueCommand(sendMailCommand);
+            changeTrigger.EnqueueCommand(sendMailCommand);
+            foreach (var registrationId in withheldMail.Registrations?.Select(rgm => rgm.RegistrationId) ?? [])
+            {
+                changeTrigger.TriggerUpdate<RegistrationCalculator>(command.EventId, registrationId);
+            }
         }
 
-        eventBus.Publish(new QueryChanged
-                         {
-                             EventId = command.EventId,
-                             QueryName = nameof(GeneratedBulkMailsQuery)
-                         });
+        changeTrigger.QueryChanged<GeneratedBulkMailsQuery>(command.EventId);
+        changeTrigger.TriggerUpdate<PendingMailsCalculator>(command.EventId);
         if (withheldMails.Count >= ChunkSize)
         {
             // enqueue next chunk
-            commandQueue.EnqueueCommand(new ReleaseBulkMailsCommand
-                                        {
-                                            EventId = command.EventId,
-                                            BulkMailKey = command.BulkMailKey
-                                        });
+            changeTrigger.EnqueueCommand(new ReleaseBulkMailsCommand
+                                         {
+                                             EventId = command.EventId,
+                                             BulkMailKey = command.BulkMailKey
+                                         });
         }
     }
 }
