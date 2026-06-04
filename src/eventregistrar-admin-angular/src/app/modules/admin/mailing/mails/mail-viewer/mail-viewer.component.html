@@ -1,1 +1,1 @@
-@if (mail?.content) {<div [froalaView]="mail.content" class="m-2"></div>}
+@if (mail?.content) {<div [innerHTML]="mail.content" class="m-2"></div>}

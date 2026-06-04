@@ -51,13 +51,9 @@
                             "src/styles/vendors.scss",
                             "src/@fuse/styles/main.scss",
                             "src/styles/styles.scss",
-                            "src/styles/tailwind.scss",
-                            "src/assets/styles/froala_editor.pkgd.min.css",
-                            "src/assets/styles/froala_style.min.css"
+                            "src/styles/tailwind.scss"
                         ],
-                        "scripts": [
-                            "src/assets/scripts/froala_editor.pkgd.min.js"
-                        ]
+                        "scripts": []
                     },
                     "configurations": {
                         "production": {

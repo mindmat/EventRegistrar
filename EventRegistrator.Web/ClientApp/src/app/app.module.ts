@@ -29,7 +29,6 @@ import { RegistrationFormsComponent } from "./registrationForms/registrationForm
 import { QuestionMappingComponent } from "./questionMapping/questionMapping.component";
 import { PaymentsComponent } from "./payments/payments.component";
 import { EventService } from "./events/eventService.service";
-import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { FileUploadModule } from 'ng2-file-upload';
 import { BulkMailTemplatesComponent } from "./bulkMailTemplates/bulkMailTemplates.component";
 import { PartnerMatchingComponent } from "./partnerMatching/partnerMatching.component";
@@ -84,8 +83,6 @@ import { DomainEventsComponent } from "./domain-events/domain-events.component";
     HttpClientModule,
     FormsModule,
     FileUploadModule,
-    FroalaEditorModule.forRoot(),
-    FroalaViewModule.forRoot(),
     NgMultiSelectDropDownModule.forRoot(),
     RouterModule.forRoot([
       //{ path: '', redirectTo: 'eventSelection', pathMatch: 'full' },

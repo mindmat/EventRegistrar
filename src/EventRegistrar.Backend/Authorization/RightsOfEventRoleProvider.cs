@@ -115,7 +115,6 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(UserInEventRolesQuery);
             yield return nameof(EventByAcronymQuery);
             yield return nameof(UpdateUserInfoCommand);
-            yield return nameof(FroalaKeyQuery);
             yield return nameof(UnprocessedRawRegistrationCountQuery);
             yield return nameof(RemarksOverviewQuery);
             yield return nameof(InternalNotesQuery);

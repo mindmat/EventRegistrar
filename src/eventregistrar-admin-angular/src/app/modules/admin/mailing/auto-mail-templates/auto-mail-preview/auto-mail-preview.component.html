@@ -2,6 +2,6 @@
 
 @if (preview?.contentHtml) {
   <div class="grid h-screen w-screen place-items-center">
-    <div [froalaView]="preview.contentHtml"></div>
+    <div [innerHTML]="preview.contentHtml"></div>
   </div>
 }

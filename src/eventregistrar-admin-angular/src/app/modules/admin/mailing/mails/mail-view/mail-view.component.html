@@ -96,9 +96,7 @@
         </div>
         <!-- Content -->
         @if (mail?.content) {
-          <div class="mt-8" [froalaView]="mail.content">
-            <!-- <div *ngIf="mail?.content" [froalaEditor] [(froalaModel)]="mail.content"> -->
-          </div>
+          <div class="mt-8" [innerHTML]="mail.content"></div>
         }
       </div>
       <!-- Footer -->

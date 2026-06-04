@@ -2032,38 +2032,6 @@
                 }
             }
         },
-        "/api/FroalaKeyQuery": {
-            "post": {
-                "tags": [
-                    "FroalaKey"
-                ],
-                "operationId": "FroalaKey_Query",
-                "requestBody": {
-                    "x-name": "FroalaKeyQuery",
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/FroalaKeyQuery"
-                            }
-                        }
-                    },
-                    "x-position": 1
-                },
-                "responses": {
-                    "200": {
-                        "description": "",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "type": "string"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/api/GeneratedBulkMailsQuery": {
             "post": {
                 "tags": [
@@ -8268,10 +8236,6 @@
                         "format": "guid"
                     }
                 }
-            },
-            "FroalaKeyQuery": {
-                "type": "object",
-                "additionalProperties": false
             },
             "GeneratedBulkMails": {
                 "type": "object",
