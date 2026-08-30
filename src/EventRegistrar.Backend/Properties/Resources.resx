@@ -1955,6 +1955,9 @@
   <data name="WillPayAtCheckinCommand" xml:space="preserve">
     <value>Bezahlung am Checkin setzen für Anmeldung</value>
   </data>
+  <data name="WindingDownNotice" xml:space="preserve">
+    <value>EventRegistrar wird eingestellt. Neue Events können nicht mehr erstellt werden. Bitte nutze künftig</value>
+  </data>
   <data name="Zugriffsanfragen" xml:space="preserve">
     <value>Zugriffsanfragen</value>
   </data>

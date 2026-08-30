@@ -1542,6 +1542,9 @@
   <data name="WillPayAtCheckin" xml:space="preserve">
     <value>Pays at check in</value>
   </data>
+  <data name="WindingDownNotice" xml:space="preserve">
+    <value>EventRegistrar is winding down. Creating new events is no longer possible. Please switch to</value>
+  </data>
   <data name="Zugriffsanfragen" xml:space="preserve">
     <value>Access requests</value>
   </data>

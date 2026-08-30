@@ -18,6 +18,12 @@
 
   <div class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:p-12 w-full max-w-3xl">
 
+    <!-- Winding down notice -->
+    <div class="mb-6 p-4 rounded-md border border-amber-300 bg-amber-100 text-amber-900 dark:bg-amber-900/30 dark:text-amber-100 dark:border-amber-700">
+      {{ 'WindingDownNotice' | translate }}
+      <a href="https://www.stomper.ch" target="_blank" rel="noopener" class="font-medium underline">www.stomper.ch</a>.
+    </div>
+
     <!-- Events -->
     <div class="flex flex-col mt-8 divide-y border-t border-b">
       @for (event of filteredEvents; track trackByFn($index, event)) {
@@ -40,15 +46,6 @@
               <div class="font-medium">{{ event.roleText }}</div>
             </div>
           </div>
-          <button class="ml-1 -mr-4" mat-icon-button [matMenuTriggerFor]="chatsHeaderMenu">
-            <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
-            <mat-menu #chatsHeaderMenu>
-              <button mat-menu-item (click)="createSuccessorEvent(event)">
-                <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
-                {{ 'CreateSuccessorEvent' | translate }}
-              </button>
-            </mat-menu>
-          </button>
         </div>
       }
 
@@ -68,26 +65,6 @@
         </button>
       }
     </div>
-
-    <!-- Create new event -->
-    <form class="grid grid-cols-4 gap-6 w-full mt-8 items-baseline" [formGroup]="createNewEventForm" (ngSubmit)="onSubmit()">
-      <!-- Name -->
-      <div class="col-span-4 sm:col-span-2">
-        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-          <mat-label>{{ 'NewEvent' | translate }}</mat-label>
-          <input [formControlName]="'name'" [placeholder]="'EventName' | translate" matInput>
-        </mat-form-field>
-      </div>
-      <!-- Acronym -->
-      <div class="col-span-2 sm:col-span-1">
-        <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-          <input [formControlName]="'acronym'" [placeholder]="'Acronym' | translate" matInput>
-        </mat-form-field>
-      </div>
-      <button class="ml-4" mat-flat-button type="submit" [color]="'primary'">{{ 'Create' | translate }}
-      </button>
-    </form>
-
 
     <!-- Access requests -->
     @if (requests?.length > 0) {
